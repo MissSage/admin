@@ -1,20 +1,25 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 import nprogress from 'nprogress'
+import AppLayout from '@/layout/AppLayout.vue'
 import 'nprogress/nprogress.css'
 // import { store } from '../store/index'
 import Home from '../views/home/index.vue'
 const routes:RouteRecordRaw[] = [
   {
     path: '/',
-    redirect: '/home'
-  },
-  {
-    path: '/home',
-    component: Home,
-    meta: {
-      requiresAuth: true
-    }
+    redirect: '/home',
+    component: AppLayout,
+    children: [
+      {
+        path: '/home',
+        component: Home,
+        meta: {
+          requiresAuth: true
+        }
+      }
+    ]
   }
+
 ]
 const router = createRouter({
   history: createWebHashHistory(), // 路由模式 history
