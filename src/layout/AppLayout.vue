@@ -1,44 +1,46 @@
 <template>
-  <el-container class="layout-container">
-    <el-header>Header</el-header>
+  <el-container>
+    <el-aside>
+      <AppMenu />
+    </el-aside>
     <el-container>
-      <el-aside width="200px">
-        Aside
-      </el-aside>
-      <el-container>
-        <el-main>Main</el-main>
-        <!-- <el-footer>Footer</el-footer> -->
-      </el-container>
+      <el-header>
+        <AppHeader />
+      </el-header>
+      <el-main>
+        <router-view />
+      </el-main>
     </el-container>
   </el-container>
 </template>
-<script setup lang='ts'>
 
+<script lang="ts" setup>
+import AppHeader from './AppHeader/index.vue'
+import AppMenu from './AppMenu/index.vue'
 </script>
-<style scoped lang='scss'>
-.el-header,
-.el-footer {
-  background-color: #b3c0d1;
-  color: var(--el-text-color-primary);
-  text-align: center;
-  line-height: 60px;
-}
 
-.el-aside {
-  background-color: #d3dce6;
-  color: var(--el-text-color-primary);
-  text-align: center;
-  line-height: 200px;
-}
+<style lang="scss" scoped>
+  .el-container {
+    height: 100vh;
+  }
 
-.el-main {
-  background-color: #e9eef3;
-  color: var(--el-text-color-primary);
-  text-align: center;
-  line-height: 160px;
-}
+  .el-header {
+    background-color: #fff;
+    color: #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 
-.layout-container {
-  height: 100vh;
-}
+  .el-aside {
+    width: auto;
+    background-color: #304156;
+    color: #333;
+  }
+
+  .el-main {
+    background-color: #E9EEF3;
+    color: #333;
+  }
+
 </style>

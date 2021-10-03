@@ -1,41 +1,29 @@
-import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import nprogress from 'nprogress'
-import AppLayout from '@/layout/AppLayout.vue'
 import 'nprogress/nprogress.css'
 // import { store } from '../store/index'
-import Home from '../views/home/index.vue'
-const routes:RouteRecordRaw[] = [
-  {
-    path: '/',
-    redirect: '/home',
-    component: AppLayout,
-    children: [
-      {
-        path: '/home',
-        component: Home,
-        meta: {
-          requiresAuth: true
-        }
-      }
-    ]
-  }
-
-]
+import { store } from '@/store'
+import { routes } from './MenuRoutes'
 const router = createRouter({
   history: createWebHashHistory(), // 路由模式 history
-  routes // 路由规则
+  routes: [...routes,
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('../views/login/index.vue')
+    }] // 路由规则
 })
 
 router.beforeEach((to, from) => {
   nprogress.start()
-  // if (to.meta.requiresAuth && !store.state.user) {
-  //   // 页面需要授权但是没有登录，则重写向到登录页
-  //   return {
-  //     path: '/admin/login',
-  //     // 保存当前位置，以便登录后重新跳转到此
-  //     query: { redirect: to.fullPath }
-  //   }
-  // }
+  if (to.meta.requiresAuth && !store.state.user) {
+    // 页面需要授权但是没有登录，则重写向到登录页
+    return {
+      path: '/login',
+      // 保存当前位置，以便登录后重新跳转到此
+      query: { redirect: to.fullPath }
+    }
+  }
 })
 router.afterEach(() => {
   nprogress.done()
