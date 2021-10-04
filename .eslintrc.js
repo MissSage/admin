@@ -1,6 +1,6 @@
 module.exports = {
   globals: {
-    // 争对script-setup的编译宏的额外配置，此后可以不定义直接使用，不然的话eslint会报错，提示没有定义
+    // 针对script-setup的编译宏的额外配置，此后可以不定义直接使用，不然的话eslint会报错，提示没有定义
     defineEmits: 'readonly',
     defineExpose: 'readonly',
     defineProps: 'readonly',

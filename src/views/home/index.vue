@@ -1,10 +1,11 @@
 
 <template>
-  <h1>home</h1>
+  <div class="datavisual-page">
+    首页大屏
+  </div>
 </template>
 <script setup lang="ts">
 </script>
 
 <style scoped>
-
 </style>
