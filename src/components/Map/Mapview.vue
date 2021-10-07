@@ -26,6 +26,7 @@
 import { loadModules } from 'esri-loader'
 import { onMounted, ref } from 'vue'
 import { useStore } from '@/store'
+import { options } from '@/utils/constans'
 const store = useStore()
 const viewModel = ref<string>('2D')
 const scaleBar = ref<HTMLDivElement>()
@@ -48,10 +49,7 @@ const _createMapView = async () => {
       'esri/widgets/ScaleBar',
       'esri/widgets/Zoom'
     ],
-    {
-      url: import.meta.env.VITE_MAP_JSPATH,
-      css: import.meta.env.VITE_MAP_CSSPATH
-    }
+    options
   )
 
   const basemap = new Basemap({
@@ -110,10 +108,7 @@ const _createSceneView = async () => {
 
   const [Map, SceneView, Basemap, TileLayer] = await loadModules(
     ['esri/Map', 'esri/views/SceneView', 'esri/Basemap', 'esri/layers/TileLayer'],
-    {
-      url: import.meta.env.VITE_MAP_JSPATH,
-      css: import.meta.env.VITE_MAP_CSSPATH
-    }
+    options
   )
   const basemap = new Basemap({
     baseLayers: [
@@ -132,7 +127,7 @@ const _createSceneView = async () => {
 
   const sceneView = new SceneView({
     container: 'mapview',
-    map: map
+    map
   })
 
   setTimeout(() => {
@@ -157,11 +152,15 @@ const handleViewChale = () => {
   }
 }
 onMounted(() => {
-  _createMapView()
+  handleViewChale()
 })
 </script>
 
 <style>
+.el-main{
+  margin: 0;
+  padding: 0;
+}
 .mapview-pannel,
 #mapview {
     position: relative;

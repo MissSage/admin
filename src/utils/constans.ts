@@ -1,6 +1,6 @@
 export const USER = 'USER'
 export const MENU = 'MENU'
 export const options = {
-  css: import.meta.env.VITE_MAP_CSSPATH,
-  url: import.meta.env.VITE_MAP_JSPATH
+  url: 'https://js.arcgis.com/4.18/init.js',
+  css: 'https://js.arcgis.com/4.18/esri/themes/light/main.css'
 }

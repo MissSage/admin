@@ -107,7 +107,6 @@ const store = useStore()
 const router = useRouter()
 
 const geoData = ref<GeoData[]>([])
-let graphicsLayer:any = null
 let measurementWidget:any = null
 let sketchViewModelGlobal:any = null
 let swipe:any = null
@@ -119,7 +118,7 @@ const _initSketchTool = async () => {
     ['esri/widgets/Sketch/SketchViewModel', 'esri/layers/GraphicsLayer'],
     options
   )
-  graphicsLayer = new GraphicsLayer({
+  const graphicsLayer = new GraphicsLayer({
     id: 'polygonGraphicLayer',
     elevationInfo: {
       mode: 'on-the-ground'
@@ -247,13 +246,13 @@ const initDIYMeasurement = async (type:string) => {
     ],
     options
   )
-  const graphicsLayerDiy = new GraphicsLayer({
+  const graphicsLayer = new GraphicsLayer({
     id: 'measurementGraphicLayer',
     elevationInfo: {
       mode: 'on-the-ground'
     }
   })
-  view.map.add(graphicsLayerDiy)
+  view.map.add(graphicsLayer)
 
   if (type === 'distance') {
     const polylineSymbol = {
@@ -354,7 +353,8 @@ const initSpaceQuery = async () => {
 
   const resultLayer = view.map.findLayerById('polygonGraphicLayer')
   if (resultLayer) view.map.remove(resultLayer)
-  graphicsLayer = new GraphicsLayer({
+
+  const graphicsLayer = new GraphicsLayer({
     id: 'polygonGraphicLayer',
     elevationInfo: {
       mode: 'on-the-ground'

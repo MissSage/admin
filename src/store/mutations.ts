@@ -1,7 +1,7 @@
 import { IMenu, IUserInfo } from '@/api/types/common'
+import { State } from '@/types/Store'
 import { MENU, USER } from '@/utils/constans'
 import { setItem } from '@/utils/storage'
-import { State } from '.'
 export const mutations = {
   setIsCollapse: (state:State, payload:boolean) => {
     state.isCollapse = payload
@@ -15,7 +15,7 @@ export const mutations = {
     state.menus = payload
     setItem(MENU, state.menus)
   },
-  _setDefaultMapView: (state:State, payload: string) => {
+  _setDefaultMapView: (state:State, payload: any) => {
     state._defaultMapView = payload
   },
   _setDefaultXZQHVisible: (state:State, payload: boolean) => {
@@ -27,7 +27,7 @@ export const mutations = {
   _setDefaultQueryResultVisible: (state:State, payload: boolean) => {
     state._defaultQueryResultVisible = payload
   },
-  _setDefaultQueryResult: (state:State, payload: never[]) => {
+  _setDefaultQueryResult: (state:State, payload: any[]) => {
     state._defaultQueryResult = payload
   }
 }

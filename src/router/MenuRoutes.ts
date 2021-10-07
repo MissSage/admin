@@ -6,6 +6,7 @@ export const routes:RouteRecordRaw[] = [
   {
     path: '/',
     component: AppLayout,
+    redirect: '/home',
     meta: {
       title: '控制台'
     },
