@@ -31,19 +31,12 @@ const filterMenus = (routes:RouteRecordRaw[]) => {
       icon: '',
       header: '',
       is_header: 0,
-      children: formateMenuChild(item)
+      children: item.children ? filterMenus(item.children || []) : undefined
     }
 
     return menu
   })
   return menus
-}
-const formateMenuChild = (item:RouteRecordRaw) => {
-  if (item.children && item.children.length > 0) {
-    return filterMenus(item.children)
-  } else {
-    return []
-  }
 }
 onMounted(() => {
   menus.value = filterMenus(routes)

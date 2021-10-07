@@ -26,25 +26,22 @@
       :name="menu.icon"
       color="rgba(255, 255, 255, 0.7)"
     />
-    <template #slot>
+    <template #title>
       <span>{{ menu.title }}</span>
     </template>
   </el-menu-item>
 </template>
 
 <script lang="ts" setup>
-import { ref } from '@vue/runtime-core'
 import type { PropType } from '@vue/runtime-core'
 import type { IMenu } from '@/api/types/common'
 
-const props = defineProps({
+defineProps({
   menu: {
     type: Object as PropType<IMenu>,
     required: true
   }
 })
-
-const menu = ref(props.menu)
 
 </script>
 
