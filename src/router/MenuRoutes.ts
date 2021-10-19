@@ -8,7 +8,8 @@ export const routes:RouteRecordRaw[] = [
     component: AppLayout,
     redirect: '/home',
     meta: {
-      title: '控制台'
+      title: '控制台',
+      icon: 'icon-dashboard'
     },
     children: [
       {
@@ -16,7 +17,8 @@ export const routes:RouteRecordRaw[] = [
         name: 'home',
         component: Home,
         meta: {
-          title: '首页'
+          title: '首页',
+          icon: 'icon-home'
         }
       },
       {
@@ -24,7 +26,8 @@ export const routes:RouteRecordRaw[] = [
         name: 'oneMap',
         component: () => import('@/views/oneMap/index.vue'),
         meta: {
-          title: '一张图'
+          title: '一张图',
+          icon: 'icon-earth'
         }
       }
     ]

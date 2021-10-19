@@ -7,9 +7,11 @@
       <app-icon
         v-if="menu.icon"
         :name="menu.icon"
+        :size="20"
         color="rgba(255, 255, 255, 0.7)"
+        class="menu-icon"
       />
-      <span>{{ menu.title }}</span>
+      <span class="sub-menu-title">{{ menu.title }}</span>
     </template>
     <MenuItem
       v-for="subMenu in menu.children"
@@ -25,6 +27,7 @@
       v-if="menu.icon"
       :name="menu.icon"
       color="rgba(255, 255, 255, 0.7)"
+      class="menu-icon"
     />
     <template #title>
       <span>{{ menu.title }}</span>
@@ -45,16 +48,11 @@ defineProps({
 
 </script>
 
-  <style lang="scss" scoped>
-  i.Ionicons {
-    margin-right: 12px;
-  }
-
-  .el-submenu .el-menu-item, .el-submenu :deep(.el-submenu) .el-submenu__title {
-    background-color: #1f2d3d !important;
-  }
-
-  .el-submenu .el-menu-item:hover, .el-submenu :deep(.el-submenu) .el-submenu__title:hover {
-    background-color: #001528 !important;
-  }
-  </style>
+<style lang="scss" scoped>
+.menu-icon {
+  margin-right: 12px;
+}
+.sub-menu-title {
+  font-size: 16px;
+}
+</style>

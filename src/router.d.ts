@@ -5,6 +5,8 @@ declare module 'vue-router' {
     interface RouteMeta {
         title?: String,
         // 要求登录?
-        requiresAuth?: boolean
+        requiresAuth?: boolean,
+        icon?: String,
+        iconLight?: string
     }
 }

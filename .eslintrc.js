@@ -12,7 +12,8 @@ module.exports = {
   },
   extends: [
     'plugin:vue/vue3-strongly-recommended',
-    'standard'
+    'standard',
+    'eslint:recommended'
   ],
   parserOptions: {
     ecmaVersion: 12,
@@ -24,7 +25,8 @@ module.exports = {
     '@typescript-eslint'
   ],
   rules: {
-    'vue/no-mutating-props': 'off'
+    'vue/no-mutating-props': 'off',
+    'vue/max-attributes-per-line': 1
   },
   overrides: [
     {

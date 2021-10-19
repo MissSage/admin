@@ -2,6 +2,12 @@
 <template>
   <div class="datavisual-page">
     首页大屏
+    <i
+      :class="[
+        'icon iconfont',
+        'iconhome'
+      ]"
+    />
   </div>
 </template>
 <script setup lang="ts">

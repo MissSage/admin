@@ -1,6 +1,3 @@
 export const USER = 'USER'
 export const MENU = 'MENU'
-export const options = {
-  url: 'https://js.arcgis.com/4.18/init.js',
-  css: 'https://js.arcgis.com/4.18/esri/themes/light/main.css'
-}
+export const streetServices = 'http://map.geoq.cn/arcgis/rest/services/ChinaOnlineStreetPurplishBlue/MapServer'

@@ -20,27 +20,27 @@ import AppMenu from './AppMenu/index.vue'
 </script>
 
 <style lang="scss" scoped>
-  .el-container {
-    height: 100vh;
-  }
-
-  .el-header {
-    background-color: #fff;
-    color: #333;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
+.el-container {
+  height: 100vh;
   .el-aside {
     width: auto;
-    background-color: #304156;
+    background-color: $bgColor;
     color: #333;
   }
+  .el-container {
+    .el-header {
+      background-color: #fff;
+      color: #333;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-  .el-main {
-    background-color: #E9EEF3;
-    color: #333;
+    .el-main {
+      background-color: #e9eef3;
+      color: #333;
+      padding: 0;
+    }
   }
-
+}
 </style>

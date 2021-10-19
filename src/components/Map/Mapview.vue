@@ -1,17 +1,20 @@
 <template>
   <div class="mapview-pannel">
-    <div id="mapview" />
     <div
-      id="basemapToggle"
+      ref="mapview"
+      class="mapview"
+    />
+    <div
       ref="basemapToggle"
+      class="basemapToggle"
     />
     <div
-      id="scaleBar"
       ref="scaleBar"
+      class="scaleBar"
     />
     <div
-      id="zoom"
       ref="zoom"
+      class="zoom"
     />
     <div
       class="view-change"
@@ -23,110 +26,104 @@
 </template>
 
 <script lang="ts" setup>
-import { loadModules } from 'esri-loader'
 import { onMounted, ref } from 'vue'
-import { useStore } from '@/store'
-import { options } from '@/utils/constans'
-const store = useStore()
-const viewModel = ref<string>('2D')
+// import { useStore } from '@/store'
+import { streetServices } from '@/utils/constans'
+import MapView from '@arcgis/core/views/MapView'
+import Map from '@arcgis/core/Map'
+import SceneView from '@arcgis/core/views/SceneView'
+import Basemap from '@arcgis/core/Basemap'
+import TileLayer from '@arcgis/core/layers/TileLayer'
+import BasemapToggle from '@arcgis/core/widgets/BasemapToggle'
+import Zoom from '@arcgis/core/widgets/Zoom'
+import ScaleBar from '@arcgis/core/widgets/ScaleBar'
+
+// const store = useStore()
+const viewModel = ref<string>('3D')
+
+// elements
+const mapview = ref<HTMLDivElement>()
 const scaleBar = ref<HTMLDivElement>()
 const zoom = ref<HTMLDivElement>()
 const basemapToggle = ref<HTMLDivElement>()
-let toggleMapBase:any = null
-let barScaleBase:any = null
-let zoomBase:any = null
-const _createMapView = async () => {
+let toggleIns: BasemapToggle
+let scaleIns: ScaleBar
+let zoomIns: Zoom
+
+const _createMapView = (el: HTMLDivElement) => {
+  viewModel.value = '2D'
   basemapToggle.value && (basemapToggle.value.innerHTML = '')
   scaleBar.value && (scaleBar.value.innerHTML = '')
   zoom.value && (zoom.value.innerHTML = '')
-  const [Map, MapView, Basemap, TileLayer, BasemapToggle, ScaleBar, Zoom] = await loadModules(
-    [
-      'esri/Map',
-      'esri/views/MapView',
-      'esri/Basemap',
-      'esri/layers/TileLayer',
-      'esri/widgets/BasemapToggle',
-      'esri/widgets/ScaleBar',
-      'esri/widgets/Zoom'
-    ],
-    options
-  )
-
-  const basemap = new Basemap({
-    baseLayers: [
-      new TileLayer({
-        url: 'http://map.geoq.cn/arcgis/rest/services/ChinaOnlineStreetPurplishBlue/MapServer',
-        title: 'Basemap'
-      })
-    ],
-    title: 'basemap',
-    id: 'basemap'
-  })
 
   const map = new Map({
-    basemap
+    basemap: new Basemap({
+      baseLayers: [
+        new TileLayer({
+          url: streetServices,
+          title: 'Basemap'
+        })
+      ],
+      title: 'basemap',
+      id: 'basemap'
+    })
   })
 
-  const mapView = new MapView({
-    container: 'mapview',
+  const mapViewIns = new MapView({
+    container: mapview.value,
     map: map,
     zoom: 10,
     center: [104.072745, 30.663774]
   })
 
   // 实例化底图切换控件
-  toggleMapBase = new BasemapToggle({
-    view: mapView,
+  toggleIns = new BasemapToggle({
+    view: mapViewIns,
     nextBasemap: 'hybrid',
-    container: 'basemapToggle'
+    container: basemapToggle.value
   })
-  mapView.ui.add(toggleMapBase)
+  mapViewIns.ui.add(toggleIns)
 
   // 实例化比例尺
-  barScaleBase = new ScaleBar({
-    view: mapView,
+  scaleIns = new ScaleBar({
+    view: mapViewIns,
     unit: 'metric',
-    container: 'scaleBar'
+    container: scaleBar.value
   })
-  mapView.ui.add(barScaleBase)
+  mapViewIns.ui.add(scaleIns)
 
   // 实例化缩放控件
-  zoomBase = new Zoom({
-    view: mapView,
-    container: 'zoom'
+  zoomIns = new Zoom({
+    view: mapViewIns,
+    container: zoom.value
   })
-  mapView.ui.add(zoomBase)
+  mapViewIns.ui.add(zoomIns)
 
-  mapView.ui.components = []
+  mapViewIns.ui.components = []
 
-  store.commit('_setDefaultMapView', mapView)
+  // store.commit('_setDefaultMapView', mapViewIns)
 }
-const _createSceneView = async () => {
+const _createSceneView = (el: HTMLDivElement) => {
+  viewModel.value = '3D'
   basemapToggle.value && (basemapToggle.value.innerHTML = '')
   scaleBar.value && (scaleBar.value.innerHTML = '')
   zoom.value && (zoom.value.innerHTML = '')
 
-  const [Map, SceneView, Basemap, TileLayer] = await loadModules(
-    ['esri/Map', 'esri/views/SceneView', 'esri/Basemap', 'esri/layers/TileLayer'],
-    options
-  )
-  const basemap = new Basemap({
-    baseLayers: [
-      new TileLayer({
-        url: 'http://map.geoq.cn/arcgis/rest/services/ChinaOnlineStreetPurplishBlue/MapServer',
-        title: 'Basemap'
-      })
-    ],
-    title: 'basemap',
-    id: 'basemap'
-  })
-
   const map = new Map({
-    basemap
+    basemap: new Basemap({
+      baseLayers: [
+        new TileLayer({
+          url: streetServices,
+          title: 'Basemap'
+        })
+      ],
+      title: 'basemap',
+      id: 'basemap'
+    })
   })
 
   const sceneView = new SceneView({
-    container: 'mapview',
+    container: el,
     map
   })
 
@@ -135,20 +132,19 @@ const _createSceneView = async () => {
       zoom: 10,
       center: [104.072745, 30.663774]
     })
-  }, 3000)
+  }, 0)
 
   sceneView.ui.components = []
 
-  store.commit('_setDefaultMapView', sceneView)
+  // store.commit('_setDefaultMapView', sceneView)
 }
 // 二三维切换
 const handleViewChale = () => {
-  if (viewModel.value === '3D') {
-    _createSceneView()
-    viewModel.value = '2D'
-  } else {
-    _createMapView()
-    viewModel.value = '3D'
+  if (mapview.value) {
+    mapview.value.innerHTML = ''
+    viewModel.value === '3D'
+      ? _createMapView(mapview.value)
+      : _createSceneView(mapview.value)
   }
 }
 onMounted(() => {
@@ -156,33 +152,32 @@ onMounted(() => {
 })
 </script>
 
-<style>
-.el-main{
-  margin: 0;
-  padding: 0;
-}
-.mapview-pannel,
-#mapview {
+<style scoped lang="scss">
+.mapview-pannel {
+  width: 100%;
+  height: 100%;
+  .mapview {
     position: relative;
     width: 100%;
     height: 100%;
-}
-#basemapToggle {
+  }
+  .basemapToggle {
     position: absolute;
     right: 15px;
     bottom: 15px;
-}
-#scaleBar {
+  }
+  .scaleBar {
     position: absolute;
     left: 15px;
     bottom: 15px;
-}
-#zoom {
+    color: $color;
+  }
+  .zoom {
     position: absolute;
     right: 15px;
     bottom: 100px;
-}
-.view-change {
+  }
+  .view-change {
     position: absolute;
     width: 32px;
     height: 32px;
@@ -191,8 +186,9 @@ onMounted(() => {
     background-color: #fff;
     cursor: pointer;
     text-align: center;
-}
-.view-change span {
+  }
+  .view-change span {
     line-height: 32px;
+  }
 }
 </style>

@@ -28,7 +28,8 @@ const filterMenus = (routes:RouteRecordRaw[]) => {
     const menu:IMenu = {
       path: item.path,
       title: item.meta?.title as string,
-      icon: '',
+      icon: item.meta?.icon as string,
+      iconLight: item.meta?.iconLight as String,
       header: '',
       is_header: 0,
       children: item.children ? filterMenus(item.children || []) : undefined

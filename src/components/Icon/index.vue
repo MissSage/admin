@@ -1,8 +1,8 @@
 <template>
   <i
     :class="[
-      'Ionicons',
-      `ion-${props.name}`
+      'icon iconfont',
+      `${props.name}`
     ]"
     :style="styles"
   />
