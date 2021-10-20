@@ -98,10 +98,25 @@
 import { useStore } from '@/store'
 import { GeoData } from '@/types/Map'
 import { ElMessage } from 'element-plus'
-import { loadModules } from 'esri-loader'
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { options } from '@/utils/constans'
+import { GeometryServer, PrintingServer } from '@/utils/constans'
+import DistanceMeasurement2D from '@arcgis/core/widgets/DistanceMeasurement2D'
+import AreaMeasurement2D from '@arcgis/core/widgets/AreaMeasurement2D'
+import SketchViewModel from '@arcgis/core/widgets/Sketch/SketchViewModel'
+import Graphic from '@arcgis/core/Graphic'
+import GraphicsLayer from '@arcgis/core/layers/GraphicsLayer'
+import GeometryService from '@arcgis/core/tasks/GeometryService'
+import LengthsParameters from '@arcgis/core/tasks/support/LengthsParameters'
+import AreasAndLengthsParameters from '@arcgis/core/tasks/support/AreasAndLengthsParameters'
+import FeatureLayer from '@arcgis/core/layers/FeatureLayer'
+import { SimpleRenderer } from '@arcgis/core/renderers'
+import { PictureMarkerSymbol } from '@arcgis/core/symbols'
+import Collection from '@arcgis/core/core/Collection'
+import Swipe from '@arcgis/core/widgets/Swipe'
+import PrintTask from '@arcgis/core/tasks/PrintTask'
+import PrintTemplate from '@arcgis/core/tasks/support/PrintTemplate'
+import PrintParameters from '@arcgis/core/tasks/support/PrintParameters'
 // import config from './config'
 const store = useStore()
 const router = useRouter()
@@ -114,10 +129,6 @@ let swipe:any = null
 const _initSketchTool = async () => {
   const view = store.getters._getDefaultMapView
   // 1、绘制面状区域
-  const [SketchViewModel, GraphicsLayer] = await loadModules(
-    ['esri/widgets/Sketch/SketchViewModel', 'esri/layers/GraphicsLayer'],
-    options
-  )
   const graphicsLayer = new GraphicsLayer({
     id: 'polygonGraphicLayer',
     elevationInfo: {
@@ -126,20 +137,19 @@ const _initSketchTool = async () => {
   })
   view.map.add(graphicsLayer)
 
-  const polygonSymbol = {
-    type: 'simple-fill',
-    color: 'rgba(216,30,6, 0.4)',
-    style: 'solid',
-    outline: {
-      color: '#d81e06',
-      width: 1
-    }
-  }
   sketchViewModelGlobal = new SketchViewModel({
     updateOnGraphicClick: false,
     view,
     layer: graphicsLayer,
-    polygonSymbol
+    polygonSymbol: {
+      type: 'simple-fill',
+      color: 'rgba(216,30,6, 0.4)',
+      style: 'solid',
+      outline: {
+        color: '#d81e06',
+        width: 1
+      }
+    }
   })
 }
 const handleMapToolsitemClick = (e:any) => {
@@ -202,11 +212,6 @@ const openMapTreePannel = () => {
 // 地图距离量算
 const initDistanceMap = async () => {
   const view = store.getters._getDefaultMapView
-  const [DistanceMeasurement2D] = await loadModules([
-    'esri/widgets/DistanceMeasurement2D'
-  ],
-  options
-  )
   if (measurementWidget) measurementWidget.destroy()
   measurementWidget = new DistanceMeasurement2D({
     view: view
@@ -216,7 +221,6 @@ const initDistanceMap = async () => {
 // 地图面积量算
 const initAreaMap = async () => {
   const view = store.getters._getDefaultMapView
-  const [AreaMeasurement2D] = await loadModules(['esri/widgets/AreaMeasurement2D'], options)
   if (measurementWidget) measurementWidget.destroy()
   measurementWidget = new AreaMeasurement2D({
     view
@@ -228,24 +232,6 @@ const initDIYMeasurement = async (type:string) => {
   const view = store.getters._getDefaultMapView
   const resultLayer = view.map.findLayerById('measurementGraphicLayer')
   if (resultLayer) view.map.remove(resultLayer)
-  const [
-    SketchViewModel,
-    Graphic,
-    GraphicsLayer,
-    GeometryService,
-    LengthsParameters,
-    AreasAndLengthsParameters
-  ] = await loadModules(
-    [
-      'esri/widgets/Sketch/SketchViewModel',
-      'esri/Graphic',
-      'esri/layers/GraphicsLayer',
-      'esri/tasks/GeometryService',
-      'esri/tasks/support/LengthsParameters',
-      'esri/tasks/support/AreasAndLengthsParameters'
-    ],
-    options
-  )
   const graphicsLayer = new GraphicsLayer({
     id: 'measurementGraphicLayer',
     elevationInfo: {
@@ -255,35 +241,40 @@ const initDIYMeasurement = async (type:string) => {
   view.map.add(graphicsLayer)
 
   if (type === 'distance') {
-    const polylineSymbol = {
-      type: 'simple-line',
-      color: '#d81e06',
-      width: '2',
-      style: 'solid'
-    }
     const sketchViewModelDiy = new SketchViewModel({
       updateOnGraphicClick: false,
       view: view,
       layer: graphicsLayer,
-      polylineSymbol
+      polylineSymbol: {
+        type: 'simple-line',
+        color: '#d81e06',
+        width: '2',
+        style: 'solid'
+      }
     })
     sketchViewModelDiy.create('polyline')
 
-    sketchViewModelDiy.on('create-complete', function (event:any) {
+    // sketchViewModelDiy.on('create-complete', function (event:any) {
+    //   const graphic = new Graphic({
+    //     geometry: event.geometry,
+    //     symbol: sketchViewModelDiy.graphic.symbol
+    //   })
+    //   graphicsLayer.add(graphic)
+    // })
+    sketchViewModelDiy.on('create', function (event:any) {
       const graphic = new Graphic({
         geometry: event.geometry,
-        symbol: sketchViewModelDiy.graphic.symbol
+        symbol: sketchViewModelDiy.createGraphic.symbol
       })
       graphicsLayer.add(graphic)
-    })
-    sketchViewModelDiy.on('create', function (event:any) {
+
       if (event.state === 'complete') {
         console.log(graphicsLayer)
         console.log(event)
 
         // 获取线段长度
         const geometryService = new GeometryService({
-          url: 'http://sampleserver6.arcgisonline.com/arcgis/rest/services/Utilities/Geometry/GeometryServer'
+          url: GeometryServer
         })
 
         const lengthsParameters = new LengthsParameters()
@@ -297,38 +288,35 @@ const initDIYMeasurement = async (type:string) => {
       }
     })
   } else if (type === 'area') {
-    const polygonSymbol = {
-      type: 'simple-fill',
-      color: 'rgba(216,30,6, 0.4)',
-      style: 'solid',
-      outline: {
-        color: '#d81e06',
-        width: 1
-      }
-    }
     const sketchViewModelArea = new SketchViewModel({
       updateOnGraphicClick: false,
       view: view,
       layer: graphicsLayer,
-      polygonSymbol
+      polygonSymbol: {
+        type: 'simple-fill',
+        color: 'rgba(216,30,6, 0.4)',
+        style: 'solid',
+        outline: {
+          color: '#d81e06',
+          width: 1
+        }
+      }
     })
     sketchViewModelArea.create('polygon')
 
-    sketchViewModelArea.on('create-complete', function (event:any) {
+    sketchViewModelArea.on('create', function (event:any) {
       const graphic = new Graphic({
         geometry: event.geometry,
-        symbol: sketchViewModelArea.graphic.symbol
+        symbol: sketchViewModelArea.createGraphic.symbol
       })
       graphicsLayer.add(graphic)
-    })
-    sketchViewModelArea.on('create', function (event:any) {
       if (event.state === 'complete') {
         console.log(graphicsLayer)
         console.log(event)
 
         // 获取周长和面积
         const geometryService = new GeometryService({
-          url: 'http://sampleserver6.arcgisonline.com/arcgis/rest/services/Utilities/Geometry/GeometryServer'
+          url: GeometryServer
         })
 
         const areasAndLengthsParameters = new AreasAndLengthsParameters()
@@ -346,10 +334,6 @@ const initDIYMeasurement = async (type:string) => {
 // 初始化空间查询
 const initSpaceQuery = async () => {
   const view = store.getters._getDefaultMapView
-  const [Graphic, GraphicsLayer] = await loadModules(
-    ['esri/Graphic', 'esri/layers/GraphicsLayer'],
-    options
-  )
 
   const resultLayer = view.map.findLayerById('polygonGraphicLayer')
   if (resultLayer) view.map.remove(resultLayer)
@@ -425,7 +409,6 @@ const handleSpaceQuery = (graphic:any) => {
 }
 const renderResultLayer = async (resultFeatures:any) => {
   const view = store.getters._getDefaultMapView
-  const [FeatureLayer] = await loadModules(['esri/layers/FeatureLayer'], options)
 
   const resultLayer = view.map.findLayerById('initResultLayer')
   if (resultLayer) view.map.remove(resultLayer)
@@ -459,18 +442,20 @@ const renderResultLayer = async (resultFeatures:any) => {
     ]
   }
   const queryResultLayer = new FeatureLayer({
-    source: resultData,
+    source: new Collection<Graphic>({
+      ...resultData
+    }),
     id: 'initResultLayer',
     objectIdField: 'ObjectID',
-    renderer: {
-      type: 'simple', // autocasts as new SimpleRenderer()
-      symbol: {
+    renderer: new SimpleRenderer({
+      // type: 's', // autocasts as new SimpleRenderer()
+      symbol: new PictureMarkerSymbol({
         type: 'picture-marker', // autocasts as new PictureMarkerSymbol()
         url: 'static/icon/train.png',
         width: '32px',
         height: '32px'
-      }
-    },
+      })
+    }),
     fields: [
       {
         name: 'OBJECTID',
@@ -524,7 +509,6 @@ const _translateLonLat = (data:any) => {
 // 卷帘分析
 const _initSwipe = async () => {
   const view = store.getters._getDefaultMapView
-  const [Swipe] = await loadModules(['esri/widgets/Swipe'], options)
   const topLayer = view.map.findLayerById('swipeLayerTop')
   const bottomLayer = view.map.findLayerById('swipeLayerBottom')
   if (topLayer && bottomLayer) {
@@ -543,12 +527,8 @@ const _initSwipe = async () => {
 // 地图打印
 const handlePrintMap = async () => {
   const view = store.getters._getDefaultMapView
-  const [PrintTask, PrintTemplate, PrintParameters] = await loadModules(
-    ['esri/tasks/PrintTask', 'esri/tasks/support/PrintTemplate', 'esri/tasks/support/PrintParameters'],
-    options
-  )
   const printTask = new PrintTask({
-    url: 'https://utility.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task'
+    url: PrintingServer
   })
 
   const template = new PrintTemplate({
@@ -569,11 +549,12 @@ const handlePrintMap = async () => {
     template: template
   })
 
-  printTask.execute(params).then((printResult:any, printError:any) => {
-    console.log(printResult, printError)
+  printTask.execute(params).then((printResult:any) => {
     if (printResult.url) window.open(printResult.url)
-    if (printError) ElMessage.error('地图打印失败')
   })
+    .catch((printError) => {
+      if (printError) ElMessage.error('地图打印失败')
+    })
 }
 // 开启图层弹窗
 const openMapPopup = () => {
@@ -581,7 +562,7 @@ const openMapPopup = () => {
   const resultLayer = view.map.findLayerById('layerid')
   if (resultLayer) {
     // Get the screen point from the view's click event
-    view.on('click', function (event:any) {
+    view.on('click', function (event:MouseEvent) {
       view.hitTest(event).then(function (response:any) {
         if (response.results.length) {
           const graphic = response.results.filter(function (result:any) {

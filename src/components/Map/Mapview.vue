@@ -27,19 +27,19 @@
 
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
-// import { useStore } from '@/store'
+import { useStore } from '@/store'
 import { streetServices } from '@/utils/constans'
 import MapView from '@arcgis/core/views/MapView'
-import Map from '@arcgis/core/Map'
 import SceneView from '@arcgis/core/views/SceneView'
+import Map from '@arcgis/core/Map'
 import Basemap from '@arcgis/core/Basemap'
 import TileLayer from '@arcgis/core/layers/TileLayer'
 import BasemapToggle from '@arcgis/core/widgets/BasemapToggle'
 import Zoom from '@arcgis/core/widgets/Zoom'
 import ScaleBar from '@arcgis/core/widgets/ScaleBar'
 
-// const store = useStore()
-const viewModel = ref<string>('3D')
+const store = useStore()
+const viewModel = ref<string>('2D')
 
 // elements
 const mapview = ref<HTMLDivElement>()
@@ -50,7 +50,7 @@ let toggleIns: BasemapToggle
 let scaleIns: ScaleBar
 let zoomIns: Zoom
 
-const _createMapView = (el: HTMLDivElement) => {
+const _createMapView = () => {
   viewModel.value = '2D'
   basemapToggle.value && (basemapToggle.value.innerHTML = '')
   scaleBar.value && (scaleBar.value.innerHTML = '')
@@ -101,9 +101,9 @@ const _createMapView = (el: HTMLDivElement) => {
 
   mapViewIns.ui.components = []
 
-  // store.commit('_setDefaultMapView', mapViewIns)
+  store.commit('_setDefaultMapView', { viewMode: '2D', view: mapViewIns })
 }
-const _createSceneView = (el: HTMLDivElement) => {
+const _createSceneView = () => {
   viewModel.value = '3D'
   basemapToggle.value && (basemapToggle.value.innerHTML = '')
   scaleBar.value && (scaleBar.value.innerHTML = '')
@@ -123,7 +123,7 @@ const _createSceneView = (el: HTMLDivElement) => {
   })
 
   const sceneView = new SceneView({
-    container: el,
+    container: mapview.value,
     map
   })
 
@@ -132,23 +132,25 @@ const _createSceneView = (el: HTMLDivElement) => {
       zoom: 10,
       center: [104.072745, 30.663774]
     })
-  }, 0)
+  }, 500)
 
   sceneView.ui.components = []
 
-  // store.commit('_setDefaultMapView', sceneView)
+  store.commit('_setDefaultSceneView', { viewMode: '3D', view: sceneView })
 }
 // 二三维切换
 const handleViewChale = () => {
   if (mapview.value) {
     mapview.value.innerHTML = ''
     viewModel.value === '3D'
-      ? _createMapView(mapview.value)
-      : _createSceneView(mapview.value)
+      ? _createMapView()
+      : _createSceneView()
   }
 }
 onMounted(() => {
-  handleViewChale()
+  if (mapview.value) {
+    _createMapView()
+  }
 })
 </script>
 

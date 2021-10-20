@@ -13,6 +13,11 @@ export default defineConfig({
     }
   },
   envDir: 'root/env',
+  server: {
+    port: 3456,
+    host: '0.0.0.0',
+    cors: true
+  },
   css: {
     preprocessorOptions: {
       scss: {

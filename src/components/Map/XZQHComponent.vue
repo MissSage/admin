@@ -58,13 +58,15 @@
 </template>
 
 <script setup lang="ts">
-import { loadModules } from 'esri-loader'
-import { options } from '@/utils/constans'
 import { onMounted, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { useStore } from '@/store'
+import QueryTask from '@arcgis/core/tasks/QueryTask'
+import Query from '@arcgis/core/tasks/support/Query'
+import { XZQHCityWebMokatuoServices, XZQHCountyWebMokatuoServices, XZQHProvinceWebMokatuoServices } from '@/utils/constans'
+import Graphic from '@arcgis/core/Graphic'
 const store = useStore()
-let graphic = ''
+let graphic:Graphic
 const provinceOptions = ref<any[]>([])
 const provinceValue = ref<string>('')
 const cityAndCountyOptions = ref<any[]>([])
@@ -73,12 +75,8 @@ onMounted(() => {
 })
 // 获取行政区划 省份数据
 const getProvinceData = async () => {
-  const [QueryTask, Query] = await loadModules(
-    ['esri/tasks/QueryTask', 'esri/tasks/support/Query'],
-    options
-  )
   const queryTask = new QueryTask({
-    url: 'https://services3.arcgis.com/U26uBjSD32d7xvm2/arcgis/rest/services/XZQHProvince_WebMokatuo/FeatureServer/0'
+    url: XZQHProvinceWebMokatuoServices
   })
   const query = new Query()
   query.returnGeometry = false
@@ -107,12 +105,8 @@ const getProvinceData = async () => {
 // }
 const getCityAndCountyData = async (value:any) => {
   const provinceCode = value.toString().substring(0, 2)
-  const [QueryTask, Query] = await loadModules(
-    ['esri/tasks/QueryTask', 'esri/tasks/support/Query'],
-    options
-  )
   const queryTask = new QueryTask({
-    url: 'https://services3.arcgis.com/U26uBjSD32d7xvm2/arcgis/rest/services/XZQHCity_WebMokatuo/FeatureServer/0'
+    url: XZQHCityWebMokatuoServices
   })
   const query = new Query()
   query.returnGeometry = false
@@ -134,7 +128,7 @@ const getCityAndCountyData = async (value:any) => {
       currentCityData.map(async (item2) => {
         const cityCode = item2.value.toString().substring(0, 4)
         const queryTask2 = new QueryTask({
-          url: 'https://services3.arcgis.com/U26uBjSD32d7xvm2/arcgis/rest/services/XZQHCounty_WebMokatuo/FeatureServer/0'
+          url: XZQHCountyWebMokatuoServices
         })
         const query2 = new Query()
         query2.returnGeometry = false
@@ -159,17 +153,11 @@ const handleItemClick = async (val:any, type:any) => {
   const view = store.getters._getDefaultMapView
   if (type === 'city') {
     code = val.toString().substring(0, 4)
-    serverUrl =
-                    'https://services3.arcgis.com/U26uBjSD32d7xvm2/arcgis/rest/services/XZQHCity_WebMokatuo/FeatureServer/0'
+    serverUrl = XZQHCityWebMokatuoServices
   } else if (type === 'county') {
     code = val.toString().substring(0, 6)
-    serverUrl =
-                    'https://services3.arcgis.com/U26uBjSD32d7xvm2/arcgis/rest/services/XZQHCounty_WebMokatuo/FeatureServer/0'
+    serverUrl = XZQHCountyWebMokatuoServices
   }
-  const [QueryTask, Query, Graphic] = await loadModules(
-    ['esri/tasks/QueryTask', 'esri/tasks/support/Query', 'esri/Graphic'],
-    options
-  )
   const queryTask = new QueryTask({
     url: serverUrl
   })

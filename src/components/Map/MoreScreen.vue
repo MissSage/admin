@@ -24,22 +24,21 @@
 </template>
 
 <script lang="ts" setup>
-import { loadModules } from 'esri-loader'
-import { options } from '@/utils/constans'
 import { onMounted } from 'vue'
+import Map from '@arcgis/core/Map'
+import MapView from '@arcgis/core/views/MapView'
+import Basemap from '@arcgis/core/Basemap'
+import TileLayer from '@arcgis/core/layers/TileLayer'
+import watchUtils from '@arcgis/core/core/watchUtils'
+import { streetServices } from '@/utils/constans'
 onMounted(() => {
   _initMap()
 })
-const _initMap = async () => {
-  const [Map, MapView, Basemap, TileLayer, watchUtils] = await loadModules(
-    ['esri/Map', 'esri/views/MapView', 'esri/Basemap', 'esri/layers/TileLayer', 'esri/core/watchUtils'],
-    options
-  )
-
+const _initMap = () => {
   const basemap = new Basemap({
     baseLayers: [
       new TileLayer({
-        url: 'http://map.geoq.cn/arcgis/rest/services/ChinaOnlineStreetPurplishBlue/MapServer',
+        url: streetServices,
         title: 'Basemap'
       })
     ],
@@ -94,7 +93,7 @@ const _initMap = async () => {
 
   // 地图联动
   watchUtils.whenTrue(mapView01, 'stationary', function () {
-    // Get the new center of the view only when view is stationary.
+  // Get the new center of the view only when view is stationary.
     if (mapView01.center) {
       mapView02.goTo({
         center: [mapView01.center.longitude, mapView01.center.latitude],
