@@ -62,7 +62,7 @@ import { onMounted, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { useStore } from '@/store'
 import QueryTask from '@arcgis/core/tasks/QueryTask'
-import Query from '@arcgis/core/tasks/support/Query'
+import Query from '@arcgis/core/rest/support/Query'
 import { XZQHCityWebMokatuoServices, XZQHCountyWebMokatuoServices, XZQHProvinceWebMokatuoServices } from '@/utils/constans'
 import Graphic from '@arcgis/core/Graphic'
 const store = useStore()

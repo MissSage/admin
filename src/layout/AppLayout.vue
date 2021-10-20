@@ -1,7 +1,9 @@
 <template>
   <el-container>
     <el-aside>
-      <AppMenu />
+      <el-scrollbar>
+        <AppMenu />
+      </el-scrollbar>
     </el-aside>
     <el-container>
       <el-header>
@@ -40,6 +42,8 @@ import AppMenu from './AppMenu/index.vue'
       background-color: #e9eef3;
       color: #333;
       padding: 0;
+      width: 100%;
+      height: 100%;
     }
   }
 }

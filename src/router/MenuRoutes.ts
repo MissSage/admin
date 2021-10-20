@@ -29,6 +29,10 @@ export const routes:RouteRecordRaw[] = [
           title: '一张图',
           icon: 'icon-earth'
         }
+      },
+      {
+        path: '/onemap/one',
+        component: () => import('@/components/Map/MoreScreen.vue')
       }
     ]
   }

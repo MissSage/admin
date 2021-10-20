@@ -101,7 +101,8 @@ const _createMapView = () => {
 
   mapViewIns.ui.components = []
 
-  store.commit('_setDefaultMapView', { viewMode: '2D', view: mapViewIns })
+  store.commit('_setDefaultMapView', mapViewIns)
+  // store.commit('_setViewMode', '2D')
 }
 const _createSceneView = () => {
   viewModel.value = '3D'
@@ -136,7 +137,8 @@ const _createSceneView = () => {
 
   sceneView.ui.components = []
 
-  store.commit('_setDefaultSceneView', { viewMode: '3D', view: sceneView })
+  store.commit('_setDefaultSceneView', sceneView)
+  // store.commit('_setViewMode', '3D')
 }
 // 二三维切换
 const handleViewChale = () => {

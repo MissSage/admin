@@ -17,23 +17,16 @@ export const mutations = {
     state.menus = payload
     setItem(MENU, state.menus)
   },
-  _setDefaultMapView: (state:State, payload: {viewMode:'2D', View:MapView}) => {
-    if (payload.viewMode === '2D') {
-      state._defaultMapView = payload.View || null
-      state._defaultSceneView = null
-      state._viewMode = '2D'
-    } else {
-      console.log(`2D模式不不能保存不能保存${payload.viewMode}的内容`)
-    }
+  _setViewMode: (state: State, payload: '2D'|'3D') => {
+    state._viewMode = payload
   },
-  _setDefaultSceneView: (state:State, payload: {viewMode:'2D'|'3D', View:SceneView}) => {
-    if (payload.viewMode === '2D') {
-      state._defaultSceneView = payload.View as SceneView|null
-      state._defaultMapView = null
-      state._viewMode = '3D'
-    } else {
-      console.log(`3D模式不不能保存不能保存${payload.viewMode}的内容`)
-    }
+  _setDefaultMapView: (state:State, payload: MapView) => {
+    state._defaultMapView = payload as MapView
+    state._defaultSceneView = null
+  },
+  _setDefaultSceneView: (state:State, payload: SceneView) => {
+    state._defaultSceneView = payload as SceneView
+    state._defaultMapView = null
   },
   _setDefaultXZQHVisible: (state:State, payload: boolean) => {
     state._defaultXZQHVisible = payload

@@ -29,7 +29,7 @@ import Map from '@arcgis/core/Map'
 import MapView from '@arcgis/core/views/MapView'
 import Basemap from '@arcgis/core/Basemap'
 import TileLayer from '@arcgis/core/layers/TileLayer'
-import watchUtils from '@arcgis/core/core/watchUtils'
+import { whenTrue } from '@arcgis/core/core/watchUtils'
 import { streetServices } from '@/utils/constans'
 onMounted(() => {
   _initMap()
@@ -92,7 +92,7 @@ const _initMap = () => {
   mapView04.ui.components = []
 
   // 地图联动
-  watchUtils.whenTrue(mapView01, 'stationary', function () {
+  whenTrue(mapView01, 'stationary', function () {
   // Get the new center of the view only when view is stationary.
     if (mapView01.center) {
       mapView02.goTo({

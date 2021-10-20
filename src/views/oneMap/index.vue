@@ -1,7 +1,7 @@
 <template>
   <div class="onemap-page">
     <Mapview />
-    <MapTools /> -->
+    <MapTools />
     <MapTree />
     <XZQHComponent />
     <ResultTable />

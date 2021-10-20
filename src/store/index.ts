@@ -21,6 +21,7 @@ export const state:State = {
 // export type State = typeof state
 export const key:InjectionKey<Store<State>> = Symbol('store')
 export const store = createStore<State>({
+  strict: true,
   state,
   getters,
   mutations
