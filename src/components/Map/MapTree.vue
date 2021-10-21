@@ -110,6 +110,19 @@ const data = ref<
           'https://services3.arcgis.com/U26uBjSD32d7xvm2/arcgis/rest/services/XZQHCity_WebMokatuo/FeatureServer'
       }
     ]
+  },
+  {
+    label: 'TileLayers',
+    children: [
+      {
+        label: '管线',
+        layerid: 'swipeLayerBottom',
+        layerurl:
+          // 'https://services3.arcgis.com/U26uBjSD32d7xvm2/arcgis/rest/services/XZQHCity_WebMokatuo/FeatureServer'
+          'http://192.168.2.103:6080/arcgis/rest/services/deyang/PIPE_QY_DEYANG/MapServer'
+      }
+    ]
+
   }
 ])
 const defaultProps = ref<{
