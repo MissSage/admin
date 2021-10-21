@@ -19,15 +19,18 @@
 </template>
 
 <script lang="ts" setup>
-import { getCurrentInstance, ref } from 'vue'
 import { useStore } from '@/store'
-import TileLayer from '@arcgis/core/layers/TileLayer'
-import FeatureLayer from '@arcgis/core/layers/FeatureLayer'
-import Layer from '@arcgis/core/layers/Layer'
-// import MapView from '@arcgis/core/views/MapView'
-import useGlobal from '@/composables/useGlobal'
+import useLayerControl from '@/composables/useLayers/useLayerControl'
 import { StreetGrayServices, StreetPurplishBlueServices, StreetWarmServices } from '@/utils/constans'
+import { getCurrentInstance, ref } from 'vue'
 const store = useStore()
+const defaultProps = ref<{
+  children: string;
+  label: string;
+}>({
+  children: 'children',
+  label: 'label'
+})
 const data = ref<
   {
     label: string;
@@ -112,53 +115,17 @@ const data = ref<
     ]
   },
   {
-    label: 'TileLayers',
+    label: 'Pipe',
     children: [
       {
         label: '管线',
-        layerid: 'swipeLayerBottom',
-        layerurl:
-          // 'https://services3.arcgis.com/U26uBjSD32d7xvm2/arcgis/rest/services/XZQHCity_WebMokatuo/FeatureServer'
-          'http://192.168.2.103:6080/arcgis/rest/services/deyang/PIPE_QY_DEYANG/MapServer'
+        layerid: 'pipeLayer',
+        layerurl: 'http://192.168.2.103:6080/arcgis/rest/services/deyang/PIPE_QY_DEYANG/MapServer'
       }
     ]
-
   }
 ])
-const defaultProps = ref<{
-  children: string;
-  label: string;
-}>({
-  children: 'children',
-  label: 'label'
-})
-
-const handleNodeClick = async (data: any) => {
-  const { $map } = useGlobal(getCurrentInstance())
-  if (data.layerurl) {
-    // 删除已添加的图层
-    // const view = store.getters._getDefaultMapView as MapView
-    const resultLayer = $map.findLayerById('layerid')
-    if (resultLayer) $map.remove(resultLayer)
-
-    // 处理不同服务类型
-    const c = data.layerurl.split('/')
-    const serverType = c[c.length - 1]
-    let layer:FeatureLayer|TileLayer|null
-    switch (serverType) {
-      case 'MapServer':
-        layer = new TileLayer({ url: data.layerurl, id: data.layerid })
-        break
-      case 'FeatureServer':
-        layer = new FeatureLayer({ url: data.layerurl, id: data.layerid })
-        break
-      default:
-        layer = null
-        break
-    }
-    $map.add(layer as Layer)
-  }
-}
+const { handleNodeClick } = useLayerControl(getCurrentInstance())
 const closeMapTreePannel = () => {
   const currentVisible = store.getters._getDefaultMapTreeVisible
   store.commit('_setDefaultMapTreeVisible', !currentVisible)

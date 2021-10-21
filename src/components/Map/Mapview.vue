@@ -26,7 +26,7 @@
 </template>
 
 <script lang="ts" setup>
-import { getCurrentInstance, nextTick, onMounted, ref } from 'vue'
+import { getCurrentInstance, onMounted, ref } from 'vue'
 import { StreetPurplishBlueServices } from '@/utils/constans'
 import MapView from '@arcgis/core/views/MapView'
 import SceneView from '@arcgis/core/views/SceneView'
@@ -37,7 +37,6 @@ import BasemapToggle from '@arcgis/core/widgets/BasemapToggle'
 import Zoom from '@arcgis/core/widgets/Zoom'
 import ScaleBar from '@arcgis/core/widgets/ScaleBar'
 import useGlobal from '@/composables/useGlobal'
-import useLayers2D from '@/composables/useLayers/useLayers2D'
 const { $setMap, $setUI, $setView } = useGlobal(getCurrentInstance())
 const viewModel = ref<string>('2D')
 
@@ -50,7 +49,6 @@ let toggleIns: BasemapToggle
 let scaleIns: ScaleBar
 let zoomIns: Zoom
 
-const { addToMap } = useLayers2D(getCurrentInstance())
 const _createMapView = () => {
   viewModel.value = '2D'
   basemapToggle.value && (basemapToggle.value.innerHTML = '')
@@ -150,9 +148,6 @@ const handleViewChale = () => {
 onMounted(() => {
   if (mapview.value) {
     _createMapView()
-    nextTick(() => {
-      addToMap()
-    })
   }
 })
 </script>
