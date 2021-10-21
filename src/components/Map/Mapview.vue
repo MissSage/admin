@@ -27,8 +27,8 @@
 
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
-import { useStore } from '@/store'
-import { streetServices } from '@/utils/constans'
+// import { useStore } from '@/store'
+import { StreetPurplishBlueServices } from '@/utils/constans'
 import MapView from '@arcgis/core/views/MapView'
 import SceneView from '@arcgis/core/views/SceneView'
 import Map from '@arcgis/core/Map'
@@ -37,8 +37,9 @@ import TileLayer from '@arcgis/core/layers/TileLayer'
 import BasemapToggle from '@arcgis/core/widgets/BasemapToggle'
 import Zoom from '@arcgis/core/widgets/Zoom'
 import ScaleBar from '@arcgis/core/widgets/ScaleBar'
-
-const store = useStore()
+import useGlobal from '@/composables/useGlobal'
+// const store = useStore()
+const { Global } = useGlobal()
 const viewModel = ref<string>('2D')
 
 // elements
@@ -60,7 +61,7 @@ const _createMapView = () => {
     basemap: new Basemap({
       baseLayers: [
         new TileLayer({
-          url: streetServices,
+          url: StreetPurplishBlueServices,
           title: 'Basemap'
         })
       ],
@@ -100,8 +101,8 @@ const _createMapView = () => {
   mapViewIns.ui.add(zoomIns)
 
   mapViewIns.ui.components = []
-
-  store.commit('_setDefaultMapView', mapViewIns)
+  Global.$view = mapViewIns
+  // store.commit('_setDefaultMapView', mapViewIns)
   // store.commit('_setViewMode', '2D')
 }
 const _createSceneView = () => {
@@ -114,7 +115,7 @@ const _createSceneView = () => {
     basemap: new Basemap({
       baseLayers: [
         new TileLayer({
-          url: streetServices,
+          url: StreetPurplishBlueServices,
           title: 'Basemap'
         })
       ],
@@ -136,8 +137,8 @@ const _createSceneView = () => {
   }, 500)
 
   sceneView.ui.components = []
-
-  store.commit('_setDefaultSceneView', sceneView)
+  Global.$view = sceneView
+  // store.commit('_setDefaultSceneView', sceneView)
   // store.commit('_setViewMode', '3D')
 }
 // 二三维切换

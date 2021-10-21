@@ -24,7 +24,7 @@ import { RouteRecordRaw } from 'vue-router'
 import { onMounted, ref } from 'vue'
 const menus = ref<IMenu[]>([])
 const filterMenus = (routes:RouteRecordRaw[]) => {
-  const menus = routes.map(item => {
+  const menus = routes.filter(item => !(item.meta?.hidden)).map(item => {
     const menu:IMenu = {
       path: item.path,
       title: item.meta?.title as string,

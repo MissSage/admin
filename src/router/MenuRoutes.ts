@@ -32,7 +32,10 @@ export const routes:RouteRecordRaw[] = [
       },
       {
         path: '/onemap/one',
-        component: () => import('@/components/Map/MoreScreen.vue')
+        component: () => import('@/components/Map/MoreScreen.vue'),
+        meta: {
+          hidden: true
+        }
       }
     ]
   }

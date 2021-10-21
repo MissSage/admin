@@ -24,8 +24,11 @@ import { useStore } from '@/store'
 import TileLayer from '@arcgis/core/layers/TileLayer'
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer'
 import Layer from '@arcgis/core/layers/Layer'
-import MapView from '@arcgis/core/views/MapView'
+// import MapView from '@arcgis/core/views/MapView'
+import useGlobal from '@/composables/useGlobal'
+import { StreetGrayServices, StreetPurplishBlueServices, StreetWarmServices } from '@/utils/constans'
 const store = useStore()
+const { Global } = useGlobal()
 const data = ref<
   {
     label: string;
@@ -42,14 +45,17 @@ const data = ref<
       {
         label: '暖色系图层',
         layerid: 'layerid',
-        layerurl:
-          'http://map.geoq.cn/arcgis/rest/services/ChinaOnlineStreetWarm/MapServer'
+        layerurl: StreetWarmServices
       },
       {
         label: '灰色系图层',
         layerid: 'layerid',
-        layerurl:
-          'http://map.geoq.cn/arcgis/rest/services/ChinaOnlineStreetGray/MapServer'
+        layerurl: StreetGrayServices
+
+      }, {
+        label: '深色第图层',
+        layerid: 'layerid',
+        layerurl: StreetPurplishBlueServices
       }
     ]
   },
@@ -118,9 +124,10 @@ const defaultProps = ref<{
 const handleNodeClick = async (data: any) => {
   if (data.layerurl) {
     // 删除已添加的图层
-    const view = store.getters._getDefaultMapView as MapView
-    const resultLayer = view.map.findLayerById('layerid')
-    if (resultLayer) view.map.remove(resultLayer)
+    const map = Global.$view.map
+    // const view = store.getters._getDefaultMapView as MapView
+    const resultLayer = map.findLayerById('layerid')
+    if (resultLayer) map.remove(resultLayer)
 
     // 处理不同服务类型
     const c = data.layerurl.split('/')
@@ -137,7 +144,7 @@ const handleNodeClick = async (data: any) => {
         layer = null
         break
     }
-    view.map.add(layer as Layer)
+    map.add(layer as Layer)
   }
 }
 const closeMapTreePannel = () => {

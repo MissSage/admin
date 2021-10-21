@@ -14,4 +14,5 @@ for (const path in modules) {
   app.use(modules[path].default)
 }
 
+app.config.globalProperties.$view = null
 app.mount('#app')
