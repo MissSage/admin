@@ -5,32 +5,31 @@ import Graphic from '@arcgis/core/Graphic'
 import GeometryService from '@arcgis/core/tasks/GeometryService'
 import LengthsParameters from '@arcgis/core/rest/support/LengthsParameters'
 import AreasAndLengthsParameters from '@arcgis/core/rest/support/AreasAndLengthsParameters'
-
-import useGlobal from '../useGlobal'
 import { GeometryServer } from '@/utils/constans'
-const { Global } = useGlobal()
-const useDIYMeasurement2D = () => {
+import useGlobal from '../useGlobal'
+import { ComponentInternalInstance } from 'vue'
+const useDIYMeasurement2D = (ins: ComponentInternalInstance|null) => {
   let sketchViewModelDiy:SketchViewModel|undefined
   /**
    * 自定义测量
    * @param type 'distance'|'area'
    */
   const initDIYMeasurement2D = async (type:'distance'|'area') => {
-    const view = Global.$view
-    const resultLayer = view.map.findLayerById('measurementGraphicLayer')
-    if (resultLayer) view.map.remove(resultLayer)
+    const { $map, $view } = useGlobal(ins)
+    const resultLayer = $map.findLayerById('measurementGraphicLayer')
+    if (resultLayer) $map.remove(resultLayer)
     const graphicsLayer = new GraphicsLayer({
       id: 'measurementGraphicLayer',
       elevationInfo: {
         mode: 'on-the-ground'
       }
     })
-    view.map.add(graphicsLayer)
+    $map.add(graphicsLayer)
 
     if (type === 'distance') {
       sketchViewModelDiy = new SketchViewModel({
         updateOnGraphicClick: false,
-        view: view,
+        view: $view,
         layer: graphicsLayer,
         polylineSymbol: {
           type: 'simple-line',
@@ -43,7 +42,7 @@ const useDIYMeasurement2D = () => {
       sketchViewModelDiy.on('create', function (event:any) {
         const graphic = new Graphic({
           geometry: event.geometry,
-          symbol: sketchViewModelDiy?.createGraphic.symbol
+          symbol: sketchViewModelDiy?.polylineSymbol
         })
         graphicsLayer.add(graphic)
 
@@ -69,7 +68,7 @@ const useDIYMeasurement2D = () => {
     } else if (type === 'area') {
       sketchViewModelDiy = new SketchViewModel({
         updateOnGraphicClick: false,
-        view: view,
+        view: $view,
         layer: graphicsLayer,
         polygonSymbol: {
           type: 'simple-fill',
@@ -86,7 +85,7 @@ const useDIYMeasurement2D = () => {
       sketchViewModelDiy.on('create', function (event:any) {
         const graphic = new Graphic({
           geometry: event.geometry,
-          symbol: sketchViewModelDiy?.createGraphic.symbol
+          symbol: sketchViewModelDiy?.polygonSymbol
         })
         graphicsLayer.add(graphic)
         if (event.state === 'complete') {

@@ -1,22 +1,28 @@
 
 import AreaMeasurement2D from '@arcgis/core/widgets/AreaMeasurement2D'
+import { ComponentInternalInstance } from 'vue'
 import useGlobal from '../useGlobal'
-const { Global } = useGlobal()
-const useDistanceMeasurement2D = (measurementWidget:AreaMeasurement2D|undefined) => {
+const useDistanceMeasurement2D = (ins:ComponentInternalInstance|null) => {
+  const measurementWidgets:AreaMeasurement2D[] = []
+  let measurementWidget: AreaMeasurement2D|undefined
   /**
    * 地图面积量算
    */
   const initAreaMap2D = async () => {
+    const { $view, $ui } = useGlobal(ins)
     if (measurementWidget) {
       measurementWidget.destroy()
     }
     measurementWidget = new AreaMeasurement2D({
-      view: Global.$view
+      view: $view
     })
-    Global.$view.ui.add(measurementWidget, 'top-left')
+    $ui.add(measurementWidget, 'top-left')
+    measurementWidgets.push(measurementWidget)
   }
   const clearAreaMap2D = () => {
-    measurementWidget && measurementWidget.destroy()
+    const { $ui } = useGlobal(ins)
+    $ui.remove(measurementWidgets)
+    measurementWidgets.map(item => item.destroy())
   }
   return {
     clearAreaMap2D,

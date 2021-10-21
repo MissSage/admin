@@ -10,15 +10,14 @@ import Collection from '@arcgis/core/core/Collection'
 import { PictureMarkerSymbol } from '@arcgis/core/symbols'
 import { ElMessage } from 'element-plus'
 import useGlobal from '../useGlobal'
-const { Global } = useGlobal()
+import { ComponentInternalInstance } from 'vue'
 
 let geoData:GeoData[] = []
-const useSpaceQuery2D = (sketchViewModelGlobal:SketchViewModel|undefined) => {
+const useSpaceQuery2D = (ins: ComponentInternalInstance|null, sketchViewModelGlobal:SketchViewModel|undefined) => {
   /**
    * 初始化绘制工具
    */
   const _initSketchTool = async () => {
-    const view = Global.$view
     // 1、绘制面状区域
     const graphicsLayer = new GraphicsLayer({
       id: 'polygonGraphicLayer',
@@ -26,11 +25,12 @@ const useSpaceQuery2D = (sketchViewModelGlobal:SketchViewModel|undefined) => {
         mode: 'on-the-ground'
       }
     })
-    view.map.add(graphicsLayer)
+    const { $map, $view } = useGlobal(ins)
+    $map.add(graphicsLayer)
 
     return new SketchViewModel({
       updateOnGraphicClick: false,
-      view,
+      view: $view,
       layer: graphicsLayer,
       polygonSymbol: {
         type: 'simple-fill',
@@ -69,10 +69,9 @@ const useSpaceQuery2D = (sketchViewModelGlobal:SketchViewModel|undefined) => {
     return geoData
   }
   const renderResultLayer = async (resultFeatures:any) => {
-    const view = store.getters._getDefaultMapView
-
-    const resultLayer = view.map.findLayerById('initResultLayer')
-    if (resultLayer) view.map.remove(resultLayer)
+    const { $map } = useGlobal(ins)
+    const resultLayer = $map.findLayerById('initResultLayer')
+    if (resultLayer) $map.remove(resultLayer)
 
     const resultData = _translateLonLat(resultFeatures)
     // 实例化弹窗
@@ -141,7 +140,7 @@ const useSpaceQuery2D = (sketchViewModelGlobal:SketchViewModel|undefined) => {
       ],
       popupTemplate: template
     })
-    view.map.add(queryResultLayer)
+    $map.add(queryResultLayer)
   }
   /**
    * 查询方法
@@ -149,9 +148,8 @@ const useSpaceQuery2D = (sketchViewModelGlobal:SketchViewModel|undefined) => {
    * @returns
    */
   const handleSpaceQuery = (graphic:any) => {
-    const view = Global.$view
-
-    const resultLayer = view.map.findLayerById('layerid')
+    const { $map } = useGlobal(ins)
+    const resultLayer = $map.findLayerById('layerid')
     if (!resultLayer) {
       ElMessage.warning('尚未添加业务图层，不能进行空间查询')
       return
@@ -195,12 +193,12 @@ const useSpaceQuery2D = (sketchViewModelGlobal:SketchViewModel|undefined) => {
    * 初始化空间查询
    */
   const initSpaceQuery2D = async () => {
-    const view = Global.$view
     if (!sketchViewModelGlobal) {
       sketchViewModelGlobal = await _initSketchTool()
     }
-    const resultLayer = view.map.findLayerById('polygonGraphicLayer')
-    if (resultLayer) view.map.remove(resultLayer)
+    const { $map } = useGlobal(ins)
+    const resultLayer = $map.findLayerById('polygonGraphicLayer')
+    if (resultLayer) $map.remove(resultLayer)
 
     const graphicsLayer = new GraphicsLayer({
       id: 'polygonGraphicLayer',
@@ -208,13 +206,13 @@ const useSpaceQuery2D = (sketchViewModelGlobal:SketchViewModel|undefined) => {
         mode: 'on-the-ground'
       }
     })
-    view.map.add(graphicsLayer)
+    $map.add(graphicsLayer)
 
     sketchViewModelGlobal.create('polygon')
     sketchViewModelGlobal.on('create', function (event:any) {
       const graphic = new Graphic({
         geometry: event.geometry,
-        symbol: sketchViewModelGlobal?.createGraphic.symbol
+        symbol: sketchViewModelGlobal?.polygonSymbol
       })
       graphicsLayer.add(graphic)
       if (event.state === 'complete') {

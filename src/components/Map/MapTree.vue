@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { getCurrentInstance, ref } from 'vue'
 import { useStore } from '@/store'
 import TileLayer from '@arcgis/core/layers/TileLayer'
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer'
@@ -28,7 +28,6 @@ import Layer from '@arcgis/core/layers/Layer'
 import useGlobal from '@/composables/useGlobal'
 import { StreetGrayServices, StreetPurplishBlueServices, StreetWarmServices } from '@/utils/constans'
 const store = useStore()
-const { Global } = useGlobal()
 const data = ref<
   {
     label: string;
@@ -122,12 +121,12 @@ const defaultProps = ref<{
 })
 
 const handleNodeClick = async (data: any) => {
+  const { $map } = useGlobal(getCurrentInstance())
   if (data.layerurl) {
     // 删除已添加的图层
-    const map = Global.$view.map
     // const view = store.getters._getDefaultMapView as MapView
-    const resultLayer = map.findLayerById('layerid')
-    if (resultLayer) map.remove(resultLayer)
+    const resultLayer = $map.findLayerById('layerid')
+    if (resultLayer) $map.remove(resultLayer)
 
     // 处理不同服务类型
     const c = data.layerurl.split('/')
@@ -144,7 +143,7 @@ const handleNodeClick = async (data: any) => {
         layer = null
         break
     }
-    map.add(layer as Layer)
+    $map.add(layer as Layer)
   }
 }
 const closeMapTreePannel = () => {

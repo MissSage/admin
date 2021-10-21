@@ -96,13 +96,11 @@
 
 <script lang="ts" setup>
 import { useStore } from '@/store'
-import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import useGlobal from '@/composables/useGlobal'
 import useMapTools2D from '@/composables/useMapTools/useMapTools2D'
+import { getCurrentInstance } from 'vue'
 const store = useStore()
 const router = useRouter()
-const { Global } = useGlobal()
 const {
   initDistanceMap2D,
   initAreaMap2D,
@@ -112,7 +110,7 @@ const {
   initSwipe2D,
   openMapPopup2D,
   handleClearMap2D
-} = useMapTools2D()
+} = useMapTools2D(getCurrentInstance())
 
 const handleMapToolsitemClick = (e:any) => {
   switch (e.target.id) {
@@ -170,14 +168,6 @@ const openMapTreePannel = () => {
   const currentVisible = store.getters._getDefaultMapTreeVisible
   store.commit('_setDefaultMapTreeVisible', !currentVisible)
 }
-onMounted(() => {
-  const checkView = setInterval(() => {
-    if (Global) {
-      // _initSketchTool()
-      clearInterval(checkView)
-    }
-  }, 200)
-})
 </script>
 
 <style>

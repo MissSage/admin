@@ -3,12 +3,12 @@ import useGlobal from '../useGlobal'
 import PrintTask from '@arcgis/core/tasks/PrintTask'
 import PrintTemplate from '@arcgis/core/rest/support/PrintTemplate'
 import PrintParameters from '@arcgis/core/rest/support/PrintParameters'
-import { ElMessage } from 'element-plus'
-const { Global } = useGlobal()
-const usePrintMap2D = () => {
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { ComponentInternalInstance } from 'vue'
+const usePrintMap2D = (ins: ComponentInternalInstance|null) => {
   // 地图打印
   const handlePrintMap2D = async () => {
-    const view = Global.$view
+    const { $view } = useGlobal(ins)
     const printTask = new PrintTask({
       url: PrintingServer
     })
@@ -27,12 +27,23 @@ const usePrintMap2D = () => {
     })
 
     const params = new PrintParameters({
-      view: view,
+      view: $view,
       template: template
     })
-
+    ElMessageBox.alert('若长时间未响应，请稍候再试', '地图打印窗口正在打开', {
+      confirmButtonText: 'OK'
+      // callback: (action:any) => {
+      //   ElMessage({
+      //     type: 'info',
+      //     message: `action: ${action}`
+      //   })
+      // }
+    })
     printTask.execute(params).then((printResult:any) => {
-      if (printResult.url) window.open(printResult.url)
+      if (printResult.url) {
+        ElMessage.info('地图打印已在新的窗口打开')
+        window.open(printResult.url)
+      }
     })
       .catch((printError) => {
         if (printError) ElMessage.error('地图打印失败')

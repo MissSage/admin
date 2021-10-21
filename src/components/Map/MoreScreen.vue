@@ -30,7 +30,7 @@ import MapView from '@arcgis/core/views/MapView'
 import Basemap from '@arcgis/core/Basemap'
 import TileLayer from '@arcgis/core/layers/TileLayer'
 import { whenTrue } from '@arcgis/core/core/watchUtils'
-import { streetServices } from '@/utils/constans'
+import { StreetPurplishBlueServices } from '@/utils/constans'
 onMounted(() => {
   _initMap()
 })
@@ -38,7 +38,7 @@ const _initMap = () => {
   const basemap = new Basemap({
     baseLayers: [
       new TileLayer({
-        url: streetServices,
+        url: StreetPurplishBlueServices,
         title: 'Basemap'
       })
     ],

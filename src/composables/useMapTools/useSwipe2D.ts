@@ -1,15 +1,17 @@
 import useGlobal from '../useGlobal'
 import Swipe from '@arcgis/core/widgets/Swipe'
 import { ElMessage } from 'element-plus'
+import { ComponentInternalInstance } from 'vue'
 
-const { Global } = useGlobal()
-const useSwipe2D = () => {
+const useSwipe2D = (ins: ComponentInternalInstance|null) => {
   let swipe: Swipe|undefined
   // 卷帘分析
   const initSwipe2D = async () => {
-    const view = Global.$view
-    const topLayer = view.map.findLayerById('swipeLayerTop')
-    const bottomLayer = view.map.findLayerById('swipeLayerBottom')
+    const { $map, $view, $ui } = useGlobal(ins)
+    const map = $map
+    const view = $view
+    const topLayer = map.findLayerById('swipeLayerTop')
+    const bottomLayer = map.findLayerById('swipeLayerBottom')
     if (topLayer && bottomLayer) {
       swipe = new Swipe({
         leadingLayers: [topLayer],
@@ -18,7 +20,7 @@ const useSwipe2D = () => {
         view: view
       })
 
-      view.ui.add(swipe)
+      $ui.add(swipe)
     } else {
       ElMessage.warning('请添加至少两张业务图层')
     }

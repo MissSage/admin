@@ -26,8 +26,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue'
-// import { useStore } from '@/store'
+import { getCurrentInstance, onMounted, ref } from 'vue'
 import { StreetPurplishBlueServices } from '@/utils/constans'
 import MapView from '@arcgis/core/views/MapView'
 import SceneView from '@arcgis/core/views/SceneView'
@@ -38,8 +37,7 @@ import BasemapToggle from '@arcgis/core/widgets/BasemapToggle'
 import Zoom from '@arcgis/core/widgets/Zoom'
 import ScaleBar from '@arcgis/core/widgets/ScaleBar'
 import useGlobal from '@/composables/useGlobal'
-// const store = useStore()
-const { Global } = useGlobal()
+const { $setMap, $setUI, $setView } = useGlobal(getCurrentInstance())
 const viewModel = ref<string>('2D')
 
 // elements
@@ -101,9 +99,9 @@ const _createMapView = () => {
   mapViewIns.ui.add(zoomIns)
 
   mapViewIns.ui.components = []
-  Global.$view = mapViewIns
-  // store.commit('_setDefaultMapView', mapViewIns)
-  // store.commit('_setViewMode', '2D')
+  $setMap(map)
+  $setView(mapViewIns)
+  $setUI(mapViewIns.ui)
 }
 const _createSceneView = () => {
   viewModel.value = '3D'
@@ -124,22 +122,19 @@ const _createSceneView = () => {
     })
   })
 
-  const sceneView = new SceneView({
+  const sceneViewIns = new SceneView({
     container: mapview.value,
     map
   })
 
   setTimeout(() => {
-    sceneView.goTo({
+    sceneViewIns.goTo({
       zoom: 10,
       center: [104.072745, 30.663774]
     })
   }, 500)
 
-  sceneView.ui.components = []
-  Global.$view = sceneView
-  // store.commit('_setDefaultSceneView', sceneView)
-  // store.commit('_setViewMode', '3D')
+  sceneViewIns.ui.components = []
 }
 // 二三维切换
 const handleViewChale = () => {

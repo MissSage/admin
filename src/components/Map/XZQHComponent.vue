@@ -70,9 +70,6 @@ let graphic:Graphic
 const provinceOptions = ref<any[]>([])
 const provinceValue = ref<string>('')
 const cityAndCountyOptions = ref<any[]>([])
-onMounted(() => {
-  getProvinceData()
-})
 // 获取行政区划 省份数据
 const getProvinceData = async () => {
   const queryTask = new QueryTask({
@@ -200,6 +197,9 @@ const closeXZQHPannel = () => {
   const currentVisible = store.getters._getDefaultXZQHVisible
   store.commit('_setDefaultXZQHVisible', !currentVisible)
 }
+onMounted(() => {
+  getProvinceData()
+})
 </script>
 
 <style>
