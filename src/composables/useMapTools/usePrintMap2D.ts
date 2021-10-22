@@ -32,12 +32,6 @@ const usePrintMap2D = (ins: ComponentInternalInstance|null) => {
     })
     ElMessageBox.alert('若长时间未响应，请稍候再试', '地图打印窗口正在打开', {
       confirmButtonText: 'OK'
-      // callback: (action:any) => {
-      //   ElMessage({
-      //     type: 'info',
-      //     message: `action: ${action}`
-      //   })
-      // }
     })
     printTask.execute(params).then((printResult:any) => {
       if (printResult.url) {

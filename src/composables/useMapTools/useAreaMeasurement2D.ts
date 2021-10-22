@@ -9,19 +9,19 @@ const useDistanceMeasurement2D = (ins:ComponentInternalInstance|null) => {
    * 地图面积量算
    */
   const initAreaMap2D = async () => {
-    const { $view, $ui } = useGlobal(ins)
+    const { $view } = useGlobal(ins)
     if (measurementWidget) {
       measurementWidget.destroy()
     }
     measurementWidget = new AreaMeasurement2D({
       view: $view
     })
-    $ui.add(measurementWidget, 'top-left')
+    $view.ui.add(measurementWidget, 'top-left')
     measurementWidgets.push(measurementWidget)
   }
   const clearAreaMap2D = () => {
-    const { $ui } = useGlobal(ins)
-    $ui.remove(measurementWidgets)
+    const { $view } = useGlobal(ins)
+    $view.ui.remove(measurementWidgets)
     measurementWidgets.map(item => item.destroy())
   }
   return {

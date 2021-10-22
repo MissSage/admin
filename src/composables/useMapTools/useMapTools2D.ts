@@ -25,7 +25,8 @@ const useMapTools2D = (ins:ComponentInternalInstance|null) => {
   const { handlePrintMap2D } = usePrintMap2D(ins)
   const { openMapPopup2D } = useMapPopup2D(ins)
   const handleClearMap2D = () => {
-    const { $map } = useGlobal(ins)
+    const { $view } = useGlobal(ins)
+    const $map = $view.map
     const resultLayer1 = $map.findLayerById('swipeLayerTop')
     const resultLayer2 = $map.findLayerById('swipeLayerBottom')
     const resultLayer3 = $map.findLayerById('layerid')

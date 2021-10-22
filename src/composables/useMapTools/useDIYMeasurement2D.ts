@@ -15,16 +15,16 @@ const useDIYMeasurement2D = (ins: ComponentInternalInstance|null) => {
    * @param type 'distance'|'area'
    */
   const initDIYMeasurement2D = async (type:'distance'|'area') => {
-    const { $map, $view } = useGlobal(ins)
-    const resultLayer = $map.findLayerById('measurementGraphicLayer')
-    if (resultLayer) $map.remove(resultLayer)
+    const { $view } = useGlobal(ins)
+    const resultLayer = $view.map.findLayerById('measurementGraphicLayer')
+    if (resultLayer) $view.map.remove(resultLayer)
     const graphicsLayer = new GraphicsLayer({
       id: 'measurementGraphicLayer',
       elevationInfo: {
         mode: 'on-the-ground'
       }
     })
-    $map.add(graphicsLayer)
+    $view.map.add(graphicsLayer)
 
     if (type === 'distance') {
       sketchViewModelDiy = new SketchViewModel({

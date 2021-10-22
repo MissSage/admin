@@ -7,8 +7,8 @@ const useSwipe2D = (ins: ComponentInternalInstance|null) => {
   let swipe: Swipe|undefined
   // 卷帘分析
   const initSwipe2D = async () => {
-    const { $map, $view, $ui } = useGlobal(ins)
-    const map = $map
+    const { $view } = useGlobal(ins)
+    const map = $view.map
     const view = $view
     const topLayer = map.findLayerById('swipeLayerTop')
     const bottomLayer = map.findLayerById('swipeLayerBottom')
@@ -20,7 +20,7 @@ const useSwipe2D = (ins: ComponentInternalInstance|null) => {
         view: view
       })
 
-      $ui.add(swipe)
+      $view.ui.add(swipe)
     } else {
       ElMessage.warning('请添加至少两张业务图层')
     }

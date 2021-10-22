@@ -25,8 +25,8 @@ const useSpaceQuery2D = (ins: ComponentInternalInstance|null, sketchViewModelGlo
         mode: 'on-the-ground'
       }
     })
-    const { $map, $view } = useGlobal(ins)
-    $map.add(graphicsLayer)
+    const { $view } = useGlobal(ins)
+    $view.map.add(graphicsLayer)
 
     return new SketchViewModel({
       updateOnGraphicClick: false,
@@ -69,9 +69,9 @@ const useSpaceQuery2D = (ins: ComponentInternalInstance|null, sketchViewModelGlo
     return geoData
   }
   const renderResultLayer = async (resultFeatures:any) => {
-    const { $map } = useGlobal(ins)
-    const resultLayer = $map.findLayerById('initResultLayer')
-    if (resultLayer) $map.remove(resultLayer)
+    const { $view } = useGlobal(ins)
+    const resultLayer = $view.map.findLayerById('initResultLayer')
+    if (resultLayer) $view.map.remove(resultLayer)
 
     const resultData = _translateLonLat(resultFeatures)
     // 实例化弹窗
@@ -140,7 +140,7 @@ const useSpaceQuery2D = (ins: ComponentInternalInstance|null, sketchViewModelGlo
       ],
       popupTemplate: template
     })
-    $map.add(queryResultLayer)
+    $view.map.add(queryResultLayer)
   }
   /**
    * 查询方法
@@ -148,8 +148,8 @@ const useSpaceQuery2D = (ins: ComponentInternalInstance|null, sketchViewModelGlo
    * @returns
    */
   const handleSpaceQuery = (graphic:any) => {
-    const { $map } = useGlobal(ins)
-    const resultLayer = $map.findLayerById('layerid')
+    const { $view } = useGlobal(ins)
+    const resultLayer = $view.map.findLayerById('layerid')
     if (!resultLayer) {
       ElMessage.warning('尚未添加业务图层，不能进行空间查询')
       return
@@ -196,9 +196,9 @@ const useSpaceQuery2D = (ins: ComponentInternalInstance|null, sketchViewModelGlo
     if (!sketchViewModelGlobal) {
       sketchViewModelGlobal = await _initSketchTool()
     }
-    const { $map } = useGlobal(ins)
-    const resultLayer = $map.findLayerById('polygonGraphicLayer')
-    if (resultLayer) $map.remove(resultLayer)
+    const { $view } = useGlobal(ins)
+    const resultLayer = $view.map.findLayerById('polygonGraphicLayer')
+    if (resultLayer) $view.map.remove(resultLayer)
 
     const graphicsLayer = new GraphicsLayer({
       id: 'polygonGraphicLayer',
@@ -206,7 +206,7 @@ const useSpaceQuery2D = (ins: ComponentInternalInstance|null, sketchViewModelGlo
         mode: 'on-the-ground'
       }
     })
-    $map.add(graphicsLayer)
+    $view.map.add(graphicsLayer)
 
     sketchViewModelGlobal.create('polygon')
     sketchViewModelGlobal.on('create', function (event:any) {

@@ -37,7 +37,7 @@ import BasemapToggle from '@arcgis/core/widgets/BasemapToggle'
 import Zoom from '@arcgis/core/widgets/Zoom'
 import ScaleBar from '@arcgis/core/widgets/ScaleBar'
 import useGlobal from '@/composables/useGlobal'
-const { $setMap, $setUI, $setView } = useGlobal(getCurrentInstance())
+const { $setView } = useGlobal(getCurrentInstance())
 const viewModel = ref<string>('2D')
 
 // elements
@@ -99,9 +99,7 @@ const _createMapView = () => {
   mapViewIns.ui.add(zoomIns)
 
   mapViewIns.ui.components = []
-  $setMap(map)
   $setView(mapViewIns)
-  $setUI(mapViewIns.ui)
 }
 const _createSceneView = () => {
   viewModel.value = '3D'

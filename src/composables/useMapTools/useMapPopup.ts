@@ -6,8 +6,8 @@ import useGlobal from '../useGlobal'
 const useMapPopup2D = (ins: ComponentInternalInstance|null) => {
   // 开启图层弹窗
   const openMapPopup2D = () => {
-    const { $map, $view } = useGlobal(ins)
-    const resultLayer = $map.findLayerById('layerid')
+    const { $view } = useGlobal(ins)
+    const resultLayer = $view.map.findLayerById('layerid')
     if (resultLayer) {
     // Get the screen point from the view's click event
       $view.on('click', function (event:MouseEvent) {
