@@ -6,12 +6,12 @@ import { ComponentInternalInstance } from 'vue'
 
 const useLayerControl = (ins:ComponentInternalInstance|null) => {
   const handleNodeClick = async (data: any) => {
-    const { $map } = useGlobal(ins)
+    const { $view } = useGlobal(ins)
     if (data.layerurl) {
       // 删除已添加的图层
       // const view = store.getters._getDefaultMapView as MapView
-      const resultLayer = $map.findLayerById('layerid')
-      if (resultLayer) $map.remove(resultLayer)
+      const resultLayer = $view?.map.findLayerById('layerid')
+      if (resultLayer) $view?.map.remove(resultLayer)
 
       // 处理不同服务类型
       const c = data.layerurl.split('/')
@@ -28,7 +28,7 @@ const useLayerControl = (ins:ComponentInternalInstance|null) => {
           layer = null
           break
       }
-      $map.add(layer as Layer)
+      $view?.map.add(layer as Layer)
     }
   }
   return {

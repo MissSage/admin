@@ -95,7 +95,7 @@ const useLayers2D = (ins:ComponentInternalInstance|null) => {
   //   }
   // }
   const addToMap = () => {
-    const { $map } = useGlobal(ins)
+    const { $view } = useGlobal(ins)
     for (let i = 0; i < config.mapService.length; i++) {
       const layername: string = config.mapService[i]
       if (AppX.appConfig.gisResource[layername].config.length > 0) {
@@ -116,8 +116,8 @@ const useLayers2D = (ins:ComponentInternalInstance|null) => {
               //     map.addLayer(privatelayer, 0);
               // }
               // add private terrain layer
-              $map.addLayer(tileLayer, 0)// 管线图层最先添加，但地形图要插入到最底层，以保证地图的缩放比例尺与切片管线一致
-            } else { $map.addLayer(tileLayer) }
+              $view.map.add(tileLayer, 0)// 管线图层最先添加，但地形图要插入到最底层，以保证地图的缩放比例尺与切片管线一致
+            } else { $view.map.add(tileLayer) }
             // if (layername === 'pipe') { tileLayer.load().then((res)=>{
             //   // _onPipeLayerLoad(e:any)
             // }) }

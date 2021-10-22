@@ -108,17 +108,6 @@ const _initMap = () => {
         zoom: mapView01.zoom
       })
     }
-
-    // Get the new extent of the view only when view is stationary.
-    if (mapView01.extent) {
-      console.log(
-        '2',
-        mapView01.extent.xmin.toFixed(2),
-        mapView01.extent.xmax.toFixed(2),
-        mapView01.extent.ymin.toFixed(2),
-        mapView01.extent.ymax.toFixed(2)
-      )
-    }
   })
 }
 </script>

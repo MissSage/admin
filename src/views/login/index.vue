@@ -11,7 +11,7 @@
       <div class="login-form__header">
         <img
           class="login-logo"
-          src="@/assets/login_logo.png"
+          src="@/assets/logo.png"
           alt="拉勾心选"
         >
       </div>

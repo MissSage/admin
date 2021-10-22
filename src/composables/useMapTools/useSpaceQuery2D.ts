@@ -147,9 +147,9 @@ const useSpaceQuery2D = (ins: ComponentInternalInstance|null, sketchViewModelGlo
    * @param graphic
    * @returns
    */
-  const handleSpaceQuery = (graphic:any) => {
+  const handleSpaceQuery = (graphic:Graphic) => {
     const { $view } = useGlobal(ins)
-    const resultLayer = $view.map.findLayerById('layerid')
+    const resultLayer = $view.map.findLayerById('layerid') as FeatureLayer
     if (!resultLayer) {
       ElMessage.warning('尚未添加业务图层，不能进行空间查询')
       return
