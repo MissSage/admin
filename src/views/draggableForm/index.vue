@@ -1,11 +1,10 @@
 <template>
-  <DraggableForm @save="save" :user-components="userComponents" />
+  <form-draggable @save="save" :user-components="userComponents" />
 </template>
 
 <script lang='ts' setup>
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
-import DraggableForm from '@/components/FormDraggable/index.vue'
 
 const userComponents = ref<any[]>([])
 const save = (options: any) => {

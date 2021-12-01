@@ -4,7 +4,7 @@
     class="vol-table"
     :class="[textInline ? 'text-inline' : '', fxRight ? 'fx-right' : '']"
   >
-    <div class="mask" v-show="loading"></div>
+    <div class="mask" v-show="loading" />
     <div class="message" v-show="loading">加载中.....</div>
     <el-table
       lazy
@@ -37,13 +37,13 @@
         type="index"
         :fixed="fixed"
         width="55"
-      ></el-table-column>
+      />
       <el-table-column
         v-if="ck"
         type="selection"
         :fixed="fixed"
         width="55"
-      ></el-table-column>
+      />
       <!-- 2020.10.10移除table第一行强制排序 -->
       <el-table-column
         v-for="(column, cindex) in filterColumns"
@@ -65,7 +65,7 @@
             :index="scope.$index"
             :column="column"
             :render="column.render"
-          ></VolTableRender>
+          />
           <!-- 启用双击编辑功能，带编辑功能的不会渲染下拉框文本背景颜色 -->
           <!-- @click="rowBeginEdit(scope.$index,cindex)" -->
           <!-- 2021.09.21增加编辑时对readonly属性判断 -->
@@ -92,8 +92,7 @@
                   "
                   :disabled-date="(val:any) => getDateOptions(val, column)"
                   :value-format="getDateFormat(column)"
-                >
-                </el-date-picker>
+                />
                 <el-switch
                   v-else-if="column.edit.type === 'switch'"
                   v-model="scope.row[column.field]"
@@ -110,8 +109,7 @@
                   :inactive-value="
                     typeof scope.row[column.field] === 'boolean' ? false : 0
                   "
-                >
-                </el-switch>
+                />
                 <el-select
                   size="small"
                   style="width: 100%"
@@ -151,7 +149,7 @@
                   size="small"
                   v-model="scope.row[column.field]"
                   :placeholder="'请输入' + column.title"
-                ></el-input>
+                />
               </div>
               <div
                 class="extra"
@@ -170,7 +168,7 @@
               <div
                 v-if="column.formatter"
                 v-html="column.formatter(scope.row, column)"
-              ></div>
+              />
               <div v-else>{{ formatter(scope.row, column, true) }}</div>
             </template>
           </div>
@@ -181,7 +179,7 @@
               @click="link(scope.row, column, $event)"
               v-if="column.link"
               v-text="scope.row[column.field]"
-            ></a>
+            />
             <img
               v-else-if="column.type === 'img'"
               v-for="(file, imgIndex) in getFilePath(
@@ -193,7 +191,7 @@
               @click="viewImg(scope.row, column, file.path, $event)"
               class="table-img"
               :src="file.path"
-            />
+            >
             <a
               style="margin-right: 8px"
               v-else-if="column.type === 'file' || column.type === 'excel'"
@@ -212,7 +210,7 @@
               v-else-if="column.formatter"
               @click="formatterClick(scope.row, column, $event)"
               v-html="column.formatter(scope.row, column)"
-            ></div>
+            />
             <!-- 2021.11.18修复table数据源设置为normal后点击行$event缺失的问题 -->
             <div
               v-else-if="column.bind && column.normal"
@@ -253,7 +251,7 @@
           :page-size="paginations.size"
           layout="total, sizes, prev, pager, next, jumper"
           :total="paginations.total"
-        ></el-pagination>
+        />
       </div>
     </template>
   </div>
@@ -391,6 +389,7 @@ export default defineComponent({
       default: true
     }
   },
+  emits: ['rowDbClick', 'rowClick', 'loadBefore', 'loadAfter', 'rowChange'],
   setup (props, ctx) {
     let _errMsg = ''
     const state = reactive({
@@ -667,13 +666,13 @@ export default defineComponent({
       if (!state.enableEdit) return
       _errMsg = ''
       // 编辑前
-      if (!props.beginEdit(row, column, row.elementIndex)) return
-      if (row.hasOwnProperty('elementIndex')) {
-        if (state.edit.rowIndex === row.elementIndex) {
-          return
-        }
-        state.edit.rowIndex = row.elementIndex
-      }
+      // if (!props.beginEdit(row, column, row.elementIndex)) return
+      // if (row.hasOwnProperty('elementIndex')) {
+      //   if (state.edit.rowIndex === row.elementIndex) {
+      //     return
+      //   }
+      //   state.edit.rowIndex = row.elementIndex
+      // }
     }
     const rowEndEdit = (row:any, column:any, event?:any) => {
       if (state.clickEdit && event) {
@@ -830,14 +829,14 @@ export default defineComponent({
         row = {}
       }
       props.columns.forEach((x) => {
-        if (!row.hasOwnProperty(x.field)) {
-          if (x.edit && x.edit.type === 'switch') {
-            row[x.field] = x.type === 'bool' ? false : 0
-          } else if (!row.hidden) {
-            // 2020.09.06添加行时，设置默认字段
-            row[x.field] = undefined
-          }
-        }
+        // if (!row.hasOwnProperty(x.field)) {
+        //   if (x.edit && x.edit.type === 'switch') {
+        //     row[x.field] = x.type === 'bool' ? false : 0
+        //   } else if (!row.hidden) {
+        //     // 2020.09.06添加行时，设置默认字段
+        //     row[x.field] = undefined
+        //   }
+        // }
       })
       if (!props.url) {
         props.tableData.push(row)
@@ -980,11 +979,12 @@ export default defineComponent({
 
       props.columns.forEach((col:any) => {
         if (!col.hidden) {
-          if (data.summary.hasOwnProperty(col.field)) {
-            state.summaryData.push(data.summary[col.field])
-          } else {
-            state.summaryData.push('')
-          }
+          // if (data.summary.hasOwnProperty(col.field)) {
+          //   state.summaryData.push(data.summary[col.field])
+          // } else {
+          //   state.summaryData.push('')
+          // }
+          state.summaryData.push('')
         }
       })
       if (state.summaryData.length > 0 && state.summaryData[0] === '') {
@@ -1115,12 +1115,12 @@ export default defineComponent({
     function getInputSummaries (scope:any, val:any, event:any, column:any) {
       // column列设置了summary属性的才计算值
       if (!column.summary) return
-      let sum = 0;
-      (props.url ? state.rowData : props.tableData).forEach((x, index) => {
-        if (x.hasOwnProperty(column.field) && !isNaN(x[column.field])) {
-          sum += x[column.field] * 1
-        }
-      })
+      const sum = 0
+      // (props.url ? state.rowData : props.tableData).forEach((x, index) => {
+      //   if (x.hasOwnProperty(column.field) && !isNaN(x[column.field])) {
+      //     sum += x[column.field] * 1
+      //   }
+      // })
       state.summaryData[state.summaryIndex[column.field]] = sum
     }
     function getSummaryData ({ columns, data }:any) {
@@ -1270,9 +1270,9 @@ export default defineComponent({
       if (props.pagination.size) {
         state.paginations.rows = props.pagination.size
       }
-      state.enableEdit = props.columns.some((x:any) => {
-        return x.hasOwnProperty('edit')
-      })
+      // state.enableEdit = props.columns.some((x:any) => {
+      //   return x.hasOwnProperty('edit')
+      // })
       const keyColumn = props.columns.find((x:any) => {
         return x.isKey
       })

@@ -23,7 +23,7 @@
             v-if="item.render && typeof item.render === 'function'"
             :render="item.render"
             :par="12"
-          ></form-expand>
+          />
           <!-- 2021.10.17增加表单实时方法计算 -->
           <span
             v-else-if="
@@ -42,7 +42,7 @@
                   :src="getSrc(img.path)"
                   :onerror="errorImg"
                   @click="previewImg(img.path)"
-                />
+                >
               </div>
             </div>
             <div
@@ -85,12 +85,11 @@
               "
             >
               <el-option
-                v-for="item in item.data"
-                :key="item.key"
-                :label="item.value"
-                :value="item.key"
-              >
-              </el-option>
+                v-for="obj in item.data"
+                :key="obj.key"
+                :label="obj.value"
+                :value="obj.key"
+              />
             </el-select>
             <el-switch
               v-show="!item.hidden"
@@ -106,8 +105,7 @@
               :inactive-value="
                 typeof formFields[item.field] === 'boolean' ? false : 0
               "
-            >
-            </el-switch>
+            />
 
             <el-radio-group
               :disabled="item.readonly || item.disabled"
@@ -160,8 +158,7 @@
                   }
                 "
                 :value-format="getDateFormat(item)"
-              >
-              </el-date-picker>
+              />
               <span style="margin: 0px 5px; font-size: 13px; color: #6f6b6b">至</span>
               <el-date-picker
                 size="medium"
@@ -177,8 +174,7 @@
                   }
                 "
                 :value-format="getDateFormat(item)"
-              >
-              </el-date-picker>
+              />
             </div>
             <!-- v-show不添加根节点就会报错没有根点节 -->
             <div
@@ -199,8 +195,7 @@
                 "
                 :disabled-date="(val) => getDateOptions(val, item)"
                 :value-format="getDateFormat(item)"
-              >
-              </el-date-picker>
+              />
             </div>
 
             <el-time-picker
@@ -210,19 +205,15 @@
               :format="item.format"
               style="width: 100%"
               size="medium"
-            >
-            </el-time-picker>
+            />
 
-            <vol-wang-editor
+            <app-text-tditor
               ref="editor"
               v-else-if="item.type === 'editor'"
-              :url="item.url || editor.uploadImgUrl"
-              :upload="item.upload || editor.upload"
               v-model="formFields[item.field]"
-              :height="item.height || 350"
-            ></vol-wang-editor>
+            />
 
-            <vol-upload
+            <app-upload
               v-show="!item.hidden"
               v-else-if="isFile(item, formFields)"
               :desc="item.desc"
@@ -246,7 +237,7 @@
               :file-click="item.fileClick"
               :remove-before="item.removeBefore"
               :down-load="item.downLoad ? true : false"
-            ></vol-upload>
+            />
             <el-cascader
               clearable
               size="medium"
@@ -259,8 +250,7 @@
                 checkStrictly: item.changeOnSelect || item.checkStrictly,
               }"
               @change="item.onChange"
-            >
-            </el-cascader>
+            />
             <div
               style="display: flex"
               v-else-if="item.type === 'range' || item.range"
@@ -334,7 +324,7 @@
               "
               @change="item.onKeyPress"
               @keyup.enter="item.onKeyPress"
-            ></el-input>
+            />
             <el-input
               clearable
               v-else
@@ -345,13 +335,13 @@
               :disabled="item.readonly || item.disabled"
               v-show="!item.hidden"
               v-model="formFields[item.field]"
-            ></el-input>
+            />
 
             <div class="form-extra" v-if="item.extra">
               <form-expand
                 v-if="item.extra.render"
                 :render="item.extra.render"
-              ></form-expand>
+              />
               <a
                 v-else-if="item.extra.click"
                 :style="item.extra.style"
@@ -369,16 +359,15 @@
         </el-form-item>
       </div>
     </template>
-    <slot></slot>
+    <slot />
     <div style="width: 100%">
-      <slot name="footer"></slot>
+      <slot name="footer" />
     </div>
   </el-form>
 </template>
 <script>
 import FormExpand from '@/components/Form/VolFormRender'
 import {
-  defineAsyncComponent,
   defineComponent,
   ref,
   getCurrentInstance,
@@ -413,13 +402,7 @@ const types = {
 const colPow = Math.pow(10, 3)
 export default defineComponent({
   components: {
-    FormExpand,
-    'vol-upload': defineAsyncComponent(() =>
-      import('@/components/basic/VolUpload.vue')
-    ),
-    'vol-wang-editor': defineAsyncComponent(() =>
-      import('@/components/editor/VolWangEditor.vue')
-    )
+    FormExpand
   },
   props: {
     loadKey: {
@@ -458,6 +441,7 @@ export default defineComponent({
       }
     }
   },
+  emits: ['update:formFields'],
   computed: {
     rules () {
       const ruleResult = {}
@@ -558,19 +542,20 @@ export default defineComponent({
           if (x.key !== d.dicNo) return true
           // 如果有数据的则不查询
           if (x.data.length > 0) return true
-          if (d.data.length > 0 && !d.data[0].hasOwnProperty('key')) {
-            const source = d.data
-            const newSource = new Array(source.length)
-            for (let index = 0; index < source.length; index++) {
-              newSource[index] = {
-                key: source.key + '',
-                value: source.value
-              }
-            }
-            x.data.push(...newSource)
-          } else {
-            x.data.push(...d.data)
-          }
+          // if (d.data.length > 0 && !d.data[0].hasOwnProperty('key')) {
+          //   const source = d.data
+          //   const newSource = new Array(source.length)
+          //   for (let index = 0; index < source.length; index++) {
+          //     newSource[index] = {
+          //       key: source.key + '',
+          //       value: source.value
+          //     }
+          //   }
+          //   x.data.push(...newSource)
+          // } else {
+          //   x.data.push(...d.data)
+          // }
+          x.data.push(...d.data)
         })
       })
     }
@@ -582,15 +567,15 @@ export default defineComponent({
         item.columnType === 'img'
       ) {
         // 只是没设置是否自动上传的，默认都是选择文件后自动上传
-        if (!item.hasOwnProperty('autoUpload')) {
-          item.autoUpload = true
-        }
-        if (!item.hasOwnProperty('fileList')) {
-          item.fileList = true
-        }
-        if (!item.hasOwnProperty('downLoad')) {
-          item.downLoad = true
-        }
+        // if (!item.hasOwnProperty('autoUpload')) {
+        //   item.autoUpload = true
+        // }
+        // if (!item.hasOwnProperty('fileList')) {
+        //   item.fileList = true
+        // }
+        // if (!item.hasOwnProperty('downLoad')) {
+        //   item.downLoad = true
+        // }
         if (!item.removeBefore) {
           item.removeBefore = (index, file, files) => {
             return true
@@ -863,12 +848,12 @@ export default defineComponent({
           this.formFields[key] = [null, null]
         })
       }
-      if (!sourceObj) return
-      for (const key in this.formFields) {
-        if (sourceObj.hasOwnProperty(key)) {
-          this.formFields[key] = sourceObj[key]
-        }
-      }
+      // if (!sourceObj) return
+      // for (const key in this.formFields) {
+      //   if (sourceObj.hasOwnProperty(key)) {
+      //     this.formFields[key] = sourceObj[key]
+      //   }
+      // }
       //  this.remoteCall = true;
     },
 
@@ -998,7 +983,7 @@ export default defineComponent({
 
       if (!item.required && item.type !== 'mail') return { required: false }
 
-      if (!item.hasOwnProperty('type')) item.type = 'text'
+      // if (!item.hasOwnProperty('type')) item.type = 'text'
 
       if (inputTypeArr.indexOf(item.type) !== -1) {
         const message =

@@ -27,12 +27,12 @@ module.exports = {
   rules: {
     'vue/no-mutating-props': 'off',
     'vue/max-attributes-per-line': 0,
-    'vue/singleline-html-element-content-newline': 0,
-    'vue/html-self-closing': 0,
-    'spaced-comment': 1,
-    'comma-dangle': 1,
-    'prefer-const': 1,
-    'no-prototype-builtins': 1
+    'vue/singleline-html-element-content-newline': 0
+    // 'vue/html-self-closing': 0,
+    // 'spaced-comment': 1,
+    // 'comma-dangle': 1,
+    // 'prefer-const': 1,
+    // 'no-prototype-builtins': 1
   },
   overrides: [
     {

@@ -19,7 +19,7 @@
             v-for="item in components"
             :key="item.id"
           >
-            <i :class="item.icon"></i>
+            <i :class="item.icon" />
             {{ item.name }}
           </div>
         </transition-group>
@@ -27,15 +27,15 @@
       <div class="example">
         <div @click="example1">
           示例一
-          <i class="el-icon-arrow-right"></i>
+          <i class="el-icon-arrow-right" />
         </div>
         <div @click="example2">
           示例二
-          <i class="el-icon-arrow-right"></i>
+          <i class="el-icon-arrow-right" />
         </div>
         <div @click="example3">
           示例三
-          <i class="el-icon-arrow-right"></i>
+          <i class="el-icon-arrow-right" />
         </div>
       </div>
     </div>
@@ -46,16 +46,16 @@
           <!-- <i class="el-icon-warning-outline"></i>高效的表单配置 -->
         </span>
         <el-button type="primary" size="mini" plain @click="save">
-          <i class="el-icon-check"></i>保存
+          <i class="el-icon-check" />保存
         </el-button>
         <el-button type="primary" size="mini" plain @click="priview">
-          <i class="el-icon-view"></i>预览
+          <i class="el-icon-view" />预览
         </el-button>
         <el-button type="primary" size="mini" plain @click="download">
-          <i class="el-icon-view"></i>下载
+          <i class="el-icon-view" />下载
         </el-button>
         <el-button type="primary" @click="clearItems" size="mini" plain>
-          <i class="el-icon-delete"></i>清空
+          <i class="el-icon-delete" />清空
         </el-button>
         <a
           style="margin-left: 15px"
@@ -89,8 +89,8 @@
                 v-for="(item, index) in currentComponents"
                 :key="index"
               >
-                <i class="el-icon-document-copy" @click.stop="copyItem(item)"></i>
-                <i class="el-icon-delete" @click.stop="removeItem(index)"></i>
+                <i class="el-icon-document-copy" @click.stop="copyItem(item)" />
+                <i class="el-icon-delete" @click.stop="removeItem(index)" />
                 <el-form-item
                   :required="item.required"
                   label-position="top"
@@ -106,14 +106,14 @@
                       v-model="item.value"
                       :disabled="item.readonly"
                       size="medium"
-                    ></el-input>
+                    />
                     <el-input
                       v-else-if="item.type === 'textarea'"
                       type="textarea"
                       v-model="item.value"
                       :disabled="item.readonly"
                       placeholder="请输入内容"
-                    ></el-input>
+                    />
                     <el-date-picker
                       v-else-if="item.type === 'date'"
                       align="right"
@@ -122,7 +122,7 @@
                       :disabled="item.readonly"
                       size="medium"
                       placeholder="选择日期"
-                    ></el-date-picker>
+                    />
                     <el-radio-group
                       :disabled="item.readonly"
                       v-else-if="item.type === 'radio'"
@@ -133,9 +133,7 @@
                         :key="obj.key"
                         :label="obj.value"
                         :value="obj.key"
-                      ></el-radio>
-                      <!-- <el-radio :label="1">是</el-radio>
-                      <el-radio :label="0">否</el-radio>-->
+                      />
                     </el-radio-group>
 
                     <el-checkbox-group
@@ -145,11 +143,11 @@
                       v-else-if="item.type === 'checkbox'"
                     >
                       <el-checkbox
-                        v-for="obj in obj.data"
+                        v-for="obj in item.data"
                         :key="obj.key"
                         :label="obj.value"
                         :value="obj.key"
-                      ></el-checkbox>
+                      />
                       <!-- <el-checkbox label="复选框 A"></el-checkbox>
                       <el-checkbox label="复选框 B"></el-checkbox>
                       <el-checkbox label="复选框 C"></el-checkbox>-->
@@ -164,11 +162,11 @@
                       placeholder="请选择"
                     >
                       <el-option
-                        v-for="obj in obj.data"
+                        v-for="obj in item.data"
                         :key="obj.value"
                         :label="obj.label"
                         :value="obj.value"
-                      ></el-option>
+                      />
                     </el-select>
                     <el-select
                       style="width: 100%"
@@ -180,11 +178,11 @@
                       placeholder="请选择"
                     >
                       <el-option
-                        v-for="obj in obj.data"
+                        v-for="obj in item.data"
                         :key="obj.value"
                         :label="obj.label"
                         :value="obj.value"
-                      ></el-option>
+                      />
                     </el-select>
                     <el-cascader
                       :disabled="item.readonly"
@@ -193,7 +191,7 @@
                       v-model="item.values"
                       :options="item.data"
                       @change="() => { }"
-                    ></el-cascader>
+                    />
 
                     <el-switch
                       :disabled="item.readonly"
@@ -204,14 +202,12 @@
                       inactive-color="#0e7ef3"
                       :active-value="1"
                       :inactive-value="0"
-                    ></el-switch>
+                    />
                     <div class="col-line" v-else-if="item.type === 'line'">{{ item.name }}</div>
 
                     <vol-upload
                       v-else-if="
-                        item.type === 'img' ||
-                          item.type === 'excel' ||
-                          item.type === 'file'
+                        item.type === 'img' || item.type === 'excel' || item.type === 'file'
                       "
                       :file-info="item.fileInfo"
                       :url="item.url"
@@ -221,13 +217,13 @@
                       :max-size="item.maxSize"
                       :max-file="item.maxFile"
                       :auto-upload="item.autoUpload"
-                    ></vol-upload>
-                    <vol-wang-editor
+                    />
+                    <app-text-editor
                       v-else-if="item.type === 'editor'"
                       :url="item.url"
                       v-model="item.value"
                       :height="item.height"
-                    ></vol-wang-editor>
+                    />
 
                     <vol-table
                       v-else-if="item.type === 'table'"
@@ -240,7 +236,7 @@
                       :pagination-hide="true"
                       :column-index="item.columnIndex"
                       :ck="item.ck"
-                    ></vol-table>
+                    />
                     <el-button
                       @click="model = true"
                       v-else-if="item.type === 'box'"
@@ -290,7 +286,7 @@
             inactive-color="rgb(165 165 165)"
             :active-value="true"
             :inactive-value="false"
-          ></el-switch>
+          />
           <div class="text" style="margin-top: 10px">是否自动上传</div>
           <el-switch
             v-model="currentItem.autoUpload"
@@ -299,7 +295,7 @@
             inactive-color="rgb(165 165 165)"
             :active-value="true"
             :inactive-value="false"
-          ></el-switch>
+          />
         </div>
         <div class="attr-item" v-show="currentItem.data">
           <div class="text">数据源(下拉框绑定设置中维护)</div>
@@ -317,12 +313,12 @@
               :key="item.key"
               :label="item.value"
               :value="item.key"
-            ></el-option>
+            />
           </el-select>
         </div>
         <div class="attr-item" v-show="currentItem.type != 'table'">
           <div class="text">标签宽度</div>
-          <el-slider style="width: 90%" :min="20" v-model="colWidth" :step="10" show-stops></el-slider>
+          <el-slider style="width: 90%" :min="20" v-model="colWidth" :step="10" show-stops />
         </div>
         <div class="attr-item attr2" v-show="currentItem.type != 'table'">
           <div>
@@ -334,7 +330,7 @@
               inactive-color="rgb(165 165 165)"
               :active-value="true"
               :inactive-value="false"
-            ></el-switch>
+            />
           </div>
 
           <div>
@@ -348,7 +344,7 @@
               inactive-color="rgb(165 165 165)"
               :active-value="true"
               :inactive-value="false"
-            ></el-switch>
+            />
           </div>
         </div>
         <div v-show="currentItem.type === 'table'">
@@ -364,7 +360,7 @@
                 inactive-color="rgb(165 165 165)"
                 :active-value="true"
                 :inactive-value="false"
-              ></el-switch>
+              />
             </div>
           </div>
           <div class="attr-item attr2">
@@ -381,113 +377,91 @@
       </div>
     </div>
   </div>
-  <vol-box v-model="model" :height="300" :width="550" :lazy="true" title="弹出框">
-    <template #content>
-      <div>弹出框内容</div>
-    </template>
+  <app-dialog-form>
+    <div>弹出框内容</div>
     <template #footer>
       <div>
         <el-button type="primary" size="mini" @click="model = false">
-          <i class="el-icon-close"></i>点击关闭
+          <i class="el-icon-close" />点击关闭
         </el-button>
         <el-button size="mini" @click="model = false">
-          <i class="el-icon-close"></i>关闭
+          <i class="el-icon-close" />关闭
         </el-button>
       </div>
     </template>
-  </vol-box>
-
-  <vol-box
-    v-model="priviewModel"
-    :height="600"
-    :width="1300"
-    :lazy="true"
-    :padding="1"
-    :close="false"
-    title="预览"
-  >
-    <preview :options="viewFormData"></preview>
-  </vol-box>
-
-  <vol-box
-    v-model="tableModel"
-    :height="600"
-    :width="1300"
-    :lazy="true"
-    :padding="0"
-    :title="currentItem.name"
-  >
-    <template #content>
-      <el-alert title="关于table配置" type="info" :closable="false" show-icon>
-        此处table是对框架voltable基本操作的配置,如果需要事件触发、数据加载等更多功能，请在生成后的代码添加需要的功能，完整配置见文档
-        <a
-          href="http://v2.volcore.xyz/document/api"
-          style="color: #1e88e5; margin-left: 9px"
-          target="_blank"
-        >voltable</a>
-      </el-alert>
-      <div class="btns">
-        <div class="btns-left">
-          表格默认功能按钮：
-          <el-checkbox
-            v-for="item in currentItem.buttons"
-            :label="item.name"
-            :key="item.name"
-          >
-            {{ item.name }}
-          </el-checkbox>
-        </div>
-        <div class="btns-right">
-          <el-button type="primary" size="mini" @click="addRow">
-            <i class="el-icon-plus"></i>添加字段
-          </el-button>
-          <el-button type="primary" size="mini" @click="delRow">
-            <i class="el-icon-delete"></i>删除字段
-          </el-button>
-          <el-button type="primary" size="mini" @click="sortRow">
-            <i class="el-icon-sort"></i>重新排列
-          </el-button>
-        </div>
+  </app-dialog-form>
+  <app-dialog-form>
+    <preview :options="viewFormData" />
+  </app-dialog-form>
+  <app-dialog-form>
+    <el-alert title="关于table配置" type="info" :closable="false" show-icon>
+      此处table是对框架voltable基本操作的配置,如果需要事件触发、数据加载等更多功能，请在生成后的代码添加需要的功能，完整配置见文档
+      <a
+        href="http://v2.volcore.xyz/document/api"
+        style="color: #1e88e5; margin-left: 9px"
+        target="_blank"
+      >voltable</a>
+    </el-alert>
+    <div class="btns">
+      <div class="btns-left">
+        表格默认功能按钮：
+        <el-checkbox
+          v-for="item in currentItem.buttons"
+          :label="item.name"
+          :key="item.name"
+        >
+          {{ item.name }}
+        </el-checkbox>
       </div>
-      <vol-table
-        :load-key="true"
-        :table-data="currnetTableData"
-        :columns="currentTableOption"
-        :height="448"
-        ref="table"
-        :index="true"
-        :pagination-hide="true"
-        :column-index="true"
-        :ck="true"
-      ></vol-table>
-    </template>
+      <div class="btns-right">
+        <el-button type="primary" size="mini" @click="addRow">
+          <i class="el-icon-plus" />添加字段
+        </el-button>
+        <el-button type="primary" size="mini" @click="delRow">
+          <i class="el-icon-delete" />删除字段
+        </el-button>
+        <el-button type="primary" size="mini" @click="sortRow">
+          <i class="el-icon-sort" />重新排列
+        </el-button>
+      </div>
+    </div>
+    <vol-table
+      :load-key="true"
+      :table-data="currnetTableData"
+      :columns="currentTableOption"
+      :height="448"
+      ref="table"
+      :index="true"
+      :pagination-hide="true"
+      :column-index="true"
+      :ck="true"
+    />
     <template #footer>
       <div style="text-align: center">
         <el-button size="mini" @click="tableModel = false">
-          <i class="el-icon-close"></i>关闭
+          <i class="el-icon-close" />关闭
         </el-button>
         <el-button type="primary" size="mini" @click="saveConfigOptions">
-          <i class="el-icon-check"></i>保存
+          <i class="el-icon-check" />保存
         </el-button>
       </div>
     </template>
-  </vol-box>
+  </app-dialog-form>
 </template>
 
-<script>
-// import { h, resolveComponent } from "vue"
+<script lang="ts">
 import { VueDraggableNext } from 'vue-draggable-next'
-import VolWangEditor from '@/components/TextEditor/VolWangEditor.vue'
-import VolUpload from '@/components/Uploader/VolUpload.vue'
 import VolTable from '@/components/Table/VolTable.vue'
 import VolFormPreview from './FormPreview.vue'
 import { components, tableOption } from './options'
 import { options1, options2, options3 } from './formTemplate'
 import axios from 'axios'
-export default {
+import { computed, defineComponent, onMounted, PropType, reactive, ref, toRefs, watch } from 'vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
+export default defineComponent({
   props: {
     userComponents: {
-      type: Array,
+      type: Array as PropType<any[]>,
       default: () => {
         return []
       }
@@ -495,13 +469,31 @@ export default {
   },
   components: {
     draggable: VueDraggableNext,
-    'vol-upload': VolUpload,
-    'vol-wang-editor': VolWangEditor,
     'vol-table': VolTable,
     preview: VolFormPreview
   },
-  data () {
-    return {
+  emits: ['save'],
+  setup (props, ctx) {
+    const state = reactive<{
+      drag: boolean
+      options1: any
+      options2: any
+      options3: any
+      colWidth: number
+      currentIndex: number
+      currentItem: any
+      currnetTableData: any[]
+      currentTableOption: any
+      // 定义要被拖拽对象的数组
+      components: any
+      currentComponents: any[]
+      dicList: any[]
+      model: boolean
+      tableModel: boolean
+      priviewModel: boolean
+      viewFormData: { fields: any, formOptions: any[], tables: any[], tabs: any[] }
+    }>({
+      drag: false,
       options1: options1,
       options2: options2,
       options3: options3,
@@ -517,30 +509,10 @@ export default {
       model: false,
       tableModel: false,
       priviewModel: false,
-      viewFormData: { fields: {}, formOptions: [], tables: [] }
-    }
-  },
-  watch: {
-    colWidth (newVal) {
-      if (this.currentIndex !== -1) {
-        this.currentComponents[this.currentIndex].width = newVal
-      }
-    }
-  },
-  created () {
-    //  this.currentComponents = this.userComponents;
-    this.currentComponents.push(...this.userComponents)
-    // this.http
-    axios.post('api/Sys_Dictionary/GetBuilderDictionary', {}, false)
-      .then((x) => {
-        this.dicList = x.map((c) => {
-          return { key: c, value: c }
-        })
-      })
-  },
-  methods: {
-    getFormOptions (item) {
-      const _option = {}
+      viewFormData: { fields: {}, formOptions: [], tables: [], tabs: [] }
+    })
+    const getFormOptions = (item: any) => {
+      const _option: any = {}
       _option.field = item.field
       _option.title = item.name
       _option.type = item.type
@@ -549,7 +521,7 @@ export default {
       if (item.type === 'line') {
         _option.title = ''
         const title = item.name
-        _option.render = (h) => {
+        _option.render = (h: any) => {
           return h(
             'div',
             {
@@ -597,44 +569,44 @@ export default {
         _option.dataKey = item.key
       }
       return _option
-    },
-    getLineFormOptions (index) {
+    }
+    const getLineFormOptions = (index: any) => {
       const _index = index
       let endIndex = index
       let width = 0
       const _options = []
-      for (index; index < this.filterCurrentComponents().length; index++) {
-        const item = this.currentComponents[index]
+      for (index; index < filterCurrentComponents().length; index++) {
+        const item = state.currentComponents[index]
         if (item.width + width <= 100) {
           width = item.width + width
           endIndex = index
-          _options.push(this.getFormOptions(item))
+          _options.push(getFormOptions(item))
         }
       }
       return { options: _options, index: _index, endIndex: endIndex }
-    },
-    filterCurrentComponents () {
-      return this.currentComponents.filter((x) => {
+    }
+    const filterCurrentComponents = () => {
+      return state.currentComponents.filter((x: any) => {
         return x.type !== 'table'
       })
-    },
-    setSpan () { },
-    priview () {
-      const _fields = {}
-      const _formOptions = []
+    }
+    const setSpan = () => { }
+    const priview = () => {
+      const _fields: any = {}
+      const _formOptions: any[] = []
       let endIndex = -1
-      this.filterCurrentComponents().forEach((item, index) => {
-        if (item.hasOwnProperty('values')) {
-          _fields[item.field] = []
-        } else {
-          _fields[item.field] = null
-        }
+      filterCurrentComponents().forEach((item: any, index: any) => {
+        // if (item.hasOwnProperty('values')) {
+        //   _fields[item.field] = []
+        // } else {
+        //   _fields[item.field] = null
+        // }
 
         if (item.width === 100) {
-          _formOptions.push([this.getFormOptions(item)])
+          _formOptions.push([getFormOptions(item)])
         } else {
           if (endIndex === -1) {
-            const lineOptions = this.getLineFormOptions(index)
+            const lineOptions = getLineFormOptions(index)
             endIndex = lineOptions.endIndex
             _formOptions.push(lineOptions.options)
             endIndex--
@@ -667,13 +639,13 @@ export default {
         // }
         // _formOptions.push(_option);
       })
-      this.viewFormData.fields = _fields
+      state.viewFormData.fields = _fields
       // console.log(JSON.stringify(_formOptions))
-      this.viewFormData.formOptions = _formOptions
-      this.priviewModel = true
+      state.viewFormData.formOptions = _formOptions
+      state.priviewModel = true
       let tableIndex = 0
-      const keys = []
-      const tables = this.currentComponents
+      const keys: any[] = []
+      const tables = state.currentComponents
         .filter((x) => {
           return x.type === 'table'
         })
@@ -688,13 +660,14 @@ export default {
             tabs: m.tabs,
             pagination: m.pagination,
             buttons: m.buttons,
-            columns: m.columns.map((c) => {
-              const obj = {
+            columns: m.columns.map((c: any) => {
+              const obj: any = {
                 title: c.title,
                 field: c.field,
                 hidden: !c.show,
                 width: c.width,
-                required: c.required
+                required: c.required,
+                bind: null
               }
 
               if (c.dataSource) {
@@ -714,33 +687,31 @@ export default {
             tableData: [{}, {}, {}]
           }
         })
-      this.viewFormData.tables = tables.filter((x) => {
+      state.viewFormData.tables = tables.filter((x) => {
         return !x.tabs
       })
-      this.viewFormData.tabs = tables.filter((x) => {
+      state.viewFormData.tabs = tables.filter((x) => {
         return x.tabs
       })
-      this.getDicKeys(keys)
-      console.log(JSON.stringify(this.viewFormData))
-    },
-    getDicKeys (keys) {
+      getDicKeys(keys)
+    }
+    const getDicKeys = (keys: any) => {
       if (!keys.length) {
         return
       }
-      this.http
-        .post('api/Sys_Dictionary/GetVueDictionary', keys, true)
-        .then((result) => {
-          result.forEach((c) => {
-            this.viewFormData.tables.forEach((t) => {
-              const _option = t.columns.find((x) => {
+      axios.post('api/Sys_Dictionary/GetVueDictionary', keys)
+        .then((result: any) => {
+          result.forEach((c: any) => {
+            state.viewFormData.tables.forEach((t: any) => {
+              const _option = t.columns.find((x: any) => {
                 return x.bind && x.bind.key === c.dicNo
               })
               if (_option) {
                 _option.bind.data = c.data
               }
             })
-            this.viewFormData.tabs.forEach((t) => {
-              const _option = t.columns.find((x) => {
+            state.viewFormData.tabs.forEach((t: any) => {
+              const _option = t.columns.find((x: any) => {
                 return x.bind && x.bind.key === c.dicNo
               })
               if (_option) {
@@ -749,143 +720,195 @@ export default {
             })
           })
         })
-    },
-    save () {
-      this.$emit('save', this.currentComponents)
-    },
-    download () {
-      this.$Message.info('开发中')
-    },
-    openTableModel () {
-      const dataSource = this.currentTableOption.find((x) => {
+    }
+    const save = () => {
+      ctx.emit('save', state.currentComponents)
+    }
+    const download = () => {
+      ElMessage.info('开发中')
+    }
+    const openTableModel = () => {
+      const dataSource = state.currentTableOption.find((x: any) => {
         return x.field === 'dataSource'
       })
       if (!dataSource.bind.data.length) {
-        dataSource.bind.data = this.dicList
+        dataSource.bind.data = state.dicList
       }
-      this.currnetTableData = JSON.parse(
-        JSON.stringify(this.currentItem.columns)
+      state.currnetTableData = JSON.parse(
+        JSON.stringify(state.currentItem.columns)
       )
-      this.tableModel = true
-    },
-    addRow () {
-      this.currnetTableData.push({ field: this.getField() })
-    },
-    delRow () {
-      this.$confirm('确认要删除选择的数据吗?', '警告', {
+      state.tableModel = true
+    }
+    const addRow = () => {
+      state.currnetTableData.push({ field: getField() })
+    }
+    const table = ref<InstanceType<typeof VolTable>>()
+    const delRow = () => {
+      ElMessageBox.confirm('确认要删除选择的数据吗?', '警告', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning',
         center: true
       }).then(() => {
-        this.$refs.table.delRow()
+        table.value && table.value.delRow()
       })
-    },
-    sortRow () {
-      this.currnetTableData = this.currnetTableData.sort((a, b) => {
+    }
+    const sortRow = () => {
+      state.currnetTableData = state.currnetTableData.sort((a: any, b: any) => {
         return a.orderNo - b.orderNo
       }) // .reverse();
-      this.$Message.success('列显示顺序已重新排列,点击预览可查看')
-    },
-    saveConfigOptions () {
-      this.currentItem.columns = JSON.parse(
-        JSON.stringify(this.currnetTableData)
+      ElMessage.success('列显示顺序已重新排列,点击预览可查看')
+    }
+    const saveConfigOptions = () => {
+      state.currentItem.columns = JSON.parse(
+        JSON.stringify(state.currnetTableData)
       )
-      this.tableModel = false
-    },
-    copyItem (item) {
+      state.tableModel = false
+    }
+    const copyItem = (item: any) => {
       const itemClone = JSON.parse(JSON.stringify(item))
       itemClone.field = 'field' + new Date().valueOf()
-      this.currentComponents.push(itemClone)
-    },
-    removeItem (index) {
-      this.currentComponents.splice(index, 1)
-      this.colWidth = 100
-      this.currentIndex = -1
-      this.currentItem = {}
-    },
-    clearItems () {
-      this.currentComponents.length = 0
-      this.colWidth = 100
-      this.currentIndex = -1
-      this.currentItem = {}
-    },
-    itemClick (item, index) {
-      this.currentIndex = index
-      this.colWidth = this.currentComponents[this.currentIndex].width
-      this.currentItem = this.currentComponents[this.currentIndex]
-    },
+      state.currentComponents.push(itemClone)
+    }
+    const removeItem = (index: any) => {
+      state.currentComponents.splice(index, 1)
+      state.colWidth = 100
+      state.currentIndex = -1
+      state.currentItem = {}
+    }
+    const clearItems = () => {
+      state.currentComponents.length = 0
+      state.colWidth = 100
+      state.currentIndex = -1
+      state.currentItem = {}
+    }
+    const itemClick = (item: any, index: any) => {
+      state.currentIndex = index
+      state.colWidth = state.currentComponents[state.currentIndex].width
+      state.currentItem = state.currentComponents[state.currentIndex]
+    }
     // 开始拖拽事件
-    onStart (e, e1) {
-      this.drag = true
-    },
-    getField () {
+    const onStart = (e: any, e1: any) => {
+      state.drag = true
+    }
+    const getField = () => {
       return 'field' + new Date().valueOf()
-    },
+    }
     // 左边往右边拖动时的事件
-    end1 (e) {
+    const end1 = (e: any) => {
       if (e.from !== e.to) {
-        const obj = JSON.parse(JSON.stringify(this.components[e.oldIndex]))
-        obj.field = this.getField()
+        const obj = JSON.parse(JSON.stringify(state.components[e.oldIndex]))
+        obj.field = getField()
         obj.width = 100
         obj.readonly = false
         obj.required = false
-        this.currentComponents.splice(e.newIndex, 1, obj)
-        this.userComponents.splice(0)
-        this.userComponents.push(...this.currentComponents)
-        // this.currentComponents = this.currentComponents.filter((x) => {
+        state.currentComponents.splice(e.newIndex, 1, obj)
+        props.userComponents.splice(0)
+        props.userComponents.push(...state.currentComponents)
+        // state.currentComponents = state.currentComponents.filter((x) => {
         //   return x.hasOwnProperty("field");
         // });
-        this.colWidth = 100
-        this.currentIndex = e.newIndex // this.currentComponents.length - 1;
-        this.currentItem = this.currentComponents[this.currentIndex]
+        state.colWidth = 100
+        state.currentIndex = e.newIndex // state.currentComponents.length - 1;
+        state.currentItem = state.currentComponents[state.currentIndex]
       }
-    },
+    }
     // 右边往左边拖动时的事件
-    end2 (e) { },
-    onMove1 (e, originalEvent) {
-      // this.moveId = e.relatedContext.element.id;
+    const end2 = (e: any) => { }
+
+    const onMove1 = (e: any, originalEvent: any) => {
+      // state.moveId = e.relatedContext.element.id;
       return true
-    },
+    }
     // move回调方法
-    onMove (e, originalEvent) {
-      console.log(JSON.stringify(this.currentComponents))
+    const onMove = (e: any, originalEvent: any) => {
+      console.log(JSON.stringify(state.currentComponents))
       return true
-    },
-    dicChange (key) {
-      this.http
-        .post('api/Sys_Dictionary/GetVueDictionary', [key], true)
-        .then((result) => {
-          this.currentItem.data = result[0].data
+    }
+    const dicChange = (key: any) => {
+      axios.post('api/Sys_Dictionary/GetVueDictionary', [key])
+        .then((result: any) => {
+          state.currentItem.data = result[0].data
           if (result[0].data.length) {
-            if (this.currentItem.type === 'select') {
-              this.currentItem.value = result[0].data[0].value
+            if (state.currentItem.type === 'select') {
+              state.currentItem.value = result[0].data[0].value
             } else {
-              this.currentItem.values = [result[0].data[0].value]
+              state.currentItem.values = [result[0].data[0].value]
             }
           }
         })
-    },
-    example1 () {
-      this.currentComponents = this.options1
-    },
-    example2 () {
-      this.currentComponents = this.options2
-    },
-    example3 () {
-      this.currentComponents = this.options3
     }
-  },
-  computed: {
-    tabsTable () {
-      return this.currentComponents.filter((x) => {
-        return x.type === 'table' && x.tabs === true
-      })
+    const example1 = () => {
+      state.currentComponents = state.options1
+    }
+    const example2 = () => {
+      state.currentComponents = state.options2
+    }
+    const example3 = () => {
+      state.currentComponents = state.options3
+    }
+    watch(
+      () => state.colWidth,
+      (newVal: any) => {
+        if (state.currentIndex !== -1) {
+          state.currentComponents[state.currentIndex].width = newVal
+        }
+      }
+    )
+    onMounted(() => {
+      //  state.currentComponents = state.userComponents;
+      state.currentComponents.push(...props.userComponents)
+      // state.http
+      axios.post('api/Sys_Dictionary/GetBuilderDictionary', {})
+        .then((x: any) => {
+          state.dicList = x.map((c: any) => {
+            return { key: c, value: c }
+          })
+        })
+    })
+    const tabsTable = computed(
+      () => {
+        return state.currentComponents.filter(x => {
+          return x.type === 'table' && x.tabs === true
+        })
+      }
+    )
+    return {
+      ...toRefs(state),
+      tabsTable,
+      example3,
+      example2,
+      example1,
+      dicChange,
+      onMove,
+      onMove1,
+      end2,
+      end1,
+      onStart,
+      itemClick,
+      clearItems,
+      removeItem,
+      copyItem,
+      saveConfigOptions,
+      sortRow,
+      delRow,
+      addRow,
+      openTableModel,
+      download,
+      save,
+      getDicKeys,
+      priview,
+      setSpan,
+      filterCurrentComponents,
+      getLineFormOptions,
+      getFormOptions
     }
   }
-}
+})
+
 </script>
 <style lang="scss" scoped>
+
 * {
   box-sizing: border-box;
 }
@@ -1097,4 +1120,5 @@ export default {
     text-align: right;
   }
 }
+
 </style>

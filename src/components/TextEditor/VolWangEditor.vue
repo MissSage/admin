@@ -1,5 +1,5 @@
 <template>
-  <div class="hello" ref="volWangEditor"></div>
+  <div class="hello" ref="volWangEditor" />
 </template>
 
 <script>
@@ -43,6 +43,7 @@ export default {
     }
   },
   name: 'WangEditor',
+  emits: ['update:modelValue'],
   data () {
     return {
       editor: null,

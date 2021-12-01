@@ -8,19 +8,19 @@
           style="display: none"
           @change="handleChange"
           :multiple="multiple"
-        />
+        >
         <div v-if="img" class="upload-img">
           <!-- v-for="(file,index) in fileInfo.length>0?fileInfo: files" -->
           <div v-for="(file, index) in files" :key="index" class="img-item">
             <div class="operation">
               <div class="action">
-                <i class="el-icon-view view" @click="previewImg(index)"></i>
-                <i class="el-icon-delete remove" @click="removeFile(index)"></i>
+                <i class="el-icon-view view" @click="previewImg(index)" />
+                <i class="el-icon-delete remove" @click="removeFile(index)" />
               </div>
-              <div class="mask"></div>
+              <div class="mask" />
             </div>
 
-            <img :src="getImgSrc(file, index)" :onerror="errorImg" />
+            <img :src="getImgSrc(file, index)" :onerror="errorImg">
           </div>
           <div
             v-show="!autoUpload || (autoUpload && files.length < maxFile)"
@@ -28,7 +28,7 @@
             :class="getSelector()"
           >
             <div class="selector" @click="handleClick">
-              <i class="el-icon-camera-solid"></i>
+              <i class="el-icon-camera-solid" />
             </div>
             <div
               v-if="!autoUpload"
@@ -54,32 +54,31 @@
           上传文件
         </el-button>
       </div>
-      <slot></slot>
+      <slot />
       <div v-if="desc">
         <el-alert
           :title="getText() + '文件大小不超过' + (maxSize || 3) + 'M'"
           type="info"
           show-icon
-        >
-        </el-alert>
+        />
       </div>
-      <slot name="content"></slot>
+      <slot name="content" />
       <div v-if="!img">
         <ul class="upload-list" v-show="fileList">
           <li class="list-file" v-for="(file, index) in files" :key="index">
             <a>
               <span @click="fileOnClick(index, file)">
-                <i :class="format(file)"></i>
+                <i :class="format(file)" />
                 {{ file.name }}
               </span>
             </a>
             <span @click="removeFile(index)" class="file-remove">
-              <i class="el-icon-close"></i>
+              <i class="el-icon-close" />
             </span>
           </li>
         </ul>
       </div>
-      <slot name="tip"></slot>
+      <slot name="tip" />
     </div>
   </div>
 </template>
@@ -261,19 +260,19 @@ export default {
       return 'submit-selector'
     },
     getImgSrc (file, index) {
-      if (file.hasOwnProperty('path')) {
-        if (this.base.isUrl(file.path)) {
-          return file.path
-        }
-        // 2020.12.27增加base64图片操作
-        if (file.path.indexOf('/9j/') !== -1) {
-          return 'data:image/jpeg;base64,' + file.path
-        }
-        if (file.path.substr(0, 1) === '/') {
-          file.path = file.path.substr(1)
-        }
-        return this.http.ipAddress + file.path
-      }
+      // if (file.hasOwnProperty('path')) {
+      //   if (this.base.isUrl(file.path)) {
+      //     return file.path
+      //   }
+      //   // 2020.12.27增加base64图片操作
+      //   if (file.path.indexOf('/9j/') !== -1) {
+      //     return 'data:image/jpeg;base64,' + file.path
+      //   }
+      //   if (file.path.substr(0, 1) === '/') {
+      //     file.path = file.path.substr(1)
+      //   }
+      //   return this.http.ipAddress + file.path
+      // }
       return window.URL.createObjectURL(file)
     },
     fileOnClick (index, file) {
@@ -693,8 +692,6 @@ export default {
   width: 100%;
   height: 100%;
   position: relative;
-  .m-img {
-  }
   .mask {
     position: absolute;
     opacity: 0.6;

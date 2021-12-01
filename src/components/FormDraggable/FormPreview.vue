@@ -7,7 +7,7 @@
       :load-key="false"
       :form-fields="options.fields"
       :form-rules="options.formOptions"
-    ></vol-form>
+    />
     <div class="tables">
       <div class="table-item" v-for="(item, index) in options.tables" :key="index">
         <div class="table-header">
@@ -37,7 +37,7 @@
           :pagination-hide="item.pagination"
           :column-index="true"
           :ck="true"
-        ></vol-table>
+        />
       </div>
     </div>
 
@@ -78,7 +78,7 @@
             :pagination-hide="item.pagination"
             :column-index="true"
             :ck="true"
-          ></vol-table>
+          />
         </el-tab-pane>
       </el-tabs>
     </div>
