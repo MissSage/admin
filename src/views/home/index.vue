@@ -1,7 +1,7 @@
 
 <template>
   <div class="datavisual-page">
-    首页大屏
+    首页
     <i
       :class="[
         'icon iconfont',

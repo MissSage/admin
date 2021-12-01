@@ -2,7 +2,7 @@ import { RouteRecordRaw } from 'vue-router'
 import AppLayout from '@/layout/AppLayout.vue'
 
 import Home from '../views/home/index.vue'
-export const routes:RouteRecordRaw[] = [
+export const routes: RouteRecordRaw[] = [
   {
     path: '/',
     component: AppLayout,
@@ -21,22 +21,31 @@ export const routes:RouteRecordRaw[] = [
           icon: 'icon-home'
         }
       },
+      // {
+      //   path: '/oneMap',
+      //   name: 'oneMap',
+      //   component: () => import('@/views/oneMap/index.vue'),
+      //   meta: {
+      //     title: '一张图',
+      //     icon: 'icon-earth'
+      //   }
+      // },
       {
-        path: '/oneMap',
-        name: 'oneMap',
-        component: () => import('@/views/oneMap/index.vue'),
+        path: '/draggableForm',
+        name: 'draggableForm',
+        component: () => import('@/views/draggableForm/index.vue'),
         meta: {
-          title: '一张图',
-          icon: 'icon-earth'
-        }
-      },
-      {
-        path: '/onemap/one',
-        component: () => import('@/components/Map/MoreScreen.vue'),
-        meta: {
-          hidden: true
+          title: '可视化编辑器',
+          icon: 'icon-drag'
         }
       }
+      // {
+      //   path: '/onemap/one',
+      //   component: () => import('@/components/Map/MoreScreen.vue'),
+      //   meta: {
+      //     hidden: true
+      //   }
+      // }
     ]
   }
 ]
