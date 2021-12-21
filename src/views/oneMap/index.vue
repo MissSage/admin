@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts" setup>
-// import Mapview from '@/components/Map/Mapview.vue'
+import Mapview from '@/components/Map/Mapview.vue'
 // import MapTools from '@/components/Map/MapTools.vue'
 // import MapTree from '@/components/Map/MapTree.vue'
 // import XZQHComponent from '@/components/Map/XZQHComponent.vue'
