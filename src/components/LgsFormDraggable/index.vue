@@ -1,9 +1,8 @@
 <template>
   <div class="drag-container">
-    <!-- @start="onStart" -->
     <div class="drag-left">
       <div class="left-title">组件列表</div>
-      <draggable
+      <vue-draggable
         v-model="components"
         @end="end1"
         class="left-draggable-item"
@@ -23,7 +22,7 @@
             {{ item.name }}
           </div>
         </transition-group>
-      </draggable>
+      </vue-draggable>
       <div class="example">
         <div @click="example1">
           示例一
@@ -64,7 +63,7 @@
         >设计器基于框架volform、voltable、volupload、volbox定制开发</a>
       </div>
       <div>
-        <el-alert title="关于表单设计器" type="success" :show-icon="true" :closable="false">
+        <el-alert title="关于表单设计器" type="info" :show-icon="true" :closable="false">
           <div>1、表单设计器基于draggable开发,为本框架自定义页面功能的补充,框架仍以可视化代码生成器为核心</div>
           <div>2、支持可视化设计1对1、1对多及表单下拉框自动绑定、table自动加载数据(分页、编辑)、自动上传文件、富文本编辑</div>
         </el-alert>
@@ -72,7 +71,7 @@
       <el-scrollbar style="flex: 1">
         <div class="tips" key="empty" v-show="!currentComponents.length">请将左边组件拖入此容器中</div>
         <el-form label-position="top">
-          <draggable
+          <vue-draggable
             class="draggable-container"
             v-model="currentComponents"
             @end="end2"
@@ -80,7 +79,7 @@
             :move="onMove"
             group="componentsGroup"
           >
-            <transition-group class="drag-center-item">
+            <transition-group>
               <div
                 class="item2"
                 :class="{ actived: index === currentIndex }"
@@ -205,7 +204,7 @@
                     />
                     <div class="col-line" v-else-if="item.type === 'line'">{{ item.name }}</div>
 
-                    <vol-upload
+                    <app-uploader
                       v-else-if="
                         item.type === 'img' || item.type === 'excel' || item.type === 'file'
                       "
@@ -218,14 +217,14 @@
                       :max-file="item.maxFile"
                       :auto-upload="item.autoUpload"
                     />
-                    <app-text-editor
+                    <lgs-editor
                       v-else-if="item.type === 'editor'"
                       :url="item.url"
                       v-model="item.value"
                       :height="item.height"
                     />
 
-                    <vol-table
+                    <lgs-table
                       v-else-if="item.type === 'table'"
                       :url="item.url"
                       :load-key="true"
@@ -249,7 +248,7 @@
                 </el-form-item>
               </div>
             </transition-group>
-          </draggable>
+          </vue-draggable>
         </el-form>
       </el-scrollbar>
     </div>
@@ -377,7 +376,7 @@
       </div>
     </div>
   </div>
-  <app-dialog-form>
+  <lgs-dialog v-model="model">
     <div>弹出框内容</div>
     <template #footer>
       <div>
@@ -389,11 +388,11 @@
         </el-button>
       </div>
     </template>
-  </app-dialog-form>
-  <app-dialog-form>
-    <preview :options="viewFormData" />
-  </app-dialog-form>
-  <app-dialog-form>
+  </lgs-dialog>
+  <lgs-dialog v-model="priviewModel">
+    <form-preview :options="viewFormData" />
+  </lgs-dialog>
+  <lgs-dialog v-model="tableModel">
     <el-alert title="关于table配置" type="info" :closable="false" show-icon>
       此处table是对框架voltable基本操作的配置,如果需要事件触发、数据加载等更多功能，请在生成后的代码添加需要的功能，完整配置见文档
       <a
@@ -425,12 +424,12 @@
         </el-button>
       </div>
     </div>
-    <vol-table
+    <lgs-table
       :load-key="true"
       :table-data="currnetTableData"
       :columns="currentTableOption"
       :height="448"
-      ref="table"
+      ref="lgsTable"
       :index="true"
       :pagination-hide="true"
       :column-index="true"
@@ -446,18 +445,18 @@
         </el-button>
       </div>
     </template>
-  </app-dialog-form>
+  </lgs-dialog>
 </template>
 
 <script lang="ts">
 import { VueDraggableNext } from 'vue-draggable-next'
-import VolTable from '@/components/Table/VolTable.vue'
-import VolFormPreview from './FormPreview.vue'
+import FormPreview from './FormPreview.vue'
 import { components, tableOption } from './options'
 import { options1, options2, options3 } from './formTemplate'
 import axios from 'axios'
 import { computed, defineComponent, onMounted, PropType, reactive, ref, toRefs, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import LgsTable from '../LgsTable/index.vue'
 export default defineComponent({
   props: {
     userComponents: {
@@ -468,9 +467,8 @@ export default defineComponent({
     }
   },
   components: {
-    draggable: VueDraggableNext,
-    'vol-table': VolTable,
-    preview: VolFormPreview
+    VueDraggable: VueDraggableNext,
+    FormPreview
   },
   emits: ['save'],
   setup (props, ctx) {
@@ -742,7 +740,7 @@ export default defineComponent({
     const addRow = () => {
       state.currnetTableData.push({ field: getField() })
     }
-    const table = ref<InstanceType<typeof VolTable>>()
+    const lgsTable = ref<InstanceType<typeof LgsTable>>()
     const delRow = () => {
       ElMessageBox.confirm('确认要删除选择的数据吗?', '警告', {
         confirmButtonText: '确定',
@@ -750,7 +748,7 @@ export default defineComponent({
         type: 'warning',
         center: true
       }).then(() => {
-        table.value && table.value.delRow()
+        lgsTable.value && lgsTable.value.delRow()
       })
     }
     const sortRow = () => {
@@ -859,12 +857,13 @@ export default defineComponent({
       //  state.currentComponents = state.userComponents;
       state.currentComponents.push(...props.userComponents)
       // state.http
-      axios.post('api/Sys_Dictionary/GetBuilderDictionary', {})
-        .then((x: any) => {
-          state.dicList = x.map((c: any) => {
-            return { key: c, value: c }
-          })
-        })
+      state.dicList = [{ key: '1', value: '1' }, { key: '2', value: '2' }, { key: '3', value: '3' }]
+      // axios.post('api/Sys_Dictionary/GetBuilderDictionary', {})
+      //   .then((x: any) => {
+      //     state.dicList = x.map((c: any) => {
+      //       return { key: c, value: c }
+      //     })
+      //   })
     })
     const tabsTable = computed(
       () => {
@@ -908,7 +907,6 @@ export default defineComponent({
 
 </script>
 <style lang="scss" scoped>
-
 * {
   box-sizing: border-box;
 }
@@ -916,7 +914,6 @@ export default defineComponent({
   /* padding: 20px; */
   display: flex;
   height: 100%;
-  position: absolute;
   width: 100%;
   box-sizing: border-box;
 }
@@ -960,12 +957,6 @@ export default defineComponent({
   background: #f0f9eb;
   font-size: 13px;
 }
-// .drag-center-item {
-//   display: inline-block;
-//   width: 100%;
-//   height: calc(100vh - 122px);
-//   padding: 10px;
-// }
 .draggable-container {
   display: inline-block;
   width: 100%;
@@ -1062,9 +1053,9 @@ export default defineComponent({
 .drag-container ::v-deep(.el-col) {
   width: 100%;
 }
-.drag-center ::v-deep(.el-form-item__label) {
-  line-height: 0 !important;
-}
+// .drag-center ::v-deep(.el-form-item__label) {
+//   line-height: 0 !important;
+// }
 .drag-center ::v-deep(.el-scrollbar__wrap) {
   overflow-x: hidden;
 }
@@ -1080,9 +1071,9 @@ export default defineComponent({
 .drag-center ::v-deep(.el-checkbox__label) {
   padding-left: 5px;
 }
-.drag-center ::v-deep(.hello > div) {
-  z-index: 500 !important;
-}
+// .drag-center ::v-deep(.hello > div) {
+//   z-index: 500 !important;
+// }
 .drag-center ::v-deep(th),
 .drag-center ::v-deep(td) {
   padding: 6px 0;
@@ -1120,5 +1111,4 @@ export default defineComponent({
     text-align: right;
   }
 }
-
 </style>

@@ -1,8 +1,8 @@
 import { App } from '@vue/runtime-dom'
-import Component from './index.vue'
+import Component from './VolWangEditor.vue'
 
 export default {
   install (app: App) {
-    app.component('AppPagination', Component)
+    app.component('LgsEditor', Component)
   }
 }

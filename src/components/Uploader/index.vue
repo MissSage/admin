@@ -20,7 +20,7 @@
               <div class="mask" />
             </div>
 
-            <img :src="getImgSrc(file, index)" :onerror="errorImg">
+            <img :src="getImgSrc(file, index)" :onerror="require('@/assets/imgs/error-img.png')">
           </div>
           <div
             v-show="!autoUpload || (autoUpload && files.length < maxFile)"
@@ -208,7 +208,7 @@ export default {
   },
   data () {
     return {
-      errorImg: 'this.src="' + require('@/assets/imgs/error-img.png') + '"',
+      // errorImg: 'this.src="' + require('@/assets/imgs/error-img.png') + '"',
       changed: false, // 手动上传成功后禁止重复上传，必须重新选择
       model: true,
       files: [],

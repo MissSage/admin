@@ -21,15 +21,15 @@ export const routes: RouteRecordRaw[] = [
           icon: 'icon-home'
         }
       },
-      // {
-      //   path: '/oneMap',
-      //   name: 'oneMap',
-      //   component: () => import('@/views/oneMap/index.vue'),
-      //   meta: {
-      //     title: '一张图',
-      //     icon: 'icon-earth'
-      //   }
-      // },
+      {
+        path: '/oneMap',
+        name: 'oneMap',
+        component: () => import('@/views/oneMap/index.vue'),
+        meta: {
+          title: '一张图',
+          icon: 'icon-earth'
+        }
+      },
       {
         path: '/draggableForm',
         name: 'draggableForm',
@@ -38,14 +38,14 @@ export const routes: RouteRecordRaw[] = [
           title: '可视化编辑器',
           icon: 'icon-drag'
         }
+      },
+      {
+        path: '/onemap/one',
+        component: () => import('@/components/Map/MoreScreen.vue'),
+        meta: {
+          hidden: true
+        }
       }
-      // {
-      //   path: '/onemap/one',
-      //   component: () => import('@/components/Map/MoreScreen.vue'),
-      //   meta: {
-      //     hidden: true
-      //   }
-      // }
     ]
   }
 ]

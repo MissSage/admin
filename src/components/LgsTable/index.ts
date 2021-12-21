@@ -1,8 +1,8 @@
 import { App } from '@vue/runtime-dom'
-import Component from './index.vue'
+import index from './index.vue'
 
 export default {
   install (app: App) {
-    app.component('AppDialogForm', Component)
+    app.component('LgsTable', index)
   }
 }

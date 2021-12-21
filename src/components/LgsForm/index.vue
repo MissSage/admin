@@ -40,7 +40,7 @@
               >
                 <img
                   :src="getSrc(img.path)"
-                  :onerror="errorImg"
+                  :onerror="require('@/assets/imgs/error-img.png')"
                   @click="previewImg(img.path)"
                 >
               </div>
@@ -366,7 +366,7 @@
   </el-form>
 </template>
 <script>
-import FormExpand from '@/components/Form/VolFormRender'
+import FormExpand from './FormExpand'
 import {
   defineComponent,
   ref,
@@ -634,7 +634,7 @@ export default defineComponent({
   data () {
     return {
       // remoteCall: true,
-      errorImg: 'this.src="' + require('@/assets/imgs/error-img.png') + '"'
+      // errorImg: 'this.src="' + require('@/assets/imgs/error-img.png') + '"'
       // span: 1,
       // rangeFields: [],
     }

@@ -18,7 +18,7 @@
     />
     <div
       class="view-change"
-      @click="handleViewChale"
+      @click="handleViewChange"
     >
       <span>{{ viewModel }}</span>
     </div>
@@ -28,124 +28,24 @@
 <script lang="ts" setup>
 import { getCurrentInstance, onMounted, ref } from 'vue'
 import { StreetPurplishBlueServices } from '@/utils/constans'
-import MapView from '@arcgis/core/views/MapView'
-import SceneView from '@arcgis/core/views/SceneView'
-import Map from '@arcgis/core/Map'
-import Basemap from '@arcgis/core/Basemap'
-import TileLayer from '@arcgis/core/layers/TileLayer'
-import BasemapToggle from '@arcgis/core/widgets/BasemapToggle'
-import Zoom from '@arcgis/core/widgets/Zoom'
-import ScaleBar from '@arcgis/core/widgets/ScaleBar'
 import useGlobal from '@/composables/useGlobal'
+import { initMap } from '@/utils/arcgisMap'
 const { $setView } = useGlobal(getCurrentInstance())
-const viewModel = ref<string>('2D')
+const viewModel = ref<'2D'|'3D'>('2D')
 
 // elements
 const mapview = ref<HTMLDivElement>()
 const scaleBar = ref<HTMLDivElement>()
-const zoom = ref<HTMLDivElement>()
-const basemapToggle = ref<HTMLDivElement>()
-let toggleIns: BasemapToggle
-let scaleIns: ScaleBar
-let zoomIns: Zoom
+const zoomBar = ref<HTMLDivElement>()
+const basemapToggleBar = ref<HTMLDivElement>()
 
-const _createMapView = () => {
-  viewModel.value = '2D'
-  basemapToggle.value && (basemapToggle.value.innerHTML = '')
-  scaleBar.value && (scaleBar.value.innerHTML = '')
-  zoom.value && (zoom.value.innerHTML = '')
-
-  const map = new Map({
-    basemap: new Basemap({
-      baseLayers: [
-        new TileLayer({
-          url: StreetPurplishBlueServices,
-          title: 'Basemap'
-        })
-      ],
-      title: 'basemap',
-      id: 'basemap'
-    })
-  })
-
-  const mapViewIns = new MapView({
-    container: mapview.value,
-    map: map,
-    zoom: 10,
-    center: [104.072745, 30.663774]
-  })
-
-  // 实例化底图切换控件
-  toggleIns = new BasemapToggle({
-    view: mapViewIns,
-    nextBasemap: 'hybrid',
-    container: basemapToggle.value
-  })
-  mapViewIns.ui.add(toggleIns)
-
-  // 实例化比例尺
-  scaleIns = new ScaleBar({
-    view: mapViewIns,
-    unit: 'metric',
-    container: scaleBar.value
-  })
-  mapViewIns.ui.add(scaleIns)
-
-  // 实例化缩放控件
-  zoomIns = new Zoom({
-    view: mapViewIns,
-    container: zoom.value
-  })
-  mapViewIns.ui.add(zoomIns)
-
-  mapViewIns.ui.components = []
-  $setView(mapViewIns)
-}
-const _createSceneView = () => {
-  viewModel.value = '3D'
-  basemapToggle.value && (basemapToggle.value.innerHTML = '')
-  scaleBar.value && (scaleBar.value.innerHTML = '')
-  zoom.value && (zoom.value.innerHTML = '')
-
-  const map = new Map({
-    basemap: new Basemap({
-      baseLayers: [
-        new TileLayer({
-          url: StreetPurplishBlueServices,
-          title: 'Basemap'
-        })
-      ],
-      title: 'basemap',
-      id: 'basemap'
-    })
-  })
-
-  const sceneViewIns = new SceneView({
-    container: mapview.value,
-    map
-  })
-
-  setTimeout(() => {
-    sceneViewIns.goTo({
-      zoom: 10,
-      center: [104.072745, 30.663774]
-    })
-  }, 500)
-
-  sceneViewIns.ui.components = []
-}
 // 二三维切换
-const handleViewChale = () => {
-  if (mapview.value) {
-    mapview.value.innerHTML = ''
-    viewModel.value === '3D'
-      ? _createMapView()
-      : _createSceneView()
-  }
+const handleViewChange = ():void => {
+  viewModel.value === '2D' ? initMap({ url: StreetPurplishBlueServices, mode: '3D', zoomBar: zoomBar.value, basemapToggleBar: basemapToggleBar.value, scaleBar: scaleBar.value }) : initMap({ url: StreetPurplishBlueServices, mode: '2D' })
 }
 onMounted(() => {
   if (mapview.value) {
-    _createMapView()
+    $setView(initMap({ url: StreetPurplishBlueServices, mode: '2D' }))
   }
 })
 </script>
@@ -158,22 +58,28 @@ onMounted(() => {
     position: relative;
     width: 100%;
     height: 100%;
+    background-color: #fff;
+    z-index: -1;
   }
   .basemapToggle {
     position: absolute;
     right: 15px;
     bottom: 15px;
+    background-color: #fff;
   }
   .scaleBar {
     position: absolute;
     left: 15px;
-    bottom: 15px;
+    bottom: 30px;
     color: $color;
+    background-color: #fff;
   }
   .zoom {
     position: absolute;
     right: 15px;
     bottom: 100px;
+    color: $color;
+    background-color: #fff;
   }
   .view-change {
     position: absolute;

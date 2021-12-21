@@ -3,6 +3,6 @@ import Component from './index.vue'
 
 export default {
   install (app: App) {
-    app.component('AppDraggable', Component)
+    app.component('LgsDraggable', Component)
   }
 }

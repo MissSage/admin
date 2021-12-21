@@ -3,6 +3,6 @@ import Component from './index.vue'
 
 export default {
   install (app: App) {
-    app.component('AppCard', Component)
+    app.component('LgsCard', Component)
   }
 }

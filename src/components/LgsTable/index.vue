@@ -187,7 +187,7 @@
                 column
               )"
               :key="imgIndex"
-              :onerror="defaultImg"
+              :onerror="require('@/assets/imgs/error.png')"
               @click="viewImg(scope.row, column, file.path, $event)"
               class="table-img"
               :src="file.path"
@@ -265,6 +265,7 @@ import { useStore } from '@/store/'
 import { ElMessage } from 'element-plus'
 import axios from 'axios'
 export default defineComponent({
+  name: 'LgsTable',
   components: { VolTableRender },
   props: {
     rowKey: {
@@ -402,7 +403,6 @@ export default defineComponent({
       realMaxHeight: 0,
       enableEdit: false, // 是否启表格用编辑功能
       empty: props.allowEmpty ? '' : '--',
-      defaultImg: 'state.src="' + require('@/assets/imgs/error.png') + '"',
       loading: false,
       footer: {},
       total: 0,

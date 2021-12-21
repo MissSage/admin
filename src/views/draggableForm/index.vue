@@ -1,5 +1,5 @@
 <template>
-  <form-draggable @save="save" :user-components="userComponents" />
+  <lgs-form-draggable @save="save" :user-components="userComponents" />
 </template>
 
 <script lang='ts' setup>

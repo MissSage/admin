@@ -3,6 +3,6 @@ import Component from './index.vue'
 
 export default {
   install (app: App) {
-    app.component('AppIcon', Component)
+    app.component('LgsSpace', Component)
   }
 }

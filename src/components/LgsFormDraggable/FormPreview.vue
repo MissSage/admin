@@ -1,7 +1,7 @@
 <template>
   <div style="padding: 15px 20px 15px 5px">
     <div class="pre-text">{{ text }}</div>
-    <vol-form
+    <lgs-form
       ref="form"
       :label-width="80"
       :load-key="false"
@@ -91,9 +91,6 @@
 </template>
 
 <script>
-import VolTable from '@/components/Table/VolTable.vue'
-import VolForm from '@/components/Form/VolForm.vue'
-
 export default {
   props: {
     options: {
@@ -136,10 +133,6 @@ export default {
       this.$refs.form.reset()
       this.$Message.success('表单已重置')
     }
-  },
-  components: {
-    'vol-table': VolTable,
-    'vol-form': VolForm
   }
 }
 </script>

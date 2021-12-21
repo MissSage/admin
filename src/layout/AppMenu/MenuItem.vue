@@ -4,7 +4,7 @@
     :index="menu.path"
   >
     <template #title>
-      <app-icon
+      <lgs-icon
         v-if="menu.icon"
         :name="menu.icon"
         :size="20"
@@ -23,7 +23,7 @@
     v-else
     :index="menu.path"
   >
-    <app-icon
+    <lgs-icon
       v-if="menu.icon"
       :name="menu.icon"
       color="rgba(255, 255, 255, 0.7)"
