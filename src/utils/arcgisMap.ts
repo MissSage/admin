@@ -20,12 +20,10 @@ const initMapView = ({ url, container, scaleBar, zoomBar, basemapToggleBar }: {
 
   const map = new Map({
     basemap: new Basemap({
-      baseLayers: [
-        new TileLayer({
-          url,
-          title: 'Basemap'
-        })
-      ],
+      baseLayers: [new TileLayer({
+        url,
+        title: 'Basemap'
+      })],
       title: 'basemap',
       id: 'basemap'
     })
@@ -35,7 +33,10 @@ const initMapView = ({ url, container, scaleBar, zoomBar, basemapToggleBar }: {
     container,
     map: map,
     zoom: 10,
-    center: [104.072745, 30.663774]
+    center: [
+      104.072745,
+      30.663774
+    ]
   })
   if (basemapToggleBar) {
     // 实例化底图切换控件
@@ -73,12 +74,10 @@ const initSceneView = ({ url, container, basemapToggleBar }: {
 }) => {
   const map = new Map({
     basemap: new Basemap({
-      baseLayers: [
-        new TileLayer({
-          url,
-          title: 'Basemap'
-        })
-      ],
+      baseLayers: [new TileLayer({
+        url,
+        title: 'Basemap'
+      })],
       title: 'basemap',
       id: 'basemap'
     })
@@ -100,7 +99,10 @@ const initSceneView = ({ url, container, basemapToggleBar }: {
   setTimeout(() => {
     sceneViewIns.goTo({
       zoom: 10,
-      center: [104.072745, 30.663774]
+      center: [
+        104.072745,
+        30.663774
+      ]
     })
   }, 500)
 

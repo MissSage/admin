@@ -1,7 +1,7 @@
 <template>
   <!-- 2021.11.18移除voltable方法@cell-mouse-leave="rowEndEdit" -->
   <div
-    class="vol-table"
+    class="lgs-table"
     :class="[textInline ? 'text-inline' : '', fxRight ? 'fx-right' : '']"
   >
     <div class="mask" v-show="loading" />
@@ -257,7 +257,7 @@
   </div>
 </template>
 <script lang="ts">
-import VolTableRender from './VolTableRender'
+import VolTableRender from './LgsTableRender'
 import { defineComponent, PropType, toRefs, reactive, ref, watch, onMounted, computed } from 'vue'
 import { IELTable } from '@/types/element-plus'
 import base from '@/utils/common'
@@ -390,7 +390,13 @@ export default defineComponent({
       default: true
     }
   },
-  emits: ['rowDbClick', 'rowClick', 'loadBefore', 'loadAfter', 'rowChange'],
+  emits: [
+    'rowDbClick',
+    'rowClick',
+    'loadBefore',
+    'loadAfter',
+    'rowChange'
+  ],
   setup (props, ctx) {
     let _errMsg = ''
     const state = reactive({
@@ -434,7 +440,12 @@ export default defineComponent({
         Foots: '',
         total: 0,
         // 2020.08.29增加自定义分页条大小
-        sizes: [30, 60, 100, 120],
+        sizes: [
+          30,
+          60,
+          100,
+          120
+        ],
         size: 30, // 默认分页大小
         wheres: [] as any[],
         page: 1,
@@ -1340,7 +1351,7 @@ export default defineComponent({
 })
 </script>
 <style lang="scss" scoped>
-.vol-table {
+.lgs-table {
   position: relative;
   .mask {
     opacity: 0.2;
@@ -1375,7 +1386,7 @@ export default defineComponent({
     flex: 1;
   }
 }
-.vol-table ::v-deep(.el-pager .number) {
+.lgs-table ::v-deep(.el-pager .number) {
   padding: 0 7px;
   border-radius: 5px;
   border: 1px solid #e6e6e6;
@@ -1383,17 +1394,17 @@ export default defineComponent({
   font-weight: 500;
   min-width: 28px;
 }
-.vol-table ::v-deep(.el-pager .number.active) {
+.lgs-table ::v-deep(.el-pager .number.active) {
   background: #ed4014;
   color: #fff;
 }
-.vol-table .t-file {
+.lgs-table .t-file {
   color: #1e8cff;
   cursor: pointer;
   border-bottom: 1px solid;
   padding-bottom: 2px;
 }
-.vol-table .empty-tag {
+.lgs-table .empty-tag {
   border: none;
   background: none;
 }
@@ -1402,10 +1413,10 @@ export default defineComponent({
   width: 10px;
 }
 
-.vol-table.fx-right ::v-deep(.el-table__header th:last-child) {
+.lgs-table.fx-right ::v-deep(.el-table__header th:last-child) {
   border-left: 1px solid #eff1f5;
 }
-.vol-table.fx-right ::v-deep(.el-table__row) {
+.lgs-table.fx-right ::v-deep(.el-table__row) {
   td:last-child {
     border-left: 1px solid #eff1f5;
   }
@@ -1438,8 +1449,8 @@ export default defineComponent({
 .v-table ::v-deep(.el-table__header th.is-sortable) {
   padding: 3px !important;
 }
-.vol-table.text-inline ::v-deep(.el-table__body .cell),
-.vol-table ::v-deep(.el-table__header-wrapper .cell) {
+.lgs-table.text-inline ::v-deep(.el-table__body .cell),
+.lgs-table ::v-deep(.el-table__header-wrapper .cell) {
   word-break: inherit !important;
   white-space: nowrap !important;
 }
@@ -1451,21 +1462,21 @@ export default defineComponent({
   padding: 7px 0 !important;
 }
 
-.vol-table ::v-deep(.el-table-column--selection .cell) {
+.lgs-table ::v-deep(.el-table-column--selection .cell) {
   display: inline;
 }
-.vol-table.text-inline ::v-deep(.el-table th > .cell) {
+.lgs-table.text-inline ::v-deep(.el-table th > .cell) {
   white-space: nowrap !important;
 }
 
-.vol-table .table-img {
+.lgs-table .table-img {
   height: 40px;
   border-radius: 5px;
   margin-right: 10px;
   width: 40px;
   object-fit: cover;
 }
-.vol-table .table-img:hover {
+.lgs-table .table-img:hover {
   cursor: pointer;
 }
 </style>

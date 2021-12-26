@@ -85,6 +85,7 @@
 <script>
 import { ElMessage } from 'element-plus'
 export default {
+  name: 'LgsUploader',
   components: {},
   props: {
     desc: {
@@ -437,11 +438,25 @@ export default {
 
       if (
         checkFileType === 'img' ||
-        ['gif', 'jpg', 'jpeg', 'png', 'bmp', 'webp'].indexOf(format) > -1
+        [
+          'gif',
+          'jpg',
+          'jpeg',
+          'png',
+          'bmp',
+          'webp'
+        ].indexOf(format) > -1
       ) {
         if (checkFileType === 'img') {
           if (
-            ['gif', 'jpg', 'jpeg', 'png', 'bmp', 'webp'].indexOf(format) > -1
+            [
+              'gif',
+              'jpg',
+              'jpeg',
+              'png',
+              'bmp',
+              'webp'
+            ].indexOf(format) > -1
           ) {
             return true
           } else {
@@ -451,24 +466,57 @@ export default {
         fileIcon = 'el-icon-picture-outline'
       }
       if (
-        ['mp4', 'm3u8', 'rmvb', 'avi', 'swf', '3gp', 'mkv', 'flv'].indexOf(
+        [
+          'mp4',
+          'm3u8',
+          'rmvb',
+          'avi',
+          'swf',
+          '3gp',
+          'mkv',
+          'flv'
+        ].indexOf(
           format
         ) > -1
       ) {
         fileIcon = 'el-icon-document'
       }
-      if (['mp3', 'wav', 'wma', 'ogg', 'aac', 'flac'].indexOf(format) > -1) {
+      if ([
+        'mp3',
+        'wav',
+        'wma',
+        'ogg',
+        'aac',
+        'flac'
+      ].indexOf(format) > -1) {
         fileIcon = 'el-icon-document'
       }
-      if (['doc', 'txt', 'docx', 'pages', 'epub', 'pdf'].indexOf(format) > -1) {
+      if ([
+        'doc',
+        'txt',
+        'docx',
+        'pages',
+        'epub',
+        'pdf'
+      ].indexOf(format) > -1) {
         fileIcon = 'el-icon-document'
       }
       if (
         checkFileType === 'excel' ||
-        ['numbers', 'csv', 'xls', 'xlsx'].indexOf(format) > -1
+        [
+          'numbers',
+          'csv',
+          'xls',
+          'xlsx'
+        ].indexOf(format) > -1
       ) {
         if (checkFileType === 'excel') {
-          if (['numbers', 'csv', 'xls', 'xlsx'].indexOf(format) > -1) {
+          if ([
+            'numbers',
+            'csv',
+            'xls',
+            'xlsx'
+          ].indexOf(format) > -1) {
             return true
           } else {
             return false

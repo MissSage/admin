@@ -16,7 +16,7 @@ module.exports = {
     'eslint:recommended'
   ],
   parserOptions: {
-    ecmaVersion: 12,
+    ecmaVersion: 13,
     parser: '@typescript-eslint/parser',
     sourceType: 'module'
   },
@@ -27,19 +27,27 @@ module.exports = {
   rules: {
     'vue/no-mutating-props': 'off',
     'vue/max-attributes-per-line': 0,
-    'vue/singleline-html-element-content-newline': 0
-    // 'vue/html-self-closing': 0,
-    // 'spaced-comment': 1,
-    // 'comma-dangle': 1,
-    // 'prefer-const': 1,
-    // 'no-prototype-builtins': 1
-  },
-  overrides: [
-    {
-      files: ['src/api/**/*.ts'],
-      rules: {
-        camelcase: 'off'
+    'vue/singleline-html-element-content-newline': 0,
+    'vue/multi-word-component-names': 0,
+    'array-element-newline': [
+      'error',
+      {
+        minItems: 2
       }
+    ],
+    'array-bracket-newline': [
+      'error',
+      {
+        minItems: 2
+      }
+    ],
+    'object-property-newline': 2
+  },
+  ignorePatterns: ['src/styles/**/*.js'],
+  overrides: [{
+    files: ['src/api/**/*.ts'],
+    rules: {
+      camelcase: 'off'
     }
-  ]
+  }]
 }

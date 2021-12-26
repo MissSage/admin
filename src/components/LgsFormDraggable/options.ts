@@ -73,22 +73,20 @@ const components = [
     icon: 'el-icon-share',
     values: [],
     key: '',
-    data: [
-      {
-        value: '请配置数据源',
-        label: '请配置数据源',
-        children: [
-          {
-            value: '具体',
-            label: '菜单:下拉框绑定设置'
-          },
-          {
-            value: 'color',
-            label: '可参照字典编号[tree_roles]'
-          }
-        ]
-      }
-    ]
+    data: [{
+      value: '请配置数据源',
+      label: '请配置数据源',
+      children: [
+        {
+          value: '具体',
+          label: '菜单:下拉框绑定设置'
+        },
+        {
+          value: 'color',
+          label: '可参照字典编号[tree_roles]'
+        }
+      ]
+    }]
   },
   {
     id: 9,

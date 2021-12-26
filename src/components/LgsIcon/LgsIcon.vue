@@ -3,8 +3,7 @@
     :class="[
       'icon iconfont',
       `${props.name}`
-    ]"
-    :style="styles"
+    ]" :style="styles"
   />
 </template>
 
@@ -33,7 +32,5 @@ const styles = computed(() => {
   }
 })
 </script>
-
 <style lang="scss">
-
 </style>

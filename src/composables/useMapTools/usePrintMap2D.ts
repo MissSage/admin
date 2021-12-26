@@ -22,7 +22,10 @@ const usePrintMap2D = (ins: ComponentInternalInstance|null) => {
       layoutOptions: {
         titleText: '地图出图demo',
         authorText: 'lgs',
-        customTextElements: [{ location: '四川省 成都市' }, { date: '08/11/2021, 08:20:20 AM' }]
+        customTextElements: [
+          { location: '四川省 成都市' },
+          { date: '08/11/2021, 08:20:20 AM' }
+        ]
       }
     })
 

@@ -26,7 +26,7 @@
             </el-button>
           </div>
         </div>
-        <vol-table
+        <lgs-table
           :url="item.url"
           :load-key="false"
           :index="true"
@@ -67,7 +67,7 @@
               </el-button>
             </div>
           </div>
-          <vol-table
+          <lgs-table
             :url="item.url"
             :load-key="false"
             :index="true"
@@ -92,6 +92,7 @@
 
 <script>
 export default {
+  name: 'FormPreview',
   props: {
     options: {
       type: Object,
@@ -103,7 +104,7 @@ export default {
   data () {
     return {
       text: '',
-      tabsModel: 0
+      tabsModel: '0'
     }
   },
   created () { },

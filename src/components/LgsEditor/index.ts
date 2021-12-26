@@ -1,5 +1,5 @@
 import { App } from '@vue/runtime-dom'
-import Component from './VolWangEditor.vue'
+import Component from './LgsEditor.vue'
 
 export default {
   install (app: App) {

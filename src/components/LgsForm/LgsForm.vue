@@ -207,13 +207,13 @@
               size="medium"
             />
 
-            <app-text-tditor
+            <lgs-editor
               ref="editor"
               v-else-if="item.type === 'editor'"
               v-model="formFields[item.field]"
             />
 
-            <app-upload
+            <lgs-uploader
               v-show="!item.hidden"
               v-else-if="isFile(item, formFields)"
               :desc="item.desc"
@@ -387,7 +387,13 @@ const rule = {
   decimal: /(^[-0-9][0-9]*(.[0-9]+)?)$/,
   number: /(^[-0-9][0-9]*([0-9]+)?)$/
 }
-const inputTypeArr = ['text', 'string', 'mail', 'textarea', 'password']
+const inputTypeArr = [
+  'text',
+  'string',
+  'mail',
+  'textarea',
+  'password'
+]
 const types = {
   int: 'number',
   byte: 'number',
@@ -401,6 +407,7 @@ const types = {
 // 表单验证注意：每次验证都必须执行callback,否则验证不执行回调方法
 const colPow = Math.pow(10, 3)
 export default defineComponent({
+  name: 'LgsForm',
   components: {
     FormExpand
   },
@@ -505,7 +512,10 @@ export default defineComponent({
               !(props.formFields[item.field] instanceof Array) ||
               props.formFields[item.field].length !== 2
             ) {
-              props.formFields[item.field] = ['', '']
+              props.formFields[item.field] = [
+                '',
+                ''
+              ]
             }
             rangeFields.value.push(item.field)
           }
@@ -563,7 +573,11 @@ export default defineComponent({
     const initUpload = (item, init) => {
       if (!init) return
       if (
-        ['img', 'excel', 'file'].indexOf(item.type !== -1) ||
+        [
+          'img',
+          'excel',
+          'file'
+        ].indexOf(item.type !== -1) ||
         item.columnType === 'img'
       ) {
         // 只是没设置是否自动上传的，默认都是选择文件后自动上传
@@ -845,7 +859,10 @@ export default defineComponent({
       if (this.rangeFields.length) {
         this.rangeFields.forEach((key) => {
           this.formFields[key].splice(0)
-          this.formFields[key] = [null, null]
+          this.formFields[key] = [
+            null,
+            null
+          ]
         })
       }
       // if (!sourceObj) return
@@ -889,7 +906,11 @@ export default defineComponent({
           trigger: rule.change.indexOf(item.type) !== -1 ? 'change' : 'blur'
         }
       }
-      if (['img', 'excel', 'file'].indexOf(item.type) !== -1) {
+      if ([
+        'img',
+        'excel',
+        'file'
+      ].indexOf(item.type) !== -1) {
         return {
           validator: (rule, val, callback) => {
             // 2021.09.05移除文件上传默认必填
@@ -1082,7 +1103,12 @@ export default defineComponent({
         }
       }
 
-      if (['select', 'selectList', 'checkbox', 'cascader'].indexOf(item.type) !== -1) {
+      if ([
+        'select',
+        'selectList',
+        'checkbox',
+        'cascader'
+      ].indexOf(item.type) !== -1) {
         const _rule = {
           type: item.type === 'select' ? 'string' : 'array',
           required: true,
@@ -1154,6 +1180,7 @@ export default defineComponent({
   }
 })
 </script>
+
 <style lang="scss" scoped>
 .el-form-item {
   margin-right: 0;

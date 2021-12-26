@@ -77,29 +77,27 @@ const useSpaceQuery2D = (ins: ComponentInternalInstance|null, sketchViewModelGlo
     // 实例化弹窗
     const template = {
       title: '{name}-{tieluju}',
-      content: [
-        {
-          type: 'fields',
-          fieldInfos: [
-            {
-              fieldName: 'name',
-              label: '名称'
-            },
-            {
-              fieldName: 'type',
-              label: '类型'
-            },
-            {
-              fieldName: 'tieluju',
-              label: '铁路局'
-            },
-            {
-              fieldName: 'address',
-              label: '地址'
-            }
-          ]
-        }
-      ]
+      content: [{
+        type: 'fields',
+        fieldInfos: [
+          {
+            fieldName: 'name',
+            label: '名称'
+          },
+          {
+            fieldName: 'type',
+            label: '类型'
+          },
+          {
+            fieldName: 'tieluju',
+            label: '铁路局'
+          },
+          {
+            fieldName: 'address',
+            label: '地址'
+          }
+        ]
+      }]
     }
     const queryResultLayer = new FeatureLayer({
       source: new Collection<Graphic>({

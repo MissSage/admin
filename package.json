@@ -10,18 +10,18 @@
     "postinstall": "npm run copy"
   },
   "dependencies": {
-    "vue-draggable-next": "^2.1.1",
-    "wangeditor": "^4.7.8",
+    "axios": "0.21.1",
     "vue": "^3.2.6",
-    "axios": "0.21.1"
+    "vue-draggable-next": "^2.1.1",
+    "wangeditor": "^4.7.8"
   },
   "devDependencies": {
     "@arcgis/core": "^4.21.2",
     "@types/node": "^16.10.2",
     "@types/nprogress": "^0.2.0",
     "@types/sortablejs": "^1.10.7",
-    "@typescript-eslint/eslint-plugin": "^4.32.0",
-    "@typescript-eslint/parser": "^4.32.0",
+    "@typescript-eslint/eslint-plugin": "^5.8.0",
+    "@typescript-eslint/parser": "^5.8.0",
     "@vitejs/plugin-vue": "^1.6.1",
     "@vue/compiler-sfc": "^3.2.6",
     "element-plus": "^1.1.0-beta.18",
@@ -30,7 +30,7 @@
     "eslint-plugin-import": "^2.24.2",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.1.0",
-    "eslint-plugin-vue": "^7.18.0",
+    "eslint-plugin-vue": "^8.2.0",
     "ncp": "^2.0.0",
     "nprogress": "^0.2.0",
     "sass": "^1.42.1",

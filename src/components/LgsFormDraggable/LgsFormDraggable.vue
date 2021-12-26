@@ -14,8 +14,8 @@
       >
         <transition-group>
           <div
-            :class="item.id === 1 ? 'item forbid' : 'item'"
             v-for="item in components"
+            :class="item.id === 1 ? 'item forbid' : 'item'"
             :key="item.id"
           >
             <i :class="item.icon" />
@@ -115,7 +115,6 @@
                     />
                     <el-date-picker
                       v-else-if="item.type === 'date'"
-                      align="right"
                       v-model="item.value"
                       type="date"
                       :disabled="item.readonly"
@@ -204,7 +203,7 @@
                     />
                     <div class="col-line" v-else-if="item.type === 'line'">{{ item.name }}</div>
 
-                    <app-uploader
+                    <lgs-uploader
                       v-else-if="
                         item.type === 'img' || item.type === 'excel' || item.type === 'file'
                       "
@@ -456,11 +455,13 @@ import { options1, options2, options3 } from './formTemplate'
 import axios from 'axios'
 import { computed, defineComponent, onMounted, PropType, reactive, ref, toRefs, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import LgsTable from '../LgsTable/index.vue'
+import LgsTable from '../LgsTable/LgsTable.vue'
+import { LgsFormItem } from '@/types/draggable-form'
 export default defineComponent({
+  name: 'LgsFormDraggable',
   props: {
     userComponents: {
-      type: Array as PropType<any[]>,
+      type: Array as PropType<LgsFormItem[]>,
       default: () => {
         return []
       }
@@ -550,7 +551,11 @@ export default defineComponent({
       } else {
         _option.colSize = (_option.width * 12) / 100
       }
-      if (['img', 'excel', 'file'].indexOf(item.type) !== -1) {
+      if ([
+        'img',
+        'excel',
+        'file'
+      ].indexOf(item.type) !== -1) {
         _option.maxSize = item.maxSize
         _option.fileInfo = item.fileInfo
         _option.multiple = item.multiple
@@ -558,7 +563,13 @@ export default defineComponent({
         _option.maxFile = item.maxFile
       }
       if (
-        ['img', 'excel', 'file', 'editor', 'table'].indexOf(item.type) !== -1
+        [
+          'img',
+          'excel',
+          'file',
+          'editor',
+          'table'
+        ].indexOf(item.type) !== -1
       ) {
         _option.url = item.url
       }
@@ -682,7 +693,11 @@ export default defineComponent({
               }
               return obj
             }),
-            tableData: [{}, {}, {}]
+            tableData: [
+              {},
+              {},
+              {}
+            ]
           }
         })
       state.viewFormData.tables = tables.filter((x) => {
@@ -857,7 +872,11 @@ export default defineComponent({
       //  state.currentComponents = state.userComponents;
       state.currentComponents.push(...props.userComponents)
       // state.http
-      state.dicList = [{ key: '1', value: '1' }, { key: '2', value: '2' }, { key: '3', value: '3' }]
+      state.dicList = [
+        { key: '1', value: '1' },
+        { key: '2', value: '2' },
+        { key: '3', value: '3' }
+      ]
       // axios.post('api/Sys_Dictionary/GetBuilderDictionary', {})
       //   .then((x: any) => {
       //     state.dicList = x.map((c: any) => {

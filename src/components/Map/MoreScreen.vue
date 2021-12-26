@@ -36,12 +36,10 @@ onMounted(() => {
 })
 const _initMap = () => {
   const basemap = new Basemap({
-    baseLayers: [
-      new TileLayer({
-        url: StreetPurplishBlueServices,
-        title: 'Basemap'
-      })
-    ],
+    baseLayers: [new TileLayer({
+      url: StreetPurplishBlueServices,
+      title: 'Basemap'
+    })],
     title: 'basemap',
     id: 'basemap'
   })
@@ -53,7 +51,10 @@ const _initMap = () => {
     container: 'top-left',
     map: map01,
     zoom: 10,
-    center: [104.072745, 30.663774]
+    center: [
+      104.072745,
+      30.663774
+    ]
   })
 
   const map02 = new Map({
@@ -63,7 +64,10 @@ const _initMap = () => {
     container: 'top-right',
     map: map02,
     zoom: 10,
-    center: [104.072745, 30.663774]
+    center: [
+      104.072745,
+      30.663774
+    ]
   })
 
   const map03 = new Map({
@@ -73,7 +77,10 @@ const _initMap = () => {
     container: 'buttom-left',
     map: map03,
     zoom: 10,
-    center: [104.072745, 30.663774]
+    center: [
+      104.072745,
+      30.663774
+    ]
   })
 
   const map04 = new Map({
@@ -83,7 +90,10 @@ const _initMap = () => {
     container: 'buttom-right',
     map: map04,
     zoom: 10,
-    center: [104.072745, 30.663774]
+    center: [
+      104.072745,
+      30.663774
+    ]
   })
 
   mapView01.ui.components = []
@@ -96,15 +106,24 @@ const _initMap = () => {
   // Get the new center of the view only when view is stationary.
     if (mapView01.center) {
       mapView02.goTo({
-        center: [mapView01.center.longitude, mapView01.center.latitude],
+        center: [
+          mapView01.center.longitude,
+          mapView01.center.latitude
+        ],
         zoom: mapView01.zoom
       })
       mapView03.goTo({
-        center: [mapView01.center.longitude, mapView01.center.latitude],
+        center: [
+          mapView01.center.longitude,
+          mapView01.center.latitude
+        ],
         zoom: mapView01.zoom
       })
       mapView04.goTo({
-        center: [mapView01.center.longitude, mapView01.center.latitude],
+        center: [
+          mapView01.center.longitude,
+          mapView01.center.latitude
+        ],
         zoom: mapView01.zoom
       })
     }

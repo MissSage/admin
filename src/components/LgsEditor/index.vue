@@ -45,5 +45,9 @@ const initEditor = () => {
   // editor.value.txt.html(props.modelValue) // 注意：必须在 create 之后
 }
 </script>
-
+<script>
+export default {
+  name: 'LgsEditor'
+}
+</script>
 <style lang="scss" scoped></style>

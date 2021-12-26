@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts" setup>
-import Mapview from '@/components/LgsMap/index.vue'
+import Mapview from '@/components/LgsMap/LgsMap.vue'
 
 </script>
 

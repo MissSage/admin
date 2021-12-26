@@ -1,4 +1,4 @@
-import LgsFormDraggable from '@/components/LgsFormDraggable/index.vue'
+import LgsFormDraggable from '@/components/LgsFormDraggable/LgsFormDraggable.vue'
 import { App } from 'vue'
 
 export default {

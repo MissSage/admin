@@ -26,12 +26,10 @@ const options1 = [
     name: '下拉框',
     value: null,
     key: '',
-    data: [
-      {
-        label: '请设置数据源',
-        value: '请设置数据源'
-      }
-    ],
+    data: [{
+      label: '请设置数据源',
+      value: '请设置数据源'
+    }],
     type: 'select',
     icon: 'el-icon-arrow-down',
     field: 'field1630258904862',
@@ -45,12 +43,10 @@ const options1 = [
     type: 'selectList',
     key: '',
     values: [],
-    data: [
-      {
-        label: '请设置数据源',
-        value: '请设置数据源'
-      }
-    ],
+    data: [{
+      label: '请设置数据源',
+      value: '请设置数据源'
+    }],
     icon: 'el-icon-arrow-down',
     field: 'field1630258924442',
     width: 30,
@@ -64,22 +60,20 @@ const options1 = [
     icon: 'el-icon-share',
     values: [],
     key: '',
-    data: [
-      {
-        value: '请配置数据源',
-        label: '请配置数据源',
-        children: [
-          {
-            value: '具体',
-            label: '菜单:下拉框绑定设置'
-          },
-          {
-            value: 'color',
-            label: '可参照字典编号[tree_roles]'
-          }
-        ]
-      }
-    ],
+    data: [{
+      value: '请配置数据源',
+      label: '请配置数据源',
+      children: [
+        {
+          value: '具体',
+          label: '菜单:下拉框绑定设置'
+        },
+        {
+          value: 'color',
+          label: '可参照字典编号[tree_roles]'
+        }
+      ]
+    }],
     field: 'field1630259518082',
     width: 20,
     readonly: false,
@@ -247,12 +241,10 @@ const options2 = [
     name: '下拉框',
     value: null,
     key: '',
-    data: [
-      {
-        label: '请设置数据源',
-        value: '请设置数据源'
-      }
-    ],
+    data: [{
+      label: '请设置数据源',
+      value: '请设置数据源'
+    }],
     type: 'select',
     icon: 'el-icon-arrow-down',
     field: 'field1630258904862',
@@ -266,12 +258,10 @@ const options2 = [
     type: 'selectList',
     key: '',
     values: [],
-    data: [
-      {
-        label: '请设置数据源',
-        value: '请设置数据源'
-      }
-    ],
+    data: [{
+      label: '请设置数据源',
+      value: '请设置数据源'
+    }],
     icon: 'el-icon-arrow-down',
     field: 'field1630258924442',
     width: 30,
@@ -540,12 +530,10 @@ const options3 = [
     name: '下拉框',
     value: null,
     key: '',
-    data: [
-      {
-        label: '请设置数据源',
-        value: '请设置数据源'
-      }
-    ],
+    data: [{
+      label: '请设置数据源',
+      value: '请设置数据源'
+    }],
     type: 'select',
     icon: 'el-icon-arrow-down',
     field: 'field1630258904862',
@@ -559,12 +547,10 @@ const options3 = [
     type: 'selectList',
     key: '',
     values: [],
-    data: [
-      {
-        label: '请设置数据源',
-        value: '请设置数据源'
-      }
-    ],
+    data: [{
+      label: '请设置数据源',
+      value: '请设置数据源'
+    }],
     icon: 'el-icon-arrow-down',
     field: 'field1630258924442',
     width: 30,
@@ -644,6 +630,119 @@ const options3 = [
     height: 200,
     icon: 'el-icon-notebook-2',
     field: 'field1630260646842',
+    width: 100,
+    readonly: false,
+    required: false
+  }
+]
+export const a: any[] = [
+  {
+    id: 1,
+    name: '输入框',
+    type: 'text',
+    value: '',
+    icon: 'el-icon-document',
+    field: 'field1640539003299',
+    width: 100,
+    readonly: false,
+    required: false
+  },
+  {
+    id: 2,
+    name: 'textarea',
+    type: 'textarea',
+    value: '',
+    icon: 'el-icon-document-copy',
+    field: 'field1640539005370',
+    width: 100,
+    readonly: false,
+    required: false
+  },
+  {
+    id: 3,
+    name: '日期',
+    type: 'date',
+    icon: 'el-icon-date',
+    value: null,
+    field: 'field1640539007309',
+    width: 100,
+    readonly: false,
+    required: false
+  },
+  { id: 4, name: 'switch', type: 'switch', icon: 'el-icon-turn-off', value: 0, field: 'field1640539009624', width: 100, readonly: false, required: false },
+  {
+    id: 5,
+    name: '单选',
+    type: 'radio',
+    icon: 'el-icon-aim',
+    value: 0,
+    data: [
+      { label: '0', value: '请设置数据源1' },
+      { label: '1', value: '请设置数据源2' }
+    ],
+    key: '',
+    field: 'field1640539011674',
+    width: 100,
+    readonly: false,
+    required: false
+  },
+  { id: 6, name: '多选', values: [], type: 'checkbox', key: '', data: [{ label: '请设置数据源', value: '请设置数据源' }], icon: 'el-icon-circle-check', field: 'field1640539013661', width: 100, readonly: false, required: false },
+  { id: 7, name: '下拉框', value: null, key: '', data: [{ label: '请设置数据源', value: '请设置数据源' }], type: 'select', icon: 'el-icon-arrow-down', field: 'field1640539015886', width: 100, readonly: false, required: false },
+  { id: 8, name: '下拉框多选', type: 'selectList', key: '', values: [], data: [{ label: '请设置数据源', value: '请设置数据源' }], icon: 'el-icon-arrow-down', field: 'field1640539018052', width: 100, readonly: false, required: false },
+  {
+    id: 81,
+    name: '级联',
+    type: 'cascader',
+    icon: 'el-icon-share',
+    values: [],
+    key: '',
+    data: [{
+      value: '请配置数据源',
+      label: '请配置数据源',
+      children: [
+        { value: '具体', label: '菜单:下拉框绑定设置' },
+        { value: 'color', label: '可参照字典编号[tree_roles]' }
+      ]
+    }],
+    field: 'field1640539020953',
+    width: 100,
+    readonly: false,
+    required: false
+  },
+  { id: 9, name: '图片上传', type: 'img', url: '', maxSize: 3, fileInfo: [], multiple: false, autoUpload: false, maxFile: 5, icon: 'el-icon-picture-outline', field: 'field1640539023695', width: 100, readonly: false, required: false },
+  { id: 10, name: 'excel上传', url: '', maxSize: 3, multiple: false, autoUpload: false, maxFile: 5, fileInfo: [], type: 'excel', icon: 'el-icon-upload', field: 'field1640539036405', width: 100, readonly: false, required: false },
+  { id: 11, name: '文件上传', type: 'file', url: '', maxSize: 3, multiple: false, autoUpload: false, maxFile: 5, fileInfo: [], icon: 'el-icon-folder-opened', field: 'field1640539040909', width: 100, readonly: false, required: false },
+  { id: 12, name: '分段信息', type: 'line', icon: 'el-icon-guide', field: 'field1640539045103', width: 100, readonly: false, required: false },
+  { id: 13, name: '编辑器', type: 'editor', value: '', url: '', height: 200, icon: 'el-icon-notebook-2', field: 'field1640539051926', width: 100, readonly: false, required: false },
+  { id: 13, name: '弹出框', type: 'box', value: '', url: '', height: 250, icon: 'el-icon-notebook-2', field: 'field1640539056139', width: 100, readonly: false, required: false },
+  {
+    id: 13,
+    name: '表格',
+    type: 'table',
+    tabs: false,
+    columns: [
+      { title: '字段1', field: 'field1', show: true, required: false, edit: false, dataType: null, dataSource: null, width: 120, orderNo: null },
+      { title: '字段2', field: 'field2', show: true, required: false, edit: false, dataType: null, dataSource: null, width: 120, orderNo: null },
+      { title: '字段3', field: 'field3', show: true, required: false, edit: false, dataType: null, dataSource: null, width: 120, orderNo: null },
+      { title: '字段4', field: 'field4', show: true, required: false, edit: false, dataType: null, dataSource: null, width: 120, orderNo: null }
+    ],
+    tableData: [
+      { field1: 'field1', field2: 'field2', field3: 'field3', field4: 'field4' },
+      { field1: 'field1', field2: 'field2', field3: 'field3', field4: 'field4' },
+      { field1: 'field1', field2: 'field2', field3: 'field3', field4: 'field4' }
+    ],
+    icon: 'el-icon-c-scale-to-original',
+    url: null,
+    index: false,
+    height: 200,
+    columnIndex: false,
+    ck: true,
+    buttons: [
+      { name: '添加行', ck: false, icon: 'el-icon-plus', value: 'add' },
+      { name: '删除行', ck: false, icon: 'el-icon-delete', value: 'del' },
+      { name: '刷新', ck: false, icon: 'el-icon-refresh-right', value: 'ref' }
+    ],
+    field: 'field1640539059276',
     width: 100,
     readonly: false,
     required: false

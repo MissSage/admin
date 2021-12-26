@@ -637,87 +637,73 @@ const AppX = {
         name: '影像',
         groupname: '影像服务',
         type: 'tiled',
-        config: [
-          {
-            groupname: '影像服务',
-            name: '影像服务',
-            url: 'http://192.168.2.103:6080/arcgis/rest/services/deyang/PIPE_QY_DEYANG_DYNAMIC/MapServer'
-          }
-        ]
+        config: [{
+          groupname: '影像服务',
+          name: '影像服务',
+          url: 'http://192.168.2.103:6080/arcgis/rest/services/deyang/PIPE_QY_DEYANG_DYNAMIC/MapServer'
+        }]
       },
       terrain: {
         name: '地形',
         groupname: '地形服务',
         type: 'tiled',
-        config: [
-          {
-            groupname: '地形服务',
-            name: '地形服务',
-            // "url": "http://192.168.2.103:6080/arcgis/rest/services/deyang/DXT_QY_DEYANG/MapServer"
-            url: 'http://map.geoq.cn/arcgis/rest/services/ChinaOnlineStreetPurplishBlue/MapServer'
-          }
-        ]
+        config: [{
+          groupname: '地形服务',
+          name: '地形服务',
+          // "url": "http://192.168.2.103:6080/arcgis/rest/services/deyang/DXT_QY_DEYANG/MapServer"
+          url: 'http://map.geoq.cn/arcgis/rest/services/ChinaOnlineStreetPurplishBlue/MapServer'
+        }]
       },
       poi: {
         name: '注记名',
         groupname: 'POI服务',
         type: 'tiled',
-        config: [
-          {
-            groupname: 'POI服务',
-            name: 'POI服务',
-            url: 'http://192.168.2.103:6080/arcgis/rest/services/deyang/POI_QY_DEYANG/MapServer'
-          }
-        ]
+        config: [{
+          groupname: 'POI服务',
+          name: 'POI服务',
+          url: 'http://192.168.2.103:6080/arcgis/rest/services/deyang/POI_QY_DEYANG/MapServer'
+        }]
       },
       grid: {
         name: '网格',
         groupname: '网格服务',
         type: 'dynamic',
-        config: [
-          {
-            groupname: '网格服务',
-            name: '网格服务',
-            url: 'http://192.168.2.104:6080/arcgis/rest/services/nanbu/BEIJING_GRID/MapServer'
-          }
-        ]
+        config: [{
+          groupname: '网格服务',
+          name: '网格服务',
+          url: 'http://192.168.2.104:6080/arcgis/rest/services/nanbu/BEIJING_GRID/MapServer'
+        }]
       },
       privateterrain: {
         name: '专用地形',
         groupname: '专用地形服务',
         type: 'tiled',
-        config: [
-          {
-            groupname: '专用地形服务',
-            name: '专用地形服务',
-            // "url": "http://192.168.2.103:6080/arcgis/rest/services/deyang/DXT_QY_DEYANG/MapServer"
-            url: 'http://map.geoq.cn/arcgis/rest/services/ChinaOnlineStreetPurplishBlue/MapServer'
-          }
-        ]
+        config: [{
+          groupname: '专用地形服务',
+          name: '专用地形服务',
+          // "url": "http://192.168.2.103:6080/arcgis/rest/services/deyang/DXT_QY_DEYANG/MapServer"
+          url: 'http://map.geoq.cn/arcgis/rest/services/ChinaOnlineStreetPurplishBlue/MapServer'
+        }]
       },
       pipe: {
         name: '管线地图',
         groupname: '管线服务',
         type: 'tiled',
-        config: [
-          {
-            groupname: '管线服务',
-            name: '管线服务',
-            url: 'http://192.168.2.103:6080/arcgis/rest/services/deyang/PIPE_QY_DEYANG/MapServer'
-          }
-        ]
+        config: [{
+          groupname: '管线服务',
+          name: '管线服务',
+          url: 'http://192.168.2.103:6080/arcgis/rest/services/deyang/PIPE_QY_DEYANG/MapServer'
+        }]
       },
       zhuantitu: {
         name: '专题图服务',
         groupname: '专题图服务',
         type: 'tiled',
-        config: [
-          {
-            groupname: '专题图服务',
-            name: '专题图服务',
-            url: 'http://192.168.2.103:6080/arcgis/rest/services/deyang/PIPE_QY_DEYANG_DYNAMIC/MapServer'
-          }
-        ]
+        config: [{
+          groupname: '专题图服务',
+          name: '专题图服务',
+          url: 'http://192.168.2.103:6080/arcgis/rest/services/deyang/PIPE_QY_DEYANG_DYNAMIC/MapServer'
+        }]
       },
       scada: {
         name: 'SCADA监控',
@@ -729,76 +715,64 @@ const AppX = {
         name: '几何服务',
         groupname: '几何服务',
         type: '',
-        config: [
-          {
-            groupname: '几何服务',
-            name: '通用几何服务',
-            url: 'http://192.168.2.103:6080/arcgis/rest/services/Utilities/Geometry/GeometryServer'
-          }
-        ]
+        config: [{
+          groupname: '几何服务',
+          name: '通用几何服务',
+          url: 'http://192.168.2.103:6080/arcgis/rest/services/Utilities/Geometry/GeometryServer'
+        }]
       },
       apiburstpipe: {
         name: '爆管分析服务',
         groupname: '爆管服务',
         type: '',
-        config: [
-          {
-            groupname: '爆管服务',
-            name: '爆管服务',
-            // "url": "http://192.168.2.104:6080/arcgis/rest/services/cqgas/PathAnalyze1/GPServer/BurstPipeAnalyze"
-            url: 'http://192.168.2.103:6080/arcgis/rest/services/nanbu/tftoolsnanbu/GPServer/BurstPipeAnalyzenanbu'
-          }
-        ]
+        config: [{
+          groupname: '爆管服务',
+          name: '爆管服务',
+          // "url": "http://192.168.2.104:6080/arcgis/rest/services/cqgas/PathAnalyze1/GPServer/BurstPipeAnalyze"
+          url: 'http://192.168.2.103:6080/arcgis/rest/services/nanbu/tftoolsnanbu/GPServer/BurstPipeAnalyzenanbu'
+        }]
       },
       apiconnectedpipe: {
         name: '连通性分析服务',
         groupname: '连通性服务',
         type: '',
-        config: [
-          {
-            groupname: '连通性服务',
-            name: '连通性服务',
-            url: 'http://192.168.2.104:6080/arcgis/rest/services/cqgas/PathAnalyze1/GPServer/ConnectedAnalyze'
-          }
-        ]
+        config: [{
+          groupname: '连通性服务',
+          name: '连通性服务',
+          url: 'http://192.168.2.104:6080/arcgis/rest/services/cqgas/PathAnalyze1/GPServer/ConnectedAnalyze'
+        }]
       },
       apishutvalve: {
         name: '关阀分析服务',
         groupname: '关阀服务',
         type: '',
-        config: [
-          {
-            groupname: '关阀服务',
-            name: '关阀服务',
-            // "url": "http://192.168.2.104:6080/arcgis/rest/services/cqgas/PathAnalyze1/GPServer/ConnectedAnalyze"
-            url: 'http://192.168.2.103:6080/arcgis/rest/services/km/tftoolskm/GPServer/ShutOffValveAnalyzebinzhou'
-          }
-        ]
+        config: [{
+          groupname: '关阀服务',
+          name: '关阀服务',
+          // "url": "http://192.168.2.104:6080/arcgis/rest/services/cqgas/PathAnalyze1/GPServer/ConnectedAnalyze"
+          url: 'http://192.168.2.103:6080/arcgis/rest/services/km/tftoolskm/GPServer/ShutOffValveAnalyzebinzhou'
+        }]
       },
       apiextentvalve: {
         name: '扩展关阀分析服务',
         groupname: '扩展关阀服务',
         type: '',
-        config: [
-          {
-            groupname: '扩展关阀服务',
-            name: '扩展关阀服务',
-            // "url": "http://192.168.2.104:6080/arcgis/rest/services/cqgas/PathAnalyze1/GPServer/ConnectedAnalyze"
-            url: 'http://192.168.2.103:6080/arcgis/rest/services/km/tftoolskm/GPServer/ShutOffValveExtendbinzhou'
-          }
-        ]
+        config: [{
+          groupname: '扩展关阀服务',
+          name: '扩展关阀服务',
+          // "url": "http://192.168.2.104:6080/arcgis/rest/services/cqgas/PathAnalyze1/GPServer/ConnectedAnalyze"
+          url: 'http://192.168.2.103:6080/arcgis/rest/services/km/tftoolskm/GPServer/ShutOffValveExtendbinzhou'
+        }]
       },
       apipipepath: {
         name: '路径分析服务',
         groupname: '路径服务',
         type: '',
-        config: [
-          {
-            groupname: '路径服务',
-            name: '路径服务',
-            url: 'http://192.168.2.104:6080/arcgis/rest/services/cqgas/PathAnalyze1/GPServer/PathAnalyze'
-          }
-        ]
+        config: [{
+          groupname: '路径服务',
+          name: '路径服务',
+          url: 'http://192.168.2.104:6080/arcgis/rest/services/cqgas/PathAnalyze1/GPServer/PathAnalyze'
+        }]
       },
       apiscada: {
         name: 'SCADA数据接口',
@@ -810,111 +784,93 @@ const AppX = {
         name: '矢量打印服务',
         groupname: '矢量打印服务',
         type: '',
-        config: [
-          {
-            groupname: '矢量打印服务',
-            name: '矢量打印服务',
-            url: 'http://192.168.2.104:6080/arcgis/rest/services/GP_Print/GPServer/TFPrint'
-          }
-        ]
+        config: [{
+          groupname: '矢量打印服务',
+          name: '矢量打印服务',
+          url: 'http://192.168.2.104:6080/arcgis/rest/services/GP_Print/GPServer/TFPrint'
+        }]
       },
       rasterprint: {
         name: '栅格打印服务',
         groupname: '栅格打印服务',
         type: '',
-        config: [
-          {
-            groupname: '栅格打印服务',
-            name: '栅格打印',
-            url: 'http://192.168.2.104:6080/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task'
-          }
-        ]
+        config: [{
+          groupname: '栅格打印服务',
+          name: '栅格打印',
+          url: 'http://192.168.2.104:6080/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task'
+        }]
       },
       printtemplatepath: {
         name: '打印模板路径',
         groupname: '打印模板路径',
         type: '',
-        config: [
-          {
-            groupname: '打印模板路径',
-            name: '重燃打印模板目录',
-            url: 'C:/work_cqrq/jiangbei'
-          }
-        ]
+        config: [{
+          groupname: '打印模板路径',
+          name: '重燃打印模板目录',
+          url: 'C:/work_cqrq/jiangbei'
+        }]
       },
       xzqmap: {
         name: '行政区划',
         groupname: '行政区划服务',
         type: '',
-        config: [
-          {
-            groupname: '行政区划服务',
-            name: '重庆行政区划',
-            url: 'http://192.168.1.101:6080/arcgis/rest/services/test/QUHUA_CQ_DYNAMIC/MapServer'
-          }
-        ]
+        config: [{
+          groupname: '行政区划服务',
+          name: '重庆行政区划',
+          url: 'http://192.168.1.101:6080/arcgis/rest/services/test/QUHUA_CQ_DYNAMIC/MapServer'
+        }]
       },
       fangdamap: {
         name: '放大镜管线服务',
         groupname: '放大镜管线服务',
         type: '',
-        config: [
-          {
-            groupname: '放大镜管线服务',
-            name: '放大镜管线服务',
-            url: 'http://192.168.2.103:6080/arcgis/rest/services/deyang/PIPE_QY_DEYANG_FANGDA/MapServer'
-          }
-        ]
+        config: [{
+          groupname: '放大镜管线服务',
+          name: '放大镜管线服务',
+          url: 'http://192.168.2.103:6080/arcgis/rest/services/deyang/PIPE_QY_DEYANG_FANGDA/MapServer'
+        }]
       },
       pipedata: {
         name: '管线业务服务',
         groupname: '管线业务服务',
         type: '',
-        config: [
-          {
-            groupname: '管线业务服务',
-            name: '管线业务服务',
-            url: 'http://192.168.2.103:6080/arcgis/rest/services/deyang/PIPE_QY_DEYANG_DYNAMIC/MapServer'
-          }
-        ]
+        config: [{
+          groupname: '管线业务服务',
+          name: '管线业务服务',
+          url: 'http://192.168.2.103:6080/arcgis/rest/services/deyang/PIPE_QY_DEYANG_DYNAMIC/MapServer'
+        }]
       },
       region_map: {
         name: '巡检片区服务',
         groupname: '巡检片区服务',
         type: '',
-        config: [
-          {
-            groupname: '巡检片区服务',
-            name: '巡检片区服务',
-            url: 'http://192.98.151.20/cqgas/rest/services/CHONGRAN/XJAREA_QY_CHONGRAN/MapServer'
-          }
-        ]
+        config: [{
+          groupname: '巡检片区服务',
+          name: '巡检片区服务',
+          url: 'http://192.98.151.20/cqgas/rest/services/CHONGRAN/XJAREA_QY_CHONGRAN/MapServer'
+        }]
       },
       fswmap: {
         name: '附属物服务',
         groupname: '附属物服务',
         type: 'dynamic',
         filter: true, // 是否进行管理单位的过滤
-        config: [
-          {
-            groupname: '附属物服务',
-            name: '重燃附属物',
-            url: 'http://192.98.151.20/cqgas/rest/services/CHONGRAN/FSW_QY_CHONGRAN/MapServer'
-          }
-        ]
+        config: [{
+          groupname: '附属物服务',
+          name: '重燃附属物',
+          url: 'http://192.98.151.20/cqgas/rest/services/CHONGRAN/FSW_QY_CHONGRAN/MapServer'
+        }]
       },
       optionmap: {
         name: '可选附属服务',
         groupname: '可选附属服务',
         type: 'tiled',
         filter: false, // 是否进行管理单位的过滤
-        config: [
-          {
-            groupname: '可选附属服务',
-            name: '消防栓',
-            url: 'http://192.98.151.20/cqgas/rest/services/CHONGRAN/FSW_QY_CHONGRAN/MapServer'
-          }
-        ]
+        config: [{
+          groupname: '可选附属服务',
+          name: '消防栓',
+          url: 'http://192.98.151.20/cqgas/rest/services/CHONGRAN/FSW_QY_CHONGRAN/MapServer'
+        }]
       }
     } as IGisResource
   },

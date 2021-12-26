@@ -20,20 +20,24 @@ const state = reactive<{
   newCenter:[number, number]
 }>({
   timer: null,
-  oldCenter: [Math.random() * 10 + 100, Math.random() * 5 + 25],
-  newCenter: [Math.random() * 10 + 100, Math.random() * 5 + 25],
+  oldCenter: [
+    Math.random() * 10 + 100,
+    Math.random() * 5 + 25
+  ],
+  newCenter: [
+    Math.random() * 10 + 100,
+    Math.random() * 5 + 25
+  ],
   oldZoom: 5,
   newZoom: 10
 })
 const initMap = (container?:HTMLDivElement) => {
   const map = new Map({
     basemap: new Basemap({
-      baseLayers: [
-        new TileLayer({
-          url: StreetPurplishBlueServices,
-          title: 'Basemap'
-        })
-      ],
+      baseLayers: [new TileLayer({
+        url: StreetPurplishBlueServices,
+        title: 'Basemap'
+      })],
       title: 'basemap',
       id: 'basemap'
     })
@@ -58,7 +62,10 @@ onMounted(() => {
     }, {
       duration: 3000
     }).then(() => {
-      state.newCenter = [Math.random() * 10 + 100, Math.random() * 5 + 25]
+      state.newCenter = [
+        Math.random() * 10 + 100,
+        Math.random() * 5 + 25
+      ]
       state.oldCenter = state.newCenter
       state.newZoom = Math.random() * 10 + 5
       state.oldZoom = state.newZoom
@@ -66,7 +73,11 @@ onMounted(() => {
   }, 5000)
 })
 </script>
-
+<script lang="ts">
+export default {
+  name: 'LgsMap'
+}
+</script>
 <style scoped lang="scss">
 .mapview-pannel {
   width: 100%;

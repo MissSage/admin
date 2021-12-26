@@ -6,12 +6,14 @@ import { store } from '@/store'
 import { routes } from './MenuRoutes'
 const router = createRouter({
   history: createWebHashHistory(), // 路由模式 history
-  routes: [...routes,
+  routes: [
+    ...routes,
     {
       path: '/login',
       name: 'login',
       component: () => import('../views/login/index.vue')
-    }] // 路由规则
+    }
+  ] // 路由规则
 })
 
 router.beforeEach((to, from) => {

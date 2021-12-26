@@ -172,7 +172,12 @@ const handleItemClick = async (val:any, type:any) => {
   }
   const fillSymbol = {
     type: 'simple-fill',
-    color: [188, 240, 234, 0.1],
+    color: [
+      188,
+      240,
+      234,
+      0.1
+    ],
     outline: {
       color: '#00FFFF',
       width: 2

@@ -11,7 +11,9 @@ const config = {
   styleUrl: 'widgets/BaseMap/css/style.css',
   mapDiv: 'myMap',
   mapService: [
-    'pipe', 'poi', 'privateterrain'
+    'pipe',
+    'poi',
+    'privateterrain'
   ],
   baselayers: ['privateterrain']
 }

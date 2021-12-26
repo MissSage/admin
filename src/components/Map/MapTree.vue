@@ -54,7 +54,8 @@ const data = ref<
         layerid: 'layerid',
         layerurl: StreetGrayServices
 
-      }, {
+      },
+      {
         label: '深色第图层',
         layerid: 'layerid',
         layerurl: StreetPurplishBlueServices
@@ -116,13 +117,11 @@ const data = ref<
   },
   {
     label: 'Pipe',
-    children: [
-      {
-        label: '管线',
-        layerid: 'pipeLayer',
-        layerurl: 'http://192.168.2.103:6080/arcgis/rest/services/deyang/PIPE_QY_DEYANG/MapServer'
-      }
-    ]
+    children: [{
+      label: '管线',
+      layerid: 'pipeLayer',
+      layerurl: 'http://192.168.2.103:6080/arcgis/rest/services/deyang/PIPE_QY_DEYANG/MapServer'
+    }]
   }
 ])
 const { handleNodeClick } = useLayerControl(getCurrentInstance())

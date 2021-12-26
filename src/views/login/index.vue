@@ -88,15 +88,9 @@ const user = reactive({
 })
 const loading = ref(false)
 const rules = ref<IFormRule>({
-  account: [
-    { required: true, message: '请输入账号', trigger: 'change' }
-  ],
-  pwd: [
-    { required: true, message: '请输入密码', trigger: 'change' }
-  ],
-  imgcode: [
-    { required: true, message: '请输入验证码', trigger: 'change' }
-  ]
+  account: [{ required: true, message: '请输入账号', trigger: 'change' }],
+  pwd: [{ required: true, message: '请输入密码', trigger: 'change' }],
+  imgcode: [{ required: true, message: '请输入验证码', trigger: 'change' }]
 })
 
 onMounted(() => {
