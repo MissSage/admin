@@ -13,7 +13,8 @@
     "axios": "0.21.1",
     "vue": "^3.2.6",
     "vue-draggable-next": "^2.1.1",
-    "wangeditor": "^4.7.8"
+    "wangeditor": "^4.7.8",
+    "wti-form": "^1.1.6"
   },
   "devDependencies": {
     "@arcgis/core": "^4.21.2",
