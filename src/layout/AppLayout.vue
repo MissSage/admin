@@ -9,7 +9,7 @@
       <el-header>
         <AppHeader />
       </el-header>
-      <el-main>
+      <el-main :class="theme">
         <router-view />
       </el-main>
     </el-container>
@@ -19,6 +19,15 @@
 <script lang="ts" setup>
 import AppHeader from './AppHeader/index.vue'
 import AppMenu from './AppMenu/index.vue'
+import { provide, ref } from 'vue'
+const theme = ref<string>('primary')
+const themes = ref<string[]>(['normal', 'primary'])
+
+provide('theme', theme.value)
+const changeTheme = () => {
+  theme.value = theme.value === themes.value[0] ? themes.value[1] : themes.value[0]
+}
+provide('changeTheme', changeTheme)
 </script>
 
 <style lang="scss" scoped>

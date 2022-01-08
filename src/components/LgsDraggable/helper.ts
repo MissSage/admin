@@ -1,14 +1,15 @@
-import { LgsLayerDefOptions } from '..'
 
-class LayerHelper {
+import { max } from 'lodash'
+import { ILayerInsArr } from './type'
+export default class helper {
   /**
    * 点击mask关闭弹窗
-   * @param  {[MouseEvent]} event [description]
+   * @param  {[type]} event [description]
    * @param  {[type]} layer [description]
-   * @return {[void]}       [description]
+   * @return {[type]}       [description]
    */
-  static maskClose (event:MouseEvent, layer:any, id:string) {
-    const mask = event && event.target && (event.target as HTMLElement).getAttribute('class')
+  static clickMaskCloseAll (event:any, layer:any, id:any) {
+    const mask = event.target.getAttribute('class')
     if (mask && (mask.indexOf('notify-mask') > -1 || mask.indexOf('icon-remove') > -1)) {
       layer.close(id)
     }
@@ -19,7 +20,7 @@ class LayerHelper {
    * @param  {[type]} event [description]
    * @return {[type]}       [description]
    */
-  static btnyes (event:MouseEvent, options:any, formValue:any) {
+  static btnyes (event:any, options:any, formValue:any) {
     if (typeof (options.yes) === 'function') {
       if (options.type === 6) {
         options.yes(formValue, options.id)
@@ -50,7 +51,7 @@ class LayerHelper {
   static hiddenScrollBar (options:any) {
     if (!options.scrollbar) {
       const htmlDom = document.getElementsByTagName('html')[0]
-      const htmlClass = Array.from(htmlDom.classList)
+      const htmlClass = [...Array.from(htmlDom.classList)]
       if (htmlClass.indexOf('vl-html-scrollbar-hidden') > -1) {
         return
       }
@@ -70,27 +71,42 @@ class LayerHelper {
    * @param  {[type]} options [description]
    * @return {[type]}         [description]
    */
-  static moveStart (event:MouseEvent, options:LgsLayerDefOptions) {
-    options.offset = (!options.offset) || options.offset === 'auto' ? [500, 500, 0] : options.offset
-    // if (options.offset.length === 0) {
-    //   options.offset.push(document.getElementById(options.id + '')?.offsetLeft)
-    //   options.offset.push(document.getElementById(options.id + '')?.offsetTop)
-    //   options.offset.push(0)
-    // }
-    // if (options.offset.length === 2) {
-    //   options.offset.push(0)
-    // }
+  static moveStart (event:any, options:any) {
+    options.offset = options.offset === 'auto' ? [] : options.offset
     const dom = document.getElementById(options.id + '')
-    options.offset[0] = dom ? dom.offsetLeft : 500
-    options.offset[1] = dom ? dom.offsetTop : 500
+    if (!dom) return
+    if (options.offset.length === 0) {
+      options.offset.push(dom.offsetLeft)
+      options.offset.push(dom.offsetTop)
+      options.offset.push(0)
+    }
+    if (options.offset.length === 2) {
+      options.offset.push(0)
+    }
+    options.offset[0] = (dom.offsetLeft)
+    options.offset[1] = (dom.offsetTop)
   }
+
+  // /**
+  //  * 拖动弹窗
+  //  * @param  {[type]} event  [description]
+  //  * @param  {[type]} ismove [description]
+  //  * @return {[type]}        [description]
+  //  */
+  // static move (event:any, options:any, ismove:any) {
+  //   if (ismove) {
+  //     const o = document.getElementById(options.id + '_alert')
+  //     o.style.left = options.offset[0] + (event.clientX - this.moveLeft) + 'px'
+  //     o.style.top = options.offset[1] + (event.clientY - this.moveTop) + 'px'
+  //   }
+  // }
 
   /**
    * [sleep description]
    * @param  {[type]} ms [description]
    * @return {[type]}    [description]
    */
-  static sleep (ms:number) {
+  static sleep (ms:any) {
     return new Promise(resolve => setTimeout(resolve, ms))
   }
 
@@ -109,7 +125,7 @@ class LayerHelper {
           return copyedObjs[i].copyTarget
         }
       }
-      let obj:any = {}
+      let obj:any|any[] = {}
       if (Array.isArray(target)) {
         obj = [] // 处理target是数组的情况
       }
@@ -132,7 +148,9 @@ class LayerHelper {
    *  取偶数
    * @param {*} str
    */
-  static evenNumber (str:string = '') {
+  static evenNumber (str:string|number) {
+    !str && (str = '')
+    str = str.toString()
     const result = str.match(/\d+/g)
     if (result) {
       const n = parseInt(result[0])
@@ -146,5 +164,20 @@ class LayerHelper {
       return str
     }
   }
+
+  static mergeJson =(options:any, def:any) => {
+    for (const key in def) {
+      if (options[key] === undefined) {
+        options[key] = def[key]
+      }
+    }
+    return options
+  }
+
+  static getMaxSeed=(arr:ILayerInsArr[]) => {
+    const newArr:number[] = arr.map(item => {
+      return parseInt(item.id.split('_')[2])
+    })
+    return max(newArr)
+  }
 }
-export default LayerHelper

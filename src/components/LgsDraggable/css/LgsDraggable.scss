@@ -1,0 +1,53 @@
+.lgs-drag {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  outline: none;
+  position: fixed;
+  z-index: 500;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 250px;
+  min-height: 65px;
+
+  &.lgs-drag-main {
+    min-height: 65px;
+    padding: 20px;
+    max-height: calc(100% - 42px);
+  }
+
+  &.lgs-drag-header {
+    min-height: 35px;
+    width: 100%;
+    .lgs-drag-header-text{
+      margin: 5px;
+      line-height: 38px;
+      height: 38px;
+      font-size: 20px;
+
+    }
+  }
+  &.lgs-drag-footer{
+    min-height: 65px;
+    width: 100%;
+  }
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+    transform: scale(0.5) translate(-100%, -100%);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translate(-50%, -50%);
+  }
+}
+
+.lgs-drag-fade-enter-from,
+.lgs-drag-fade-leave-to {
+  opacity: 0;
+  transform: translate(-50%, -100%);
+}

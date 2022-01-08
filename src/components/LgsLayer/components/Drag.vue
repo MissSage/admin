@@ -6,7 +6,7 @@
     @mouseup="moveEnd"
     @focus="resetZIndex"
     tabindex="1"
-    :id="options.id"
+    :id="id"
     :style="getBaseStyle"
     :minindex="minindex"
   >
@@ -37,11 +37,47 @@
     />
   </div>
 </template>
-<script>
-import helper from '../../helper/helper.js'
-export default {
-  data () {
-    return {
+<script lang="ts">
+import { computed, defineComponent, onMounted, PropType, reactive, toRefs } from 'vue'
+import helper from '../utils/LgsLayerHelper'
+import { LgsLayerDefOptions } from '@/components/LgsLayer/@types/index'
+
+export default defineComponent({
+  props: {
+    options: {
+      type: Object as PropType<LgsLayerDefOptions>,
+      default: () => {
+        return {}
+      }
+    },
+    cls: {
+      type: Object as PropType<any>,
+      default: () => {
+        return {
+          'vl-notify-alert': true
+        }
+      }
+    }
+  },
+  setup (props) {
+    const state = reactive<{
+      moveLeft: number // 左移的距离
+      moveTop: number // 上移的距离
+      ismove: boolean
+      id: string
+      zindex: number
+      addStyle: any
+      minindex: number
+      maxMiniState: number // 0normal,1mini,2max
+      resize: {
+        isResize: boolean
+        oWidth: number
+        oHeight: number
+        moveLeft: number
+        moveTop: number
+        tt: any
+      }
+    }>({
       moveLeft: 0, // 左移的距离
       moveTop: 0, // 上移的距离
       ismove: false,
@@ -58,93 +94,73 @@ export default {
         moveTop: 0,
         tt: {}
       }
-    }
-  },
-  props: {
-    options: {
-      type: Object,
-      default: function () {
-        return {}
-      }
-    },
-    cls: {
-      type: Object,
-      default: function () {
-        return {
-          'vl-notify-alert': true
-        }
-      }
-    }
-  },
-  async mounted () {
-    if (this.options.shade) {
-      await helper.sleep(20)
-      // 是否显示遮罩
-      document
-        .getElementsByClassName('vl-notify-mask')[0]
-        .addEventListener('mousemove', event => {
-          this.move(event)
+    })
+    onMounted(async () => {
+      if (props.options.shade) {
+        await helper.sleep(20)
+        // 是否显示遮罩
+        document
+          .getElementsByClassName('vl-notify-mask')[0]
+          .addEventListener('mousemove', (event:any) => {
+            move(event)
+          })
+        document
+          .getElementsByClassName('vl-notify-mask')[0]
+          .addEventListener('mouseup', () => {
+            moveEnd()
+          })
+      } else {
+        document.addEventListener('mousemove', event => {
+          move(event)
         })
-      document
-        .getElementsByClassName('vl-notify-mask')[0]
-        .addEventListener('mouseup', event => {
-          this.moveEnd(event)
+        document.addEventListener('mouseup', () => {
+          moveEnd()
         })
-    } else {
-      document.addEventListener('mousemove', event => {
-        this.move(event)
-      })
-      document.addEventListener('mouseup', event => {
-        this.moveEnd(event)
-      })
-    }
-    this.resetZIndex()
-  },
-  computed: {
-    getBaseStyle () {
+      }
+      resetZIndex()
+    })
+    const getBaseStyle = computed(() => {
       // 获取z-index
-      this.resetZIndex()
-      const op = this.options
+      resetZIndex()
+      const op = props.options
+      const offset = (!op.offset || op.offset === 'auto') ? [500, 500, 0] : op.offset
+      const area = (!op.area || op.area === 'auto') ? ['500', '500'] : op.area
       const styleBase = {
-        left: op.offset[0] + 'px',
-        top: op.offset[1] + 'px',
-        margin: op.offset[2],
-        zIndex: this.zindex,
-        width: helper.evenNumber(op.area[0]),
-        height: helper.evenNumber(op.area[1]),
+        left: offset[0] + 'px',
+        top: offset[1] + 'px',
+        margin: offset[2],
+        zIndex: state.zindex,
+        width: helper.evenNumber(area[0]),
+        height: helper.evenNumber(area[1]),
         overflow: 'hidden'
       }
       const a = helper.deepClone(styleBase)
-      return this.mergeJson(a, this.addStyle)
-    }
-  },
-  methods: {
-    mergeJson (options, def) {
+      return mergeJson(a, state.addStyle)
+    })
+    const mergeJson = (options:any, def:any) => {
       for (const key in def) {
         options[key] = def[key]
       }
       return options
-    },
-    getStyle (el, styleProp) {
+    }
+    const getStyle = (el:any, styleProp:any) => {
       const x = document.getElementById(el)
-      let y = 0
-      if (window.getComputedStyle) {
+      let y:string = '0'
+      if (document.defaultView && x) {
         y = document.defaultView
           .getComputedStyle(x, null)
           .getPropertyValue(styleProp)
-      } else if (x.currentStyle) {
-        y = x.currentStyle[styleProp]
       }
       return y
-    },
-    resetZIndex () {
+    }
+    const resetZIndex = () => {
       let max = 500
-      const keys = Object.keys(this.cls)
+      const keys = Object.keys(props.cls)
       const doms = document.querySelectorAll('.' + keys[0]) // vl-notify-iframe
       let domZindex = 0
       for (let i = 0, len = doms.length; i < len; i++) {
-        const value = parseInt(this.getStyle(doms[i].id, 'z-index'))
-        if (this.options.id === doms[i].id) {
+        const value = parseInt(getStyle(doms[i].id, 'z-index'))
+        if (state.id === doms[i].id) {
           domZindex = value
         }
         if (max < value) {
@@ -155,32 +171,35 @@ export default {
         return
       }
       // 预留遮罩层z-index
-      this.zindex = max + 2
-    },
-    async close (event) {
-      await helper.btncancel(event, this.options)
-      helper.clickMaskCloseAll(event, this.options.layer, this.options.id)
-    },
-    mini () {
+      state.zindex = max + 2
+    }
+
+    const close = async (event:MouseEvent) => {
+      await helper.btncancel(event, props.options)
+      state.id && helper.maskClose(event, props.options.layer, state.id)
+    }
+    const mini = () => {
       // 最小化窗口
-      let domMinIndex = parseInt(document.getElementById(this.options.id).getAttribute('minindex'))
+      const dom = state.id && document.getElementById(state.id)
+      const miniindex = dom && dom.getAttribute('minindex')
+      let domMinIndex = (miniindex && parseInt(miniindex)) || -1
       if (domMinIndex < 0) {
-        const iframeMinList = this.options.layer.iframeMinList
+        const iframeMinList = props.options.layer.iframeMinList
         for (let i = 0, len = iframeMinList.length; i < len; i++) {
           if (iframeMinList[i] === -1) {
-            this.minindex = i
+            state.minindex = i
             domMinIndex = i
             iframeMinList[i] = 1
             break
           }
         }
-        if (this.minindex === -2) {
+        if (state.minindex === -2) {
           iframeMinList.push(1)
-          this.minindex = iframeMinList.length - 1
+          state.minindex = iframeMinList.length - 1
           domMinIndex = iframeMinList.length - 1
         }
       }
-      this.addStyle = {
+      state.addStyle = {
         overflow: 'hidden',
         bottom: 0,
         left: 250 * domMinIndex + 135 + 'px',
@@ -189,44 +208,49 @@ export default {
         minHeight: '42px',
         top: 'auto'
       }
-      this.maxMiniState = 1
-    },
-    max () {
+      state.maxMiniState = 1
+    }
+    const max = () => {
       // 最大化窗口
       let height = document.documentElement.clientHeight
       if (height % 2 === 1) {
         height += 1
       }
-      this.addStyle = {
+      state.addStyle = {
         overflow: 'hidden',
         left: '50%',
         width: '100%',
         height: height + 'px',
         minHeight: '42px'
       }
-      this.maxMiniState = 2
-    },
-    maxmini () { // 还原
-      document.getElementById(this.options.id).removeAttribute('style')
-      this.addStyle = {
+      state.maxMiniState = 2
+    }
+    const maxmini = () => { // 还原
+      const dom = state.id && document.getElementById(state.id)
+      dom && dom.removeAttribute('style')
+      state.addStyle = {
         left: 'tpx',
         top: 'tpx',
         margin: 't'
       }
-      this.maxMiniState = 0
-    },
-    moveStart (event) {
-      helper.moveStart(event, this.options)
-      this.moveLeft = event.clientX
-      this.moveTop = event.clientY
-      this.ismove = true
-    },
-    move (event) {
-      if (this.ismove) {
-        const o = document.getElementById(this.options.id + '')
-        let top = this.options.offset[1] + (event.clientY - this.moveTop)
+      state.maxMiniState = 0
+    }
+    const moveStart = (event:MouseEvent) => {
+      helper.moveStart(event, props.options)
+      state.moveLeft = event.clientX
+      state.moveTop = event.clientY
+      state.ismove = true
+    }
+
+    const move = (event:MouseEvent) => {
+      if (state.ismove) {
+        const o = document.getElementById(state.id + '')
+        if (!o) return
+        const offset = ((!props.options.offset) || props.options.offset === 'auto' || props.options.offset.length < 2) ? [500, 500, 0] : props.options.offset
+
+        let top = offset[1] + (event.clientY - state.moveTop)
         const docOffsetHeight = o.offsetHeight / 2
-        let left = this.options.offset[0] + (event.clientX - this.moveLeft)
+        let left = offset[0] + (event.clientX - state.moveLeft)
         const docOffsetWidth = o.offsetWidth / 2
         if (top <= docOffsetHeight) {
           // 顶部边界
@@ -248,39 +272,42 @@ export default {
         }
         o.style.left = left + 'px'
         o.style.top = top + 'px'
-        this.resetZIndex()
+        resetZIndex()
       }
-    },
-    moveEnd () {
-      this.ismove = false
-      this.resize.isResize = false
-    },
-    resizeHand (event) {
+    }
+    const moveEnd = () => {
+      state.ismove = false
+      state.resize.isResize = false
+    }
+    const resizeHand = (event:MouseEvent) => {
       // 拉伸操作
-      const o = document.getElementById(this.options.id + '')
-      this.resize.oWidth = o.offsetWidth
-      this.resize.oHeight = o.offsetHeight
-      this.resize.moveTop = event.clientY
-      this.resize.moveLeft = event.clientX
-      this.resize.isResize = true
+      const o = document.getElementById(state.id + '')
+      if (!o) return
+      state.resize.oWidth = o.offsetWidth
+      state.resize.oHeight = o.offsetHeight
+      state.resize.moveTop = event.clientY
+      state.resize.moveLeft = event.clientX
+      state.resize.isResize = true
       document.body.addEventListener('mousemove', e => {
-        this.resizeHandMove(e)
+        resizeHandMove(e)
       })
-    },
-    resizeHandMove (event) {
-      if (this.resize.isResize) {
-        const o = document.getElementById(this.options.id + '')
+    }
+
+    const resizeHandMove = (event:MouseEvent) => {
+      if (state.resize.isResize) {
+        const o = document.getElementById(state.id + '')
         const top = event.clientY
         const left = event.clientX
 
-        let oWidth = this.resize.oWidth + (left - this.resize.moveLeft) * 2
-        const oHeight = this.resize.oHeight + (top - this.resize.moveTop) * 2
+        let oWidth = state.resize.oWidth + (left - state.resize.moveLeft) * 2
+        const oHeight = state.resize.oHeight + (top - state.resize.moveTop) * 2
 
         // console.log('top', o.offsetHeight / 2, o.getBoundingClientRect().top);
 
         if (oWidth < 200 || oHeight < 200) {
           return
         }
+        if (!o) return
         // 控制边界
         const clientRect = o.getBoundingClientRect()
 
@@ -311,18 +338,38 @@ export default {
           o.style.left = (o.getBoundingClientRect().width / 2) + 'px'
         }
       }
-    },
-    resizeHandMoveEnd () {
+    }
+    const resizeHandMoveEnd = () => {
       setTimeout(() => {
-        this.resize.isResize = false
+        state.resize.isResize = false
         document.body.removeEventListener('mousemove', e => {
-          this.resizeHandMove(e)
+          resizeHandMove(e)
         })
       }, 50)
     }
+    return {
+      ...toRefs(props),
+      ...toRefs(state),
+      getBaseStyle,
+      mergeJson,
+      getStyle,
+      resetZIndex,
+      close,
+      mini,
+      max,
+      maxmini,
+      move,
+      moveStart,
+      moveEnd,
+      resizeHand,
+      resizeHandMove,
+      resizeHandMoveEnd
+    }
   }
-}
+})
+
 </script>
 
-<style>
+<style lang="scss" scoped>
+@import '../css/index.scss';
 </style>

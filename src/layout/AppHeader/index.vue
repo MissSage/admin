@@ -5,12 +5,14 @@
   </el-space>
   <el-space size="large">
     <MenuSearch />
+    <ThemeChange />
     <FullScreen />
     <Notification />
     <UserInfo />
   </el-space>
 </template>
 <script lang="ts" setup>
+import ThemeChange from './ThemeChange.vue'
 import ToggleSidebar from './ToggleSidebar.vue'
 import Breadcrumb from './Breadcrumb.vue'
 import MenuSearch from './MenuSearch.vue'

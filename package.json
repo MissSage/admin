@@ -10,6 +10,7 @@
     "postinstall": "npm run copy"
   },
   "dependencies": {
+    "@types/lodash": "^4.14.178",
     "axios": "0.21.1",
     "vue": "^3.2.6",
     "vue-draggable-next": "^2.1.1",
