@@ -1,6 +1,6 @@
 
 import { max } from 'lodash'
-import { ILayerInsArr } from './type'
+import { IFollowTarget, ILayerInsArr, IRectInfo } from '../type'
 export default class helper {
   /**
    * 点击mask关闭弹窗
@@ -179,5 +179,58 @@ export default class helper {
       return parseInt(item.id.split('_')[2])
     })
     return max(newArr)
+  }
+
+  static client = (type:string) => {
+    switch (type) {
+      case 'width':
+        return document.body.clientWidth
+      case 'height':
+        return document.body.clientHeight
+      default:
+        return 0
+    }
+  }
+
+  static scroll = (type:string) => {
+    switch (type) {
+      case 'left':
+        return document.body.scrollLeft
+      case 'top':
+        return document.body.scrollTop
+      default:
+        return 0
+    }
+  }
+
+  /**
+ * 获取跟随的元素的Rect信息
+ * @param follow 跟随的元素 #id 或 .class 或 [e.clientX, e.clientY]
+ * @param w w
+ * @param h h
+ * @returns [左，上，右，下，css类名]
+ */
+  static getFollowRect = (follow:IFollowTarget, w:number, h:number):IRectInfo => {
+    let t:number = 0
+    let l:number = 0
+    const r:number = 0 + w
+    const b:number = 0 + h
+    if (typeof follow === 'object') {
+      //
+      return [follow[0], follow[1], r, b, '']
+    } else {
+      const obj:HTMLElement|null = document.querySelector(follow)
+      if (obj) {
+        t = obj.offsetTop // 获取该元素对应父容器的上边距
+        l = obj.offsetLeft // 对应父容器的上边距
+        // 判断是否有父容器，如果存在则累加其边距
+        if (obj.offsetParent) { // 等效 obj = obj.offsetParent;while (obj != undefined)
+          const offsetParent = obj.offsetParent as HTMLElement
+          t += offsetParent.offsetTop // 叠加父容器的上边距
+          l += offsetParent.offsetLeft // 叠加父容器的左边距
+        }
+      }
+      return [l, t, r, b, '']
+    }
   }
 }

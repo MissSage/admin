@@ -6,13 +6,15 @@ import {
   createElementBlock,
   createElementVNode,
   createVNode, defineComponent,
+  h,
   isVNode, normalizeClass, normalizeStyle,
   onMounted, openBlock, PropType, reactive, ref, render, renderSlot,
-  toDisplayString, toRefs, Transition, vShow, withCtx, withDirectives, withModifiers
+  toDisplayString, toRefs,
+  Transition, vShow, withCtx, withDirectives, withModifiers
 } from 'vue'
 import Helper from './helper'
-import { DraggableOptions, ILayerInsArr } from './type'
-import './css/LgsDraggable.scss'
+import { DraggableOptions, ILayerInsArr } from '../type'
+
 // import LgsLayerConstructor from './index.vue'
 const script = defineComponent({
   props: {
@@ -257,7 +259,7 @@ function render1 (_ctx:any, _cache:any, $props:any, $setup:any, $data:any, $opti
           renderSlot(_ctx.$slots, 'default', {}, () => [
             createElementVNode('div', {}
               , [
-                createVNode(_ctx.options.content)
+                h(_ctx.options.content)
               ]
             )
           ])

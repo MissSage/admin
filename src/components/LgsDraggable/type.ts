@@ -26,3 +26,13 @@ export interface ILayerInsArr{
   id:string
   layer:any
 }
+export type IPosition = 't'|'r'|'b'|'l'|'lt'|'lb'|'rt'|'rb'| [number, number]
+export type IFollowTarget = string | [number, number]
+export type IRectInfo = [number, number, number, number, string]
+export type IBtn = {
+  text:string
+  disabled?:boolean
+  click?:(...args:any[])=>Promise<void>
+  style?:string
+}
+export type IToastIcon = Record<string, string>
