@@ -1,12 +1,40 @@
 // import ILayerBox from './type'
 import { createVNode, render } from 'vue'
 import Helper from './helper'
-import { ILayerInsArr } from '../type'
+import { ILayerInsArr, ILgsLayerConfigs, ILgsLayerProps } from '../type'
 import LgsLayerConstructor from '../index.vue'
 class LgsLayerBox {
   constructor () {
     this.currentId = ''
     this.layers = []
+  }
+
+  defaultOptions: ILgsLayerConfigs = {
+    title: '',
+    onSuccess: () => Promise.resolve(console.log('success')),
+    onEnd: () => Promise.resolve(console.log('end')),
+    teleport: 'body',
+    time: undefined,
+    fullscreen: false,
+    position: 'b',
+    fixed: true,
+    follow: undefined,
+    maximize: false,
+    shade: false,
+    shadeClose: false,
+    btns: [],
+    opacity: 1,
+    id: '',
+    anim: 'scaleIn',
+    type: 'message',
+    layerStyle: '',
+    icon: '',
+    content: '',
+    resize: false,
+    xclose: true,
+    xposition: 'right',
+    xcolor: 'white',
+    theme: ''
   }
 
   currentId:string
@@ -17,12 +45,17 @@ class LgsLayerBox {
     const id = `lgslayer_${new Date().getTime()}_${maxSeed++}`
     options.id = id
     options.modelValue = true
+    const configs:ILgsLayerConfigs = Helper.mergeJson<ILgsLayerConfigs>(options, this.defaultOptions)
+    const props:ILgsLayerProps = {
+      modelValue: options.modelValue,
+      config: configs
+    }
     const container = document.createElement('div')
     container.className = `${id}_container`
     // 创建虚拟节点
     const vm = createVNode(
       LgsLayerConstructor,
-      options
+      props
     )
     vm.props && (vm.props.onDestroy = () => {
       render(null, container)
@@ -30,14 +63,15 @@ class LgsLayerBox {
     render(vm, container)
     this.layers.push({ id: id, layer: vm })
     container.firstElementChild && document.body.appendChild(container.firstElementChild)
+    return id
   }
 
   close (id:string, userCallback:(id:string)=>void) {
     const idx = this.layers.findIndex(item => item.id === id)
     const layer = this.layers[idx]
-    layer && layer.layer.close().then(() => {
-      userCallback(layer.id)
-    })
+    if (!layer) return
+    const instans = layer.layer.component && layer.layer.component.proxy
+    instans && instans.close()
     this.layers.splice(idx, 1)
   }
 

@@ -8,7 +8,7 @@ export default class helper {
    * @param  {[type]} layer [description]
    * @return {[type]}       [description]
    */
-  static clickMaskCloseAll (event:any, layer:any, id:any) {
+  static clickMaskCloseAll (event: any, layer: any, id: any) {
     const mask = event.target.getAttribute('class')
     if (mask && (mask.indexOf('notify-mask') > -1 || mask.indexOf('icon-remove') > -1)) {
       layer.close(id)
@@ -20,7 +20,7 @@ export default class helper {
    * @param  {[type]} event [description]
    * @return {[type]}       [description]
    */
-  static btnyes (event:any, options:any, formValue:any) {
+  static btnyes (event: any, options: any, formValue: any) {
     if (typeof (options.yes) === 'function') {
       if (options.type === 6) {
         options.yes(formValue, options.id)
@@ -37,7 +37,7 @@ export default class helper {
    * @param  {[type]} event [description]
    * @return {[type]}       [description]
    */
-  static async btncancel (event:any, options:any) {
+  static async btncancel (event: any, options: any) {
     if (typeof (options.cancel) === 'function') {
       await options.cancel(options.id)
     } else {
@@ -48,7 +48,7 @@ export default class helper {
   /**
    * 隐藏滚动条
    */
-  static hiddenScrollBar (options:any) {
+  static hiddenScrollBar (options: any) {
     if (!options.scrollbar) {
       const htmlDom = document.getElementsByTagName('html')[0]
       const htmlClass = [...Array.from(htmlDom.classList)]
@@ -71,7 +71,7 @@ export default class helper {
    * @param  {[type]} options [description]
    * @return {[type]}         [description]
    */
-  static moveStart (event:any, options:any) {
+  static moveStart (event: any, options: any) {
     options.offset = options.offset === 'auto' ? [] : options.offset
     const dom = document.getElementById(options.id + '')
     if (!dom) return
@@ -106,7 +106,7 @@ export default class helper {
    * @param  {[type]} ms [description]
    * @return {[type]}    [description]
    */
-  static sleep (ms:any) {
+  static sleep (ms: any) {
     return new Promise(resolve => setTimeout(resolve, ms))
   }
 
@@ -114,9 +114,9 @@ export default class helper {
    *  深度拷贝
    * @param {*} source
    */
-  static deepClone (target:any) {
-    const copyedObjs:any[] = [] // 此数组解决了循环引用和相同引用的问题，它存放已经递归到的目标对象
-    function _deepCopy (target:any) {
+  static deepClone (target: any) {
+    const copyedObjs: any[] = [] // 此数组解决了循环引用和相同引用的问题，它存放已经递归到的目标对象
+    function _deepCopy (target: any) {
       if ((typeof target !== 'object') || !target) {
         return target
       }
@@ -125,7 +125,7 @@ export default class helper {
           return copyedObjs[i].copyTarget
         }
       }
-      let obj:any|any[] = {}
+      let obj: any | any[] = {}
       if (Array.isArray(target)) {
         obj = [] // 处理target是数组的情况
       }
@@ -148,7 +148,7 @@ export default class helper {
    *  取偶数
    * @param {*} str
    */
-  static evenNumber (str:string|number) {
+  static evenNumber (str: string | number) {
     !str && (str = '')
     str = str.toString()
     const result = str.match(/\d+/g)
@@ -165,23 +165,23 @@ export default class helper {
     }
   }
 
-  static mergeJson =(options:any, def:any) => {
+  static mergeJson<T> (options: any, def: any) {
     for (const key in def) {
       if (options[key] === undefined) {
         options[key] = def[key]
       }
     }
-    return options
+    return options as T
   }
 
-  static getMaxSeed=(arr:ILayerInsArr[]) => {
-    const newArr:number[] = arr.map(item => {
+  static getMaxSeed = (arr: ILayerInsArr[]) => {
+    const newArr: number[] = arr.map(item => {
       return parseInt(item.id.split('_')[2])
     })
     return max(newArr)
   }
 
-  static client = (type:string) => {
+  static client = (type: string) => {
     switch (type) {
       case 'width':
         return document.body.clientWidth
@@ -192,7 +192,7 @@ export default class helper {
     }
   }
 
-  static scroll = (type:string) => {
+  static scroll = (type: string) => {
     switch (type) {
       case 'left':
         return document.body.scrollLeft
@@ -210,16 +210,18 @@ export default class helper {
  * @param h h
  * @returns [左，上，右，下，css类名]
  */
-  static getFollowRect = (follow:IFollowTarget, w:number, h:number):IRectInfo => {
-    let t:number = 0
-    let l:number = 0
-    const r:number = 0 + w
-    const b:number = 0 + h
+  static getFollowRect = (follow?: IFollowTarget, w?: number, h?: number): IRectInfo => {
+    let t: number = 0
+    let l: number = 0
+    w = w || 0
+    h = h || 0
+    const r: number = 0 + w
+    const b: number = 0 + h
     if (typeof follow === 'object') {
       //
       return [follow[0], follow[1], r, b, '']
     } else {
-      const obj:HTMLElement|null = document.querySelector(follow)
+      const obj: HTMLElement | null = document.querySelector(follow || '')
       if (obj) {
         t = obj.offsetTop // 获取该元素对应父容器的上边距
         l = obj.offsetLeft // 对应父容器的上边距

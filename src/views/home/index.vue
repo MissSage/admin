@@ -9,6 +9,7 @@
 <script lang="ts">
 import useGlobal from '@/composables/useGlobal'
 import { defineComponent, getCurrentInstance, inject } from 'vue'
+import Test from './test.vue'
 export default defineComponent({
   setup () {
     const app = getCurrentInstance()
@@ -21,7 +22,9 @@ export default defineComponent({
         modelValue: true,
         theme: theme,
         type: 'message',
-        content: 'aaaaaaa',
+        position: 'r',
+        teleport: 'body',
+        content: Test.template,
         xclose: true,
         onEnd: async () => {
           setTimeout(() => {

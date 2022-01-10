@@ -1,34 +1,37 @@
 <template>
-  <div ref="elRef" v-show="opened" class="vui__layer" :class="{'vui__layer-closed': closeCls}" :id="id">
+  <div ref="elRef" v-show="opened" class="vui__layer" :class="[closeCls&&'vui__layer-closed']" :id="id">
     <!-- //蒙版 -->
-    <div v-if="shade" class="vlayer__overlay" @click="shadeClicked" :style="'opacity:'+opacity"></div>
-    <div class="vlayer__wrap" :class="['anim-'+anim, 'popui__'+type, tipArrow]" :style="[layerStyle]">
-      <div v-if="title" class="vlayer__wrap-tit" v-html="title"></div>
-      <div v-if="type=='toast'&&icon" class="vlayer__toast-icon" :class="['vlayer__toast-'+icon]" v-html="toastIcon[icon]"></div>
+    <div v-if="config.shade" class="vlayer__overlay" @click="shadeClicked" :style="'opacity:'+config.opacity"></div>
+    <div class="vlayer__wrap" :class="['anim-'+config.anim, 'popui__'+config.type, tipArrow, config.theme]" :style="[config.layerStyle?config.layerStyle:'']">
+      <div v-if="config.title" class="vlayer__wrap-tit" v-html="config.title"></div>
+      <div v-if="config.type=='toast'&&config.icon" class="vlayer__toast-icon" :class="['vlayer__toast-'+config.icon]" v-html="toastIcon[config.icon]"></div>
       <div class="vlayer__wrap-cntbox">
         <!-- 判断插槽是否存在 -->
         <template v-if="$slots.content">
           <div class="vlayer__wrap-cnt"><slot name="content" /></div>
         </template>
         <template v-else>
-          <template v-if="content">
-            <iframe v-if="type=='iframe'" scrolling="auto" allowtransparency="true" frameborder="0" :src="content"></iframe>
+          <template v-if="config.content">
+            <iframe v-if="config.type=='iframe'" scrolling="auto" allowtransparency="true" frameborder="0" :src="config.content"></iframe>
             <!-- message|notify|popover -->
-            <div v-else-if="type=='message' || type=='notify' || type=='popover'" class="vlayer__wrap-cnt">
-              <i v-if="icon" class="vlayer-msg__icon" :class="icon" v-html="messageIcon[icon]"></i>
-              <div class="vlayer-msg__group"><div v-if="title" class="vlayer-msg__title" v-html="title"></div><div v-html="content"></div></div>
+            <div v-else-if="config.type=='message' || config.type=='notify' || config.type=='popover'" class="vlayer__wrap-cnt">
+              <i v-if="config.icon" class="vlayer-msg__icon" :class="config.icon" v-html="messageIcon[config.icon]"></i>
+              <div class="vlayer-msg__group">
+                <div v-if="config.title" class="vlayer-msg__title" v-html="config.title"></div>
+                <div v-html="config.content"></div>
+              </div>
             </div>
-            <div v-else class="vlayer__wrap-cnt" v-html="content"></div>
+            <div v-else class="vlayer__wrap-cnt" v-html="config.content"></div>
           </template>
         </template>
         <slot />
       </div>
-      <div v-if="btns" class="vlayer__wrap-btns">
-        <span v-for="(btn,index) in btns" :key="index" class="btn" :style="btn.style" @click="btnClicked($event,index)" v-html="btn.text"></span>
+      <div v-if="config.btns" class="vlayer__wrap-btns">
+        <span v-for="(btn,index) in config.btns" :key="index" class="btn" :style="btn.style" @click="btnClicked($event,index)" v-html="btn.text"></span>
       </div>
-      <span v-if="xclose" class="vlayer__xclose" :class="!maximize&&xposition" :style="{'color': xcolor}" @click="close"></span>
-      <span v-if="maximize" class="vlayer__maximize" @click="maximizeClicked($event)"></span>
-      <span v-if="resize" class="vlayer__resize"></span>
+      <span v-if="config.xclose" class="vlayer__xclose" :class="!config.maximize&&config.xposition" :style="{'color': config.xcolor}" @click="close"></span>
+      <span v-if="config.maximize" class="vlayer__maximize" @click="maximizeClicked($event)"></span>
+      <span v-if="config.resize" class="vlayer__resize"></span>
     </div>
     <!-- 优化拖拽卡顿 -->
     <div class="vlayer__dragfix"></div>
@@ -37,7 +40,7 @@
 
 <script lang="ts">
 import { onMounted, onUnmounted, ref, reactive, watch, toRefs, nextTick, defineComponent, PropType } from 'vue'
-import { IBtn, IFollowTarget, IPosition } from './type'
+import type { ILgsLayerConfigs } from './type'
 import helper from './utils/helper'
 // 索引，蒙层控制，定时器
 let $index = 0
@@ -47,129 +50,23 @@ let $closeTimer:any = null
 
 export default defineComponent({
   props: {
-    title: {
-      type: String,
-      default: ''
-    },
-    // ...
     modelValue: {
       type: Boolean,
-      dafault: false
-    },
-    onSuccess: {
-      type: Function as PropType<()=>Promise<void>>,
-      default: () => Promise.resolve()
-    },
-    onEnd: {
-      type: Function as PropType<()=>Promise<void>>,
-      default: () => Promise.resolve()
-    },
-    teleport: {
-      type: String,
-      default: 'body'
-    },
-    time: {
-      type: Number,
-      default: null
-    },
-    fullscreen: {
-      type: Boolean,
       default: false
     },
-    position: {
-      type: Object as PropType<IPosition>,
+    config: {
+      type: Object as PropType<ILgsLayerConfigs>,
       default: () => {
 
       }
-    },
-    fixed: {
-      type: Boolean,
-      default: true
-    },
-    follow: {
-      type: Object as PropType<IFollowTarget>,
-      default: () => {
-
-      }
-    },
-    // 显示放大按钮
-    maximize: {
-      type: Boolean,
-      default: false
-    },
-    shade: {
-      type: Boolean,
-      default: false
-    },
-    shadeClose: {
-      type: Boolean,
-      default: false
-    },
-    btns: {
-      type: Array as PropType<IBtn[]>,
-      default: () => {
-        return []
-      }
-    },
-    opacity: {
-      type: Number,
-      default: 1
-    },
-    id: {
-      type: String,
-      default: ''
-    },
-    // scaleIn | fadeIn | footer | fadeInUp | fadeInDown | fadeInLeft | fadeInRight
-    anim: {
-      type: String,
-      default: 'fadeIn'
-    },
-    // toast|footer|actionsheet|actionsheetPicker|android|ios|contextmenu|drawer|iframe
-    type: {
-      type: String,
-      default: 'toast'
-    },
-    layerStyle: {
-      type: String,
-      default: ''
-    },
-    icon: {
-      type: String,
-      default: null
-    },
-    content: {
-      type: String,
-      default: ''
-    },
-    resize: {
-      type: Boolean,
-      default: false
-    },
-    // 是否显示关闭图标
-    xclose: {
-      type: Boolean,
-      default: true
-    },
-    // 关闭图标位置: left | right | top | bottom
-    xposition: {
-      type: String,
-      default: 'right'
-    },
-    xcolor: {
-      type: String,
-      default: 'white'
-    },
-    theme: {
-      type: String,
-      default: ''
     }
   },
   emits: [
-    'update:modelValue'
+    'update:modelValue',
+    'destroy'
   ],
   setup (props, context) {
     const elRef = ref<HTMLDivElement>()
-
     const data = reactive<{
       id: string,
       opened: boolean,
@@ -179,7 +76,7 @@ export default defineComponent({
       vlayerOpts: any,
       tipArrow: any
     }>({
-      id: props.id,
+      id: props.config.id || '',
       opened: false,
       closeCls: true,
       toastIcon: {
@@ -218,11 +115,11 @@ export default defineComponent({
     const open = () => {
       if (data.opened) return
       data.opened = true
-      props.onSuccess && props.onSuccess()
+      props.config.onSuccess && props.config.onSuccess()
       // 弹层挂载位置
-      if (props.teleport) {
+      if (props.config.teleport) {
         nextTick(() => {
-          const teleportNode = document.querySelector(props.teleport)
+          const teleportNode = props.config.teleport && document.querySelector(props.config.teleport)
           teleportNode && elRef.value && teleportNode.appendChild(elRef.value)
 
           auto()
@@ -235,11 +132,6 @@ export default defineComponent({
     // 关闭弹窗
     const close = () => {
       if (!data.opened) return
-      const dom = elRef.value
-      if (!dom) return
-      const vlayero:HTMLDivElement|null = dom.querySelector('.vlayer__wrap')
-      const ocnt:HTMLDivElement|null = dom.querySelector('.vlayer__wrap-cntbox')
-      const omax:HTMLDivElement|null = dom.querySelector('.vlayer__maximize')
 
       data.closeCls = true
       clearTimeout($closeTimer)
@@ -249,22 +141,16 @@ export default defineComponent({
         if (data.vlayerOpts.lockScroll) {
           $locknum--
           if (!$locknum) {
-            document.body.style.paddingRight = ''
-            document.body.classList.remove('vui__body-hidden')
+            //
           }
         }
-        if (props.time) {
+        if (props.config.time) {
           $index--
         }
-        // 清除弹窗样式
-        vlayero && (vlayero.style.width = vlayero.style.height = vlayero.style.top = vlayero.style.left = '')
-        ocnt && (ocnt.style.height = '')
-        omax && omax.classList.contains('maximized') && omax.classList.remove('maximized')
-
-        data.vlayerOpts.isBodyOverflow && (document.body.style.overflow = '')
 
         context.emit('update:modelValue', false)
-        props.onEnd && props.onEnd()
+        context.emit('destroy')
+        props.config.onEnd && props.config.onEnd()
       }, 200)
     }
 
@@ -275,7 +161,7 @@ export default defineComponent({
       autopos()
 
       // 全屏弹窗
-      if (props.fullscreen) {
+      if (props.config.fullscreen) {
         full()
       }
 
@@ -286,12 +172,12 @@ export default defineComponent({
     const autopos = () => {
       if (!data.opened) return
       let oL, oT
-      const pos = props.position
-      const isFixed = props.fixed
+      const pos = props.config.position
+      const isFixed = props.config.fixed
       if (!elRef.value) return
       const vlayero:HTMLDivElement|null = elRef.value.querySelector('.vlayer__wrap')
       if (!vlayero) return
-      if (!isFixed || props.follow) {
+      if (!isFixed || props.config.follow) {
         vlayero && (vlayero.style.position = 'absolute')
       }
 
@@ -300,7 +186,7 @@ export default defineComponent({
       oL = (area[0] - area[2]) / 2
       oT = (area[1] - area[3]) / 2
 
-      if (props.follow) {
+      if (props.config.follow) {
         offset()
       } else {
         if (pos instanceof Array) {
@@ -348,13 +234,14 @@ export default defineComponent({
 
     // 元素跟随定位
     const offset = () => {
+      if (!props.config.follow) return
       const dom = elRef.value
       if (!dom) return
       const vlayero:HTMLDivElement|null = dom.querySelector('.vlayer__wrap')
       if (!vlayero) return
       const oW = vlayero.offsetWidth
       const oH = vlayero.offsetHeight
-      const pS = helper.getFollowRect(props.follow, oW, oH)
+      const pS = helper.getFollowRect(props.config.follow, oW, oH)
       data.tipArrow = pS[4]
 
       vlayero.style.left = pS[0] + 'px'
@@ -385,7 +272,7 @@ export default defineComponent({
         document.body.style.overflow = ''
       }
 
-      props.maximize && omax && omax.classList.remove('maximized')
+      props.config.maximize && omax && omax.classList.remove('maximized')
 
       vlayero.style.left = parseFloat(data.vlayerOpts.rect[0]) + 'px'
       vlayero.style.top = parseFloat(data.vlayerOpts.rect[1]) + 'px'
@@ -401,13 +288,13 @@ export default defineComponent({
     // 事件处理
     const callback = () => {
       // 倒计时关闭
-      if (props.time) {
+      if (props.config.time) {
         $index++
         // 防止重复点击
         if ($timer[$index] !== null) clearTimeout($timer[$index])
         $timer[$index] = setTimeout(() => {
           close()
-        }, props.time)
+        }, props.config.time)
       }
     }
 
@@ -424,14 +311,14 @@ export default defineComponent({
     }
     // 点击遮罩层
     const shadeClicked = () => {
-      if (props.shadeClose) {
+      if (props.config.shadeClose) {
         close()
       }
     }
     // 按钮事件
     const btnClicked = (e:MouseEvent, index:number) => {
-      const btn = props.btns[index]
-      if (!btn.disabled) {
+      const btn = props.config.btns && props.config.btns[index]
+      if (btn && !btn.disabled) {
         btn.click && btn.click(e)
       }
     }
