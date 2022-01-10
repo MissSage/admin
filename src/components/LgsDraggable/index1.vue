@@ -202,7 +202,7 @@ export default defineComponent({
       state.ismove = false
       state.resize.isResize = false
     }
-    const getBaseStyle = computed(() => {
+    const getBaseStyle:any = computed(() => {
       // 获取z-index
       resetZIndex()
       const styleBase = {
