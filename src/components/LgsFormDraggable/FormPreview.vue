@@ -9,7 +9,11 @@
       :form-rules="options.formOptions"
     />
     <div class="tables">
-      <div class="table-item" v-for="(item, index) in options.tables" :key="index">
+      <div
+        class="table-item"
+        v-for="(item, index) in options.tables"
+        :key="index"
+      >
         <div class="table-header">
           <div class="header-text">{{ item.name }}</div>
           <div class="header-btns">
@@ -42,7 +46,11 @@
     </div>
 
     <div class="tables" style="padding-bottom: 10px">
-      <el-tabs v-model="tabsModel" v-show="options.tabs.length" @tab-click="() => { }">
+      <el-tabs
+        v-model="tabsModel"
+        v-show="options.tabs.length"
+        @tab-click="() => { }"
+      >
         <el-tab-pane
           style="padding: 0"
           class="table-item"
@@ -84,8 +92,23 @@
     </div>
 
     <div class="form-btns">
-      <el-button type="primary" @click="submit" icon="el-icon-check" size="mini">提交</el-button>
-      <el-button type="primary" @click="reset" plain icon="el-icon-refresh-right" size="mini">重置</el-button>
+      <el-button
+        type="primary"
+        @click="submit"
+        icon="el-icon-check"
+        size="mini"
+      >
+        提交
+      </el-button>
+      <el-button
+        type="primary"
+        @click="reset"
+        plain
+        icon="el-icon-refresh-right"
+        size="mini"
+      >
+        重置
+      </el-button>
     </div>
   </div>
 </template>

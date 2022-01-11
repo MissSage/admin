@@ -49,10 +49,10 @@ export type ILTitle = {
   btns:IBtn[]
 }
 export type ILClose = {
-  show:boolean
-  postion:IXPosition
-  color:string
-  click:() => void
+  show?:boolean
+  postion?:IXPosition
+  color?:string
+  click?:() => void
 }
 export interface ILgsLayerConfigs {
   title: ILTitle
@@ -74,7 +74,7 @@ export interface ILgsLayerConfigs {
   type: ILType
   layerStyle: string
   icon: string
-  content: string
+  content: any
   resize: boolean
   beforeClose: () => void
   theme: string

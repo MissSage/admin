@@ -72,6 +72,7 @@
           v-html="toastIcon[config.icon]"
         ></div>
         <div
+          v-else
           class="lgs-drag__wrap-cntbox"
           :class="config.theme+'-drag--main'"
         >
@@ -83,7 +84,7 @@
             <template v-if="config.content">
               <component v-if="config.type==='component'" :is="config.content">传入的组件将替换这里的信息</component>
               <iframe
-                v-if="config.type=='iframe'"
+                v-else-if="config.type=='iframe'"
                 scrolling="auto"
                 allowtransparency="true"
                 frameborder="0"

@@ -3,7 +3,8 @@
     :class="[
       'icon iconfont',
       `${props.name}`
-    ]" :style="styles"
+    ]"
+    :style="styles"
   />
 </template>
 

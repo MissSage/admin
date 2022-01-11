@@ -7,34 +7,39 @@
   </div>
 </template>
 <script lang="ts">
+import { ILgsLayerConfigs } from '@/components/LgsDraggable/type'
 import useGlobal from '@/composables/useGlobal'
 import { defineComponent, getCurrentInstance, inject } from 'vue'
-import Test from './test1.vue'
+import Test1 from './test1.vue'
+import Test from './test.vue'
 export default defineComponent({
   setup () {
     const app = getCurrentInstance()
-    const theme = inject('theme')
+    const theme:string = inject('theme') || ''
     const { $layer } = useGlobal(app)
     const layerIds:string[] = []
     const openLayer = () => {
-      const id = $layer.open({
+      const options:Partial<ILgsLayerConfigs&{modelValue:boolean}> = {
         title: {
-          component: Test
+          component: Test1,
+          text: '',
+          btns: []
 
         },
         modelValue: true,
         theme: theme,
-        type: 'message',
+        type: 'component',
+        content: Test,
         position: 'r',
         teleport: 'body',
-        content: Test.template,
-        xclose: true,
-        onEnd: async () => {
-          setTimeout(() => {
-            console.log('closed')
-          }, 1000)
+        close: {
+          show: true,
+          click: () => {
+            console.log('close')
+          }
         }
-      })
+      }
+      const id = $layer.open(options)
       layerIds.push(id)
     }
     const closeFirstLayer = () => {

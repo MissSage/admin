@@ -44,16 +44,36 @@
         <span>
           <!-- <i class="el-icon-warning-outline"></i>高效的表单配置 -->
         </span>
-        <el-button type="primary" size="mini" plain @click="save">
+        <el-button
+          type="primary"
+          size="mini"
+          plain
+          @click="save"
+        >
           <i class="el-icon-check" />保存
         </el-button>
-        <el-button type="primary" size="mini" plain @click="priview">
+        <el-button
+          type="primary"
+          size="mini"
+          plain
+          @click="priview"
+        >
           <i class="el-icon-view" />预览
         </el-button>
-        <el-button type="primary" size="mini" plain @click="download">
+        <el-button
+          type="primary"
+          size="mini"
+          plain
+          @click="download"
+        >
           <i class="el-icon-view" />下载
         </el-button>
-        <el-button type="primary" @click="clearItems" size="mini" plain>
+        <el-button
+          type="primary"
+          @click="clearItems"
+          size="mini"
+          plain
+        >
           <i class="el-icon-delete" />清空
         </el-button>
         <a
@@ -63,13 +83,24 @@
         >设计器基于框架volform、voltable、volupload、volbox定制开发</a>
       </div>
       <div>
-        <el-alert title="关于表单设计器" type="info" :show-icon="true" :closable="false">
+        <el-alert
+          title="关于表单设计器"
+          type="info"
+          :show-icon="true"
+          :closable="false"
+        >
           <div>1、表单设计器基于draggable开发,为本框架自定义页面功能的补充,框架仍以可视化代码生成器为核心</div>
           <div>2、支持可视化设计1对1、1对多及表单下拉框自动绑定、table自动加载数据(分页、编辑)、自动上传文件、富文本编辑</div>
         </el-alert>
       </div>
       <el-scrollbar style="flex: 1">
-        <div class="tips" key="empty" v-show="!currentComponents.length">请将左边组件拖入此容器中</div>
+        <div
+          class="tips"
+          key="empty"
+          v-show="!currentComponents.length"
+        >
+          请将左边组件拖入此容器中
+        </div>
         <el-form label-position="top">
           <vue-draggable
             class="draggable-container"
@@ -264,7 +295,11 @@
         </div>
         <div class="attr-item" v-show="currentItem.type === 'table'">
           <div class="text">后台返回数据接口地址</div>
-          <el-input size="medium" placeholder="例:api/表名/getPageData" v-model="currentItem.url" />
+          <el-input
+            size="medium"
+            placeholder="例:api/表名/getPageData"
+            v-model="currentItem.url"
+          />
         </div>
         <div
           class="attr-item"
@@ -273,7 +308,11 @@
           "
         >
           <div class="text">上传接口地址(后台接口)</div>
-          <el-input size="medium" placeholder="可用框架地址:api/表名/upload" v-model="currentItem.url" />
+          <el-input
+            size="medium"
+            placeholder="可用框架地址:api/表名/upload"
+            v-model="currentItem.url"
+          />
           <div class="text" style="margin-top: 10px">文件大小限制(M)</div>
           <el-input size="medium" v-model="currentItem.maxSize" />
           <div class="text" style="margin-top: 10px">是否多文件上传</div>
@@ -316,7 +355,13 @@
         </div>
         <div class="attr-item" v-show="currentItem.type != 'table'">
           <div class="text">标签宽度</div>
-          <el-slider style="width: 90%" :min="20" v-model="colWidth" :step="10" show-stops />
+          <el-slider
+            style="width: 90%"
+            :min="20"
+            v-model="colWidth"
+            :step="10"
+            show-stops
+          />
         </div>
         <div class="attr-item attr2" v-show="currentItem.type != 'table'">
           <div>
@@ -379,7 +424,11 @@
     <div>弹出框内容</div>
     <template #footer>
       <div>
-        <el-button type="primary" size="mini" @click="model = false">
+        <el-button
+          type="primary"
+          size="mini"
+          @click="model = false"
+        >
           <i class="el-icon-close" />点击关闭
         </el-button>
         <el-button size="mini" @click="model = false">
@@ -392,7 +441,12 @@
     <form-preview :options="viewFormData" />
   </lgs-dialog>
   <lgs-dialog v-model="tableModel">
-    <el-alert title="关于table配置" type="info" :closable="false" show-icon>
+    <el-alert
+      title="关于table配置"
+      type="info"
+      :closable="false"
+      show-icon
+    >
       此处table是对框架voltable基本操作的配置,如果需要事件触发、数据加载等更多功能，请在生成后的代码添加需要的功能，完整配置见文档
       <a
         href="http://v2.volcore.xyz/document/api"
@@ -412,13 +466,25 @@
         </el-checkbox>
       </div>
       <div class="btns-right">
-        <el-button type="primary" size="mini" @click="addRow">
+        <el-button
+          type="primary"
+          size="mini"
+          @click="addRow"
+        >
           <i class="el-icon-plus" />添加字段
         </el-button>
-        <el-button type="primary" size="mini" @click="delRow">
+        <el-button
+          type="primary"
+          size="mini"
+          @click="delRow"
+        >
           <i class="el-icon-delete" />删除字段
         </el-button>
-        <el-button type="primary" size="mini" @click="sortRow">
+        <el-button
+          type="primary"
+          size="mini"
+          @click="sortRow"
+        >
           <i class="el-icon-sort" />重新排列
         </el-button>
       </div>
@@ -439,7 +505,11 @@
         <el-button size="mini" @click="tableModel = false">
           <i class="el-icon-close" />关闭
         </el-button>
-        <el-button type="primary" size="mini" @click="saveConfigOptions">
+        <el-button
+          type="primary"
+          size="mini"
+          @click="saveConfigOptions"
+        >
           <i class="el-icon-check" />保存
         </el-button>
       </div>
