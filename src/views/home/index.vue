@@ -9,7 +9,7 @@
 <script lang="ts">
 import useGlobal from '@/composables/useGlobal'
 import { defineComponent, getCurrentInstance, inject } from 'vue'
-import Test from './test.vue'
+import Test from './test1.vue'
 export default defineComponent({
   setup () {
     const app = getCurrentInstance()
@@ -18,7 +18,10 @@ export default defineComponent({
     const layerIds:string[] = []
     const openLayer = () => {
       const id = $layer.open({
-        title: 'test',
+        title: {
+          component: Test
+
+        },
         modelValue: true,
         theme: theme,
         type: 'message',

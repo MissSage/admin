@@ -26,7 +26,15 @@ module.exports = {
   ],
   rules: {
     'vue/no-mutating-props': 'off',
-    'vue/max-attributes-per-line': 0,
+    // 'vue/max-attributes-per-line': 0,
+    'vue/max-attributes-per-line': ['error', {
+      singleline: {
+        max: 2
+      },
+      multiline: {
+        max: 1
+      }
+    }],
     'vue/singleline-html-element-content-newline': 0,
     'vue/multi-word-component-names': 0,
     // 'array-element-newline': [

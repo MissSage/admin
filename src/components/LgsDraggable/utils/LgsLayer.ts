@@ -10,7 +10,15 @@ class LgsLayerBox {
   }
 
   defaultOptions: ILgsLayerConfigs = {
-    title: '',
+    title: {
+      text: '弹窗',
+      btns: [{
+        text: '按钮1',
+        disabled: true,
+        click: () => Promise.resolve(),
+        type: 'default'
+      }]
+    },
     onSuccess: () => Promise.resolve(console.log('success')),
     onEnd: () => Promise.resolve(console.log('end')),
     teleport: 'body',
@@ -31,10 +39,15 @@ class LgsLayerBox {
     icon: '',
     content: '',
     resize: false,
-    xclose: true,
-    xposition: 'right',
-    xcolor: 'white',
-    theme: ''
+    theme: '',
+    beforeClose: () => {},
+    close: {
+      show: true,
+      postion: 'right',
+      color: 'white',
+      click: () => {}
+    },
+    dragOut: true
   }
 
   currentId:string

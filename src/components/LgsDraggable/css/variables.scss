@@ -1,0 +1,29 @@
+// Primary color palette 
+$themes:( // newtral  
+  dark:( // dark  
+    xdark: #2C3643,
+    dark: #3B444F,
+    base: #67747C,
+    light: #99A9B3,
+    xlight: #DBE6EC),
+  darkblue:( // darkblue  
+    xdark: #041c3b,
+    dark: #103664,
+    base: #1452af,
+    light: #2d89d4,
+    xlight: #85c2e4),
+  primary: ( // primary  
+    xdark:#000000,
+    dark:#222222,
+    base:#444444,
+    light:#666666,
+    xlight:#888888,
+  ));
+
+$colors:( // 自定义颜色
+
+  red: #FA5E5B,
+  green: #16C98D,
+  orange: #FFC83F,
+  yellow: #FEEF6D,
+);

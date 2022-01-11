@@ -26,22 +26,36 @@ export interface ILayerInsArr {
   id: string
   layer: any
 }
+export type ILTheme = 'primary' | 'darkblue' | 'warm' | 'dark'
 export type IPosition = 't' | 'r' | 'b' | 'l' | 'lt' | 'lb' | 'rt' | 'rb' | [number, number]
 export type IXPosition = 'left' | 'right' | 'top' | 'bottom'
-export type ILType = 'message' | 'notify' | 'popover' | 'toast' | 'footer' | 'actionsheet' | 'actionsheetPicker' | 'android' | 'ios' | 'contextmenu' | 'drawer' | 'iframe'
+export type ILType = 'component' | 'message' | 'notify' | 'popover' | 'toast' | 'footer' | 'actionsheet' | 'actionsheetPicker' | 'android' | 'ios' | 'contextmenu' | 'drawer' | 'iframe'
 export type IFollowTarget = string | [number, number]
 export type IRectInfo = [number, number, number, number, string]
+export type IBtnType = 'primary'|'warning'|'info'|'error'|'default'
 export type IBtn = {
   text: string
   disabled?: boolean
   click?: (...args: any[]) => Promise<void>
   style?: string
+  type?: IBtnType
+  class?: string
 }
 export type IAnims = 'scaleIn' | 'fadeIn' | 'footer' | 'fadeInUp' | 'fadeInDown' | 'fadeInLeft' | 'fadeInRight'
 export type IToastIcon = Record<string, string>
-
+export type ILTitle = {
+  component?:any
+  text:string
+  btns:IBtn[]
+}
+export type ILClose = {
+  show:boolean
+  postion:IXPosition
+  color:string
+  click:() => void
+}
 export interface ILgsLayerConfigs {
-  title: string
+  title: ILTitle
   onSuccess: (...args: any[]) => Promise<void>
   onEnd: (...args: any[]) => Promise<void>
   teleport: string
@@ -62,10 +76,10 @@ export interface ILgsLayerConfigs {
   icon: string
   content: string
   resize: boolean
-  xclose: boolean
-  xposition: IXPosition
-  xcolor: string
+  beforeClose: () => void
   theme: string
+  dragOut: boolean
+  close: ILClose
 }
 export type ILgsLayerConfigsPartial = ILgsLayerConfigs & { type: ILType }
 export type ILgsLayerProps = {
