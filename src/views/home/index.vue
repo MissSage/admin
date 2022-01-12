@@ -11,7 +11,7 @@ import { ILgsLayerConfigs } from '@/components/LgsDraggable/type'
 import useGlobal from '@/composables/useGlobal'
 import { defineComponent, getCurrentInstance, inject } from 'vue'
 import Test1 from './test1.vue'
-import Test from './test.vue'
+// import Test from './test.vue'
 export default defineComponent({
   setup () {
     const app = getCurrentInstance()
@@ -23,21 +23,53 @@ export default defineComponent({
         title: {
           component: Test1,
           text: '',
-          btns: []
-
+          extrabtns: [{
+            type: 'primary',
+            text: '导出',
+            icon: '',
+            click: () => Promise.resolve(
+              $layer.open({
+                content: 'message',
+                type: 'message'
+              })
+            )
+          }, {
+            type: 'primary',
+            text: '导出',
+            icon: '',
+            click: () => Promise.resolve(
+              $layer.open({
+                content: 'message',
+                type: 'message'
+              })
+            )
+          }, {
+            type: 'primary',
+            text: '导出',
+            icon: '',
+            click: () => Promise.resolve(
+              $layer.open({
+                content: 'message',
+                type: 'message'
+              })
+            )
+          }, {
+            type: 'primary',
+            text: '导出',
+            icon: '',
+            click: () => Promise.resolve(
+              $layer.open({
+                content: 'message',
+                type: 'message'
+              })
+            )
+          }]
         },
+        // dragOut: false,
         modelValue: true,
         theme: theme,
         type: 'component',
-        content: Test,
-        position: 'r',
-        teleport: 'body',
-        close: {
-          show: true,
-          click: () => {
-            console.log('close')
-          }
-        }
+        content: Test1
       }
       const id = $layer.open(options)
       layerIds.push(id)

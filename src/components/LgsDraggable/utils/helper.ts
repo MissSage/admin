@@ -166,6 +166,7 @@ export default class helper {
   }
 
   static mergeJson<T> (options: any, def: any) {
+    if (!options) options = {}
     for (const key in def) {
       if (options[key] === undefined) {
         options[key] = def[key]
@@ -233,6 +234,23 @@ export default class helper {
         }
       }
       return [l, t, r, b, '']
+    }
+  }
+
+  /**
+   * 全屏切换
+   */
+  static toggleFullScreen (el?:HTMLElement) {
+    if (!document.fullscreenElement) {
+      if (el) {
+        el.requestFullscreen()
+      } else {
+        document.documentElement.requestFullscreen()
+      }
+      return true
+    } else {
+      document.exitFullscreen()
+      return false
     }
   }
 }

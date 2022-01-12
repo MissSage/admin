@@ -36,6 +36,7 @@ export type IBtnType = 'primary'|'warning'|'info'|'error'|'default'
 export type IBtn = {
   text: string
   disabled?: boolean
+  icon?: string
   click?: (...args: any[]) => Promise<void>
   style?: string
   type?: IBtnType
@@ -45,8 +46,11 @@ export type IAnims = 'scaleIn' | 'fadeIn' | 'footer' | 'fadeInUp' | 'fadeInDown'
 export type IToastIcon = Record<string, string>
 export type ILTitle = {
   component?:any
-  text:string
-  btns:IBtn[]
+  text?:string
+  showClose?:boolean
+  showMaximize?:boolean
+  showMinimize?:boolean
+  extrabtns?:IBtn[]
 }
 export type ILClose = {
   show?:boolean
@@ -56,15 +60,11 @@ export type ILClose = {
 }
 export interface ILgsLayerConfigs {
   title: ILTitle
-  onSuccess: (...args: any[]) => Promise<void>
-  onEnd: (...args: any[]) => Promise<void>
   teleport: string
   time: number | undefined
-  fullscreen: boolean
   position: IPosition
   fixed: boolean
   follow: IFollowTarget | undefined
-  maximize: boolean
   shade: boolean
   shadeClose: boolean
   btns: IBtn[]
@@ -76,10 +76,11 @@ export interface ILgsLayerConfigs {
   icon: string
   content: any
   resize: boolean
-  beforeClose: () => void
   theme: string
   dragOut: boolean
-  close: ILClose
+  beforeClose: () => Promise<void>
+  onSuccess: (...args: any[]) => Promise<void>
+  onClosed: (...args: any[]) => Promise<void>
 }
 export type ILgsLayerConfigsPartial = ILgsLayerConfigs & { type: ILType }
 export type ILgsLayerProps = {

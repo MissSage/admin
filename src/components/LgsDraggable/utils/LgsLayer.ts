@@ -11,23 +11,16 @@ class LgsLayerBox {
 
   defaultOptions: ILgsLayerConfigs = {
     title: {
-      text: '弹窗',
-      btns: [{
-        text: '按钮1',
-        disabled: true,
-        click: () => Promise.resolve(),
-        type: 'default'
-      }]
+      text: '',
+      showClose: true,
+      showMaximize: true,
+      showMinimize: true
     },
-    onSuccess: () => Promise.resolve(console.log('success')),
-    onEnd: () => Promise.resolve(console.log('end')),
     teleport: 'body',
     time: undefined,
-    fullscreen: false,
     position: 'b',
     fixed: true,
     follow: undefined,
-    maximize: false,
     shade: false,
     shadeClose: false,
     btns: [],
@@ -40,14 +33,10 @@ class LgsLayerBox {
     content: '',
     resize: false,
     theme: '',
-    beforeClose: () => {},
-    close: {
-      show: true,
-      postion: 'right',
-      color: 'white',
-      click: () => {}
-    },
-    dragOut: true
+    dragOut: true,
+    beforeClose: () => Promise.resolve(),
+    onSuccess: () => Promise.resolve(),
+    onClosed: () => Promise.resolve()
   }
 
   currentId:string
@@ -58,6 +47,7 @@ class LgsLayerBox {
     const id = `lgslayer_${new Date().getTime()}_${maxSeed++}`
     options.id = id
     options.modelValue = true
+    Helper.mergeJson<ILgsLayerConfigs>(options.title, this.defaultOptions.title)
     const configs:ILgsLayerConfigs = Helper.mergeJson<ILgsLayerConfigs>(options, this.defaultOptions)
     const props:ILgsLayerProps = {
       modelValue: options.modelValue,
