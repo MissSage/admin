@@ -1,9 +1,9 @@
 <template>
   <div
     ref="elRef"
-    v-show="opened"
+    v-if="opened"
     class="lgs-drag__layer"
-    :class="[closeCls&&'lgs-drag__layer-closed']"
+    :style="'z-index:'+zindex"
     :id="id"
   >
     <!-- //蒙版 -->
@@ -23,27 +23,31 @@
         class="lgs-drag__wrap"
         :class="['anim-'+config.anim, 'popui__'+config.type, tipArrow, config.theme]"
         :style="[config.layerStyle?config.layerStyle:'']"
-        @mousemove="move"
-        @mouseup="moveEnd"
+        @mousedown="Active"
       >
         <!-- header -->
         <div
-          v-if="config.title"
+          v-if="config.header"
+          :id="id+'_header'"
           class="lgs-drag__wrap-header"
-          :class="config.theme+'-drag--header'"
+          :class="[config.theme+'-drag--header',activeClass]"
           @mousedown="moveStart"
-          @mouseup="handleGrab"
+          :style="{'cursor': cursor}"
         >
-          <div class="lgs-drag-header-box" :style="{'cursor': cursor}">
+          <div class="lgs-drag-header-box">
             <slot name="header">
-              <component v-if="config.title.component" :is="config.title.component">{{ config.title.text }}</component>
-              <span v-else class="lgs-drag-header-text">
-                {{ config.title.text }}
+              <component v-if="config.header.component" :is="config.header.component">{{ config.header.text }}</component>
+              <span
+                v-else
+                :title="config.header.text"
+                class="lgs-drag-header-text"
+              >
+                {{ config.header.text }}
               </span>
             </slot>
-            <div class="lgs-drag-header-extrabtns">
+            <div v-if="!isMinimized" class="lgs-drag-header-extrabtns">
               <button
-                v-for="(btn,i) in config.title.extrabtns"
+                v-for="(btn,i) in config.header.extrabtns"
                 :key="i"
                 class="header-extrabtn"
                 :class="[btn.class,'extrabtn_'+btn.type]"
@@ -55,29 +59,35 @@
               </button>
             </div>
             <div class="lgs-drag-header-fixedbtns">
-              <div class="header-btns">
+              <div
+                v-if="config.header.showMinimize&&!isFullScreen"
+                class="header-btns"
+                @click.stop="toggleMinimize"
+              >
                 <i
-                  v-if="config.title.showMinimize"
                   class="icon iconfont"
                   :class="[isMinimized?'icon-retweet':'icon-minus']"
-                  @click.stop="toggleMinimize"
                 >
                 </i>
               </div>
-              <div class="header-btns">
+              <div
+                v-if="config.header.showMaximize&&!isMinimized"
+                class="header-btns"
+                @click.stop="toggleFullScreen"
+              >
                 <i
-                  v-if="config.title.showMaximize"
                   class="icon iconfont"
                   :class="[isFullScreen ? 'icon-compress' : 'icon-expend']"
-                  @click.stop="toggleFullScreen"
                 >
                 </i>
               </div>
-              <div class="header-btns">
+              <div
+                v-if="config.header.showClose"
+                class="header-btns"
+                @click.stop="close"
+              >
                 <i
-                  v-if="config.title.showClose"
                   class="icon iconfont icon-close"
-                  @click.stop="close"
                 >
                 </i>
               </div>
@@ -91,76 +101,73 @@
           :class="['lgs-drag__toast-'+config.icon]"
           v-html="toastIcon[config.icon]"
         ></div>
-        <div
-          v-else
-          class="lgs-drag__wrap-cntbox"
-          :class="config.theme+'-drag--main'"
-        >
-          <!-- 判断插槽是否存在 -->
-          <template v-if="$slots.content">
-            <div class="lgs-drag__wrap-cnt"><slot name="content"></slot></div>
-          </template>
-          <template v-else>
-            <template v-if="config.content">
-              <component v-if="config.type==='component'" :is="config.content">传入的组件将替换这里的信息</component>
-              <iframe
-                v-else-if="config.type=='iframe'"
-                scrolling="auto"
-                allowtransparency="true"
-                frameborder="0"
-                :src="config.content"
-              ></iframe>
-              <!-- message|notify|popover -->
-              <div v-else-if="config.type=='message' || config.type=='notify' || config.type=='popover'" class="lgs-drag__wrap-cnt">
-                <i
-                  v-if="config.icon"
-                  class="lgs-drag-msg__icon"
-                  :class="config.icon"
-                  v-html="messageIcon[config.icon]"
-                ></i>
-                <div class="lgs-drag-msg__group">
-                  <div
-                    v-if="config.title"
-                    class="lgs-drag-msg__title"
-                    v-html="config.title"
-                  ></div>
-                  <div v-html="config.content"></div>
-                </div>
-              </div>
-              <div
-                v-else
-                class="lgs-drag__wrap-cnt"
-                v-html="config.content"
-              >
-              </div>
+        <template v-else>
+          <div
+            v-if="!isMinimized"
+            class="lgs-drag__wrap-cntbox"
+            :class="config.theme+'-drag--main'"
+          >
+            <!-- 判断插槽是否存在 -->
+            <template v-if="$slots.content">
+              <div class="lgs-drag__wrap-cnt"><slot name="content"></slot></div>
             </template>
-          </template>
-        </div>
+            <template v-else>
+              <template v-if="config.content">
+                <component v-if="config.type==='component'" :is="config.content">传入的组件将替换这里的信息</component>
+                <iframe
+                  v-else-if="config.type=='iframe'"
+                  scrolling="auto"
+                  allowtransparency="true"
+                  frameborder="0"
+                  :src="config.content"
+                ></iframe>
+                <!-- message|notify|popover -->
+                <div
+                  v-else-if="config.type=='message' || config.type=='notify' || config.type=='popover'"
+                  class="lgs-drag__wrap-cnt"
+                >
+                  <i
+                    v-if="config.icon"
+                    class="lgs-drag-msg__icon"
+                    :class="config.icon"
+                    v-html="messageIcon[config.icon]"
+                  ></i>
+                  <div class="lgs-drag-msg__group">
+                    <div v-html="config.content"></div>
+                  </div>
+                </div>
+                <div
+                  v-else
+                  class="lgs-drag__wrap-cnt"
+                  v-html="config.content"
+                >
+                </div>
+              </template>
+            </template>
+          </div>
+        </template>
+
         <div
-          v-if="config.btns"
-          class="lgs-drag__wrap-btns"
-          :class="config.theme+'-drag--footer'"
+          v-if="config.btns&&!isMinimized"
+          class="lgs-drag__wrap-footer"
+          :class="[config.theme+'-drag--footer']"
+
+          :style="'text-align:'+config.btnAlign"
         >
-          <span
-            v-for="(btn,index) in config.btns"
-            :key="index"
-            class="btn"
-            :style="btn.style"
-            @click="btnClicked($event,index)"
-            v-html="btn.text"
-          ></span>
+          <div class="lgs-drag_footer-btns">
+            <button
+              v-for="(btn,index) in config.btns"
+              :key="index"
+              class="footer-btn"
+              :style="btn.style"
+              @click="btnClicked($event,index)"
+              v-html="btn.text"
+            ></button>
+          </div>
         </div>
-        <!-- <span
-          v-if="config.maximize"
-          class="lgs-drag__maximize"
-          @click="maximizeClicked($event)"
-        ></span> -->
         <span v-if="config.resize" class="lgs-drag__resize"></span>
       </div>
     </transition>
-
-    <!-- 优化拖拽卡顿 -->
-    <div class="lgs-drag__dragfix"></div>
   </div>
 </template>
 
@@ -168,12 +175,6 @@
 import { onMounted, onUnmounted, ref, reactive, watch, toRefs, nextTick, defineComponent, PropType } from 'vue'
 import type { ILgsLayerConfigs } from './type'
 import helper from './utils/helper'
-// 索引，蒙层控制，定时器
-let $index = 0
-// let $locknum = 0
-const $timer:any = {}
-let $closeTimer:any = null
-
 export default defineComponent({
   props: {
     modelValue: {
@@ -189,16 +190,17 @@ export default defineComponent({
   },
   emits: [
     'update:modelValue',
-    'destroy'
+    'destroy',
+    'active'
   ],
   setup (props, context) {
     const elRef = ref<HTMLDivElement>()
     const state = reactive<{
       id: string,
+      activeClass:string
       opened: boolean,
       isFullScreen:boolean
       isMinimized:boolean
-      closeCls: boolean,
       toastIcon: Record<string, string>,
       messageIcon: any,
       layerOpts: {
@@ -210,9 +212,7 @@ export default defineComponent({
       tipArrow: any
       offsetX:number
       offsetY:number
-      width:number
-      height:number
-      evemtStartLeft:number
+      eventStartLeft:number
       eventStartTop:number
       ismove:boolean
       cursor:'grab'|'grabbing'
@@ -225,12 +225,13 @@ export default defineComponent({
         tt: any
       }
       zindex:number
+      timer:any
     }>({
-      id: props.config.id || '',
+      id: props.config.id || `lgslayer_${new Date().getTime()}`,
+      activeClass: '',
       opened: false,
       isFullScreen: false,
       isMinimized: false,
-      closeCls: true,
       toastIcon: {
         // ...
       },
@@ -240,15 +241,13 @@ export default defineComponent({
       layerOpts: {
         left: '0',
         top: '0',
-        width: '0',
-        height: '0'
+        width: props.config.width || '250',
+        height: props.config.height || '50'
       },
       tipArrow: null,
       offsetX: 500,
       offsetY: 600,
-      width: 250,
-      height: 200,
-      evemtStartLeft: 0,
+      eventStartLeft: 0,
       eventStartTop: 0,
       ismove: false,
       cursor: 'grab',
@@ -260,13 +259,14 @@ export default defineComponent({
         moveTop: 0,
         tt: {}
       },
-      zindex: 2000
+      zindex: 2000,
+      timer: null
     })
     const lgsLayer = ref<HTMLDivElement>()
     const moveStart = (event:MouseEvent) => {
       // 保存点击的初始位置
-      handleGrab(event)
-      state.evemtStartLeft = event.clientX
+      handleGrab(true)
+      state.eventStartLeft = event.clientX
       state.eventStartTop = event.clientY
       state.ismove = true
       if (lgsLayer.value) {
@@ -285,7 +285,7 @@ export default defineComponent({
           !props.config.dragOut && (top = 0)
         }
         // const docOffsetHeight = 0
-        let left = state.offsetX + (event.clientX - state.evemtStartLeft)
+        let left = state.offsetX + (event.clientX - state.eventStartLeft)
 
         // const docOffsetWidth = 0
         if (left <= 0) {
@@ -308,24 +308,14 @@ export default defineComponent({
         }
         lgsLayer.value.style.left = left + 'px'
         lgsLayer.value.style.top = top + 'px'
-        resetZIndex()
       }
     }
     const moveEnd = () => {
       state.ismove = false
       state.resize.isResize = false
-      handleGrab()
     }
-    const handleGrab = (event?:MouseEvent) => {
-      if (!event) {
-        state.cursor = 'grab'
-        return
-      }
-      if (event.type === 'mousedown') {
-        state.cursor = 'grabbing'
-      } else {
-        state.cursor = 'grab'
-      }
+    const handleGrab = (isGrabbing:boolean) => {
+      state.cursor = isGrabbing ? 'grabbing' : 'grab'
     }
     const toggleFullScreen = (e:MouseEvent) => {
       // 先保存样式
@@ -336,7 +326,6 @@ export default defineComponent({
     const toggleMinimize = (event:MouseEvent) => {
       if (!lgsLayer.value) return
       state.isMinimized ? restoreRect() : setForMinimize()
-
       state.isMinimized = !state.isMinimized
     }
     /**
@@ -346,7 +335,9 @@ export default defineComponent({
       if (!lgsLayer.value) return
       // 先保存弹窗样式
       saveLayerRect()
+      lgsLayer.value.style.width = '250px'
       lgsLayer.value.style.height = '35px'
+      lgsLayer.value.style.left = 'auto'
       lgsLayer.value.style.right = '20px'
       lgsLayer.value.style.top = '20px'
     }
@@ -359,51 +350,61 @@ export default defineComponent({
       state.layerOpts.top = lgsLayer.value.style.top
       state.layerOpts.width = lgsLayer.value.style.width
       state.layerOpts.height = lgsLayer.value.style.height
+      return state.layerOpts
     }
     /**
      * 恢复弹窗
      */
-    const restoreRect = () => {
+    const restoreRect = (opts?:{
+      left:string
+      top:string
+      width:string
+      height:string
+    }) => {
       if (!lgsLayer.value) return
-      // if (!state.layerOpts.lockScroll) {
-      //   state.layerOpts.isBodyOverflow = false
-      //   document.body.style.overflow = 'hidden'
-      // }
-      // 还原样式
-      lgsLayer.value.style.left = parseFloat(state.layerOpts.left) + 'px'
-      lgsLayer.value.style.top = parseFloat(state.layerOpts.top) + 'px'
-      lgsLayer.value.style.width = parseFloat(state.layerOpts.width) + 'px'
-      lgsLayer.value.style.height = parseFloat(state.layerOpts.height) + 'px'
+      if (opts) {
+        // 根据传入的样式设置弹窗的样式
+        state.layerOpts.left = lgsLayer.value.style.left = parseFloat(opts.left) + 'px'
+        state.layerOpts.top = lgsLayer.value.style.top = parseFloat(opts.top) + 'px'
+        state.layerOpts.width = lgsLayer.value.style.width = parseFloat(opts.width) + 'px'
+        state.layerOpts.height = lgsLayer.value.style.height = parseFloat(opts.height) + 'px'
+      } else {
+        // 还原样式
+        lgsLayer.value.style.left = parseFloat(state.layerOpts.left) + 'px'
+        lgsLayer.value.style.top = parseFloat(state.layerOpts.top) + 'px'
+        lgsLayer.value.style.width = parseFloat(state.layerOpts.width) + 'px'
+        lgsLayer.value.style.height = parseFloat(state.layerOpts.height) + 'px'
+      }
     }
 
     const resetZIndex = () => {
-      let max = 500
-      const doms = document.querySelectorAll('.lgs-drag') // vl-notify-iframe
+      let max = 2000
+      const doms = document.querySelectorAll('.lgs-drag__layer') // vl-notify-iframe
       let domZindex = 0
       for (let i = 0, len = doms.length; i < len; i++) {
-        const value = parseInt(getStyle(doms[i].id, 'z-index'))
+        const index = helper.getStyle(doms[i].id, 'z-index')
+
         if (state.id === doms[i].id) {
-          domZindex = value
+          domZindex = index === 'auto' ? max : parseInt(index)
         }
-        if (max < value) {
-          max = value
+        if (max < domZindex) {
+          max = domZindex
         }
       }
-      if (domZindex === max && max !== 500) {
+      if (domZindex === max && max !== 2000) {
         return
       }
       // 预留遮罩层z-index
       state.zindex = max + 2
+      console.log(state.zindex)
     }
-    const getStyle = (el:any, styleProp:any) => {
-      const x = document.getElementById(el)
-      let y:string = '0'
-      if (document.defaultView && x) {
-        y = document.defaultView
-          .getComputedStyle(x, null)
-          .getPropertyValue(styleProp)
-      }
-      return y
+    const Active = () => {
+      state.activeClass = props.config.theme + '-drag--header-active'
+      resetZIndex()
+      context.emit('active')
+    }
+    const deActive = () => {
+      state.activeClass = ''
     }
     // 打开弹窗
     const open = () => {
@@ -420,41 +421,22 @@ export default defineComponent({
         })
       }
 
-      callback()
+      autoClose()
     }
 
     // 关闭弹窗
     const close = () => {
       if (!state.opened) return
 
-      state.closeCls = true
-      clearTimeout($closeTimer)
-      $closeTimer = setTimeout(() => {
-        state.opened = false
-        state.closeCls = false
-        // if (state.layerOpts.lockScroll) {
-        //   $locknum--
-        //   if (!$locknum) {
-        //     //
-        //   }
-        // }
-        if (props.config.time) {
-          $index--
-        }
-        // props.config.beforeClose && props.config.beforeClose().then(() => {
-        //   props.config.onClosed && props.config.onClosed()
-        context.emit('update:modelValue', false)
-        //   context.emit('destroy')
-        // }).catch(error => {
-        //   console.log(error.message)
-        // })
-      }, 200)
+      state.opened = false
+
+      context.emit('update:modelValue', false)
     }
 
     // 弹窗位置
     const auto = () => {
       // ...
-
+      restoreRect(state.layerOpts)
       autopos()
 
       // 全屏弹窗
@@ -472,13 +454,15 @@ export default defineComponent({
       const pos = props.config.position
       const isFixed = props.config.fixed
       if (!elRef.value) return
-      const lgslayerIns:HTMLDivElement|null = elRef.value.querySelector('.lgs-drag__wrap')
-      if (!lgslayerIns) return
-      if (!isFixed || props.config.follow) {
-        lgslayerIns && (lgslayerIns.style.position = 'absolute')
-      }
+      if (!lgsLayer.value) return
 
-      const area = [helper.client('width'), helper.client('height'), lgslayerIns.offsetWidth, lgslayerIns.offsetHeight]
+      // const lgslayerIns:HTMLDivElement|null = elRef.value.querySelector('.lgs-drag__wrap')
+      // if (!lgslayerIns) return
+      // if (!isFixed || props.config.follow) {
+      //   lgslayerIns && (lgslayerIns.style.position = 'absolute')
+      // }
+
+      const area = [helper.client('width'), helper.client('height'), lgsLayer.value.offsetWidth, lgsLayer.value.offsetHeight]
 
       oL = (area[0] - area[2]) / 2
       oT = (area[1] - area[3]) / 2
@@ -487,8 +471,18 @@ export default defineComponent({
         offset()
       } else {
         if (pos instanceof Array) {
-          oL = pos[0]
-          oT = pos[1]
+          oL = pos[0].toString()
+          oT = pos[1].toString()
+          let container:HTMLElement | null = null
+          if (oL.indexOf('%') !== -1) {
+            const olN = parseFloat(oL)
+            container = container || document.querySelector(props.config.teleport || 'body')
+            oL = container ? (container as HTMLElement).clientWidth * olN / 100 : 500
+          }
+          if (oT.indexOf('%') !== -1) {
+            container = container || document.querySelector(props.config.teleport || 'body')
+            oT = container ? (container as HTMLElement).clientHeight * parseFloat(oT) / 100 : 500
+          }
         } else {
           switch (pos) {
             case 't':
@@ -520,12 +514,14 @@ export default defineComponent({
               oT = area[1] - area[3]
               break
             default:
+              oL = (area[0] - area[2]) / 2
+              oT = (area[1] - area[3]) / 2
               break
           }
         }
 
-        lgslayerIns.style.left = (isFixed ? oL : helper.scroll('left') + oL) + 'px'
-        lgslayerIns.style.top = (isFixed ? oT : helper.scroll('top') + oT) + 'px'
+        lgsLayer.value.style.left = (isFixed ? oL : helper.scroll('left') + oL.toString()) + 'px'
+        lgsLayer.value.style.top = (isFixed ? oT : helper.scroll('top') + oT.toString()) + 'px'
 
         saveLayerRect()
       }
@@ -536,28 +532,25 @@ export default defineComponent({
       if (!props.config.follow) return
       const dom = elRef.value
       if (!dom) return
-      const lgslayerIns:HTMLDivElement|null = dom.querySelector('.lgs-drag__wrap')
-      if (!lgslayerIns) return
-      const oW = lgslayerIns.offsetWidth
-      const oH = lgslayerIns.offsetHeight
+      if (!lgsLayer.value) return
+      // const lgslayerIns:HTMLDivElement|null = dom.querySelector('.lgs-drag__wrap')
+      // if (!lgslayerIns) return
+      const oW = lgsLayer.value.offsetWidth
+      const oH = lgsLayer.value.offsetHeight
       const pS = helper.getFollowRect(props.config.follow, oW, oH)
       state.tipArrow = pS[4]
 
-      lgslayerIns.style.left = pS[0] + 'px'
-      lgslayerIns.style.top = pS[1] + 'px'
+      lgsLayer.value.style.left = pS[0] + 'px'
+      lgsLayer.value.style.top = pS[1] + 'px'
     }
 
     // 事件处理
-    const callback = () => {
-      // 倒计时关闭
-      if (props.config.time) {
-        $index++
-        // 防止重复点击
-        if ($timer[$index] !== null) clearTimeout($timer[$index])
-        $timer[$index] = setTimeout(() => {
-          close()
-        }, props.config.time)
-      }
+    const autoClose = () => {
+      if (!props.config.time) return
+      state.timer && clearTimeout(state.timer)
+      state.timer = setTimeout(() => {
+        close()
+      }, props.config.time)
     }
 
     // 点击最大化按钮
@@ -586,13 +579,14 @@ export default defineComponent({
       })
       document.addEventListener('mouseup', () => {
         moveEnd()
+        handleGrab(false)
       })
-      resetZIndex()
+      Active()
     })
 
     onUnmounted(() => {
-      window.removeEventListener('resize', autopos, false)
-      clearTimeout($closeTimer)
+      window.removeEventListener('resize', autopos)
+      state.timer && clearTimeout(state.timer)
     })
 
     // 监听弹层v-model
@@ -610,16 +604,21 @@ export default defineComponent({
       elRef,
       lgsLayer,
       close,
+      resetZIndex,
       move,
       moveEnd,
       // maximizeClicked,
       shadeClicked,
       btnClicked,
       moveStart,
-      handleGrab,
       toggleFullScreen,
-      toggleMinimize
+      toggleMinimize,
+      deActive,
+      Active
     }
   }
 })
 </script>
+<style lang="scss" scoped>
+@import './css/index.scss';
+</style>

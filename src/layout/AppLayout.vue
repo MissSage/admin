@@ -20,12 +20,13 @@
 import AppHeader from './AppHeader/index.vue'
 import AppMenu from './AppMenu/index.vue'
 import { provide, ref } from 'vue'
-const theme = ref<string>('primary')
-const themes = ref<string[]>(['normal', 'primary'])
-
+const theme = ref<string>('darkblue')
+const themes = ref<string[]>(['darkblue', 'dark', 'primary'])
+const index = ref<number>(0)
 provide('theme', theme.value)
 const changeTheme = () => {
-  theme.value = theme.value === themes.value[0] ? themes.value[1] : themes.value[0]
+  theme.value = themes.value[index.value % 3]
+  index.value++
 }
 provide('changeTheme', changeTheme)
 </script>

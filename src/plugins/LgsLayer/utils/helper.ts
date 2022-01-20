@@ -1,6 +1,6 @@
 
 import { max } from 'lodash'
-import { IFollowTarget, ILayerInsArr, IRectInfo } from '../type'
+import { IFollowTarget, ILgsLayer, IRectInfo } from '../type'
 export default class helper {
   /**
    * 点击mask关闭弹窗
@@ -175,7 +175,7 @@ export default class helper {
     return options as T
   }
 
-  static getMaxSeed = (arr: ILayerInsArr[]) => {
+  static getMaxSeed = (arr: ILgsLayer[]) => {
     const newArr: number[] = arr.map(item => {
       return parseInt(item.id.split('_')[2])
     })
@@ -252,5 +252,22 @@ export default class helper {
       document.exitFullscreen()
       return false
     }
+  }
+
+  /**
+   *
+   * @param el 元素
+   * @param styleProp 样式属性
+   * @returns 返回
+   */
+  static getStyle (el:any, styleProp:any) {
+    const dom = document.getElementById(el)
+    let value:string = '0'
+    if (document.defaultView && dom) {
+      value = document.defaultView
+        .getComputedStyle(dom, null)
+        .getPropertyValue(styleProp)
+    }
+    return value
   }
 }

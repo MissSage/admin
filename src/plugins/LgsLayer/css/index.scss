@@ -1,0 +1,99 @@
+@import './variables.scss';
+@import './theme.scss';
+@import './animate.scss';
+
+.lgs-drag__layer {
+  padding: 0;
+  margin: 0;
+  position: relative;
+
+  .lgs-drag__wrap {
+    box-sizing: border-box;
+    outline: none;
+    position: fixed;
+    min-width: 250px;
+
+    .lgs-drag__wrap-header {
+      height: 35px;
+      line-height: 35px;
+      user-select: none;
+      cursor: grab;
+
+      .lgs-drag-header-box {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        align-content: center;
+
+        .lgs-drag-header-text {
+          line-height: 35px;
+          font-size: 16px;
+          margin: 0 15px 0 8px;
+          flex: 1;
+          min-width: 100px;
+          /*文本不换行*/
+          white-space: nowrap;
+          /*超出部分隐藏*/
+          overflow: hidden;
+          /*省略号展示*/
+          text-overflow: ellipsis;
+        }
+
+        .lgs-drag-header-extrabtns,
+        .lgs-drag-header-fixedbtns {
+          display: flex;
+          justify-content: flex-end;
+          align-content: center;
+          margin-right: 5px;
+
+          .header-btns {
+            cursor: pointer;
+            text-align: center;
+            height: 100%;
+            width: 25px;
+            flex-basis: 25px;
+
+            &:hover {
+              color: white;
+            }
+          }
+
+          .header-extrabtn {
+            cursor: pointer;
+            height: 28px;
+            margin: 4px 2px 3px 2px;
+          }
+        }
+      }
+    }
+
+    .lgs-drag__wrap-cntbox {
+      margin: 15px 15px 25px;
+      
+      .lgs-drag-msg__group {
+        height: 100%;
+      }
+    }
+
+    .lgs-drag__wrap-footer {
+      height: 50px;
+      margin: 0 15px;
+      border-top: 1px solid #465b6e;
+
+      .lgs-drag_footer-btns {
+        height: 100%;
+        display: flex;
+        flex-wrap: nowrap;
+        flex-direction: row;
+        justify-content: flex-end;
+        align-content: center;
+        .footer-btn{
+          height: 28px;
+          margin:10px 6px 12px 6px;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}
