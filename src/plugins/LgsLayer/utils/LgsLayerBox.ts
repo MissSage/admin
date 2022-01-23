@@ -17,7 +17,7 @@ class LgsLayerBox {
       showMaximize: true,
       showMinimize: true
     },
-    teleport: 'body',
+    teleport: '#app-main',
     time: undefined,
     fixed: true,
     follow: undefined,

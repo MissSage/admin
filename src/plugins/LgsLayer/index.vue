@@ -107,12 +107,13 @@
             class="lgs-drag__wrap-cntbox"
             :class="config.theme+'-drag--main'"
           >
-            <!-- 判断插槽是否存在 -->
-            <template v-if="$slots.content">
-              <div class="lgs-drag__wrap-cnt"><slot name="content"></slot></div>
-            </template>
-            <template v-else>
+            <slot>
               <template v-if="config.content">
+                <!-- <div
+                  v-if="config.type==='component'"
+                  ref="refLgsLayerContainer"
+                  :id="id"
+                ></div> -->
                 <component v-if="config.type==='component'" :is="config.content">传入的组件将替换这里的信息</component>
                 <iframe
                   v-else-if="config.type=='iframe'"
@@ -143,7 +144,7 @@
                 >
                 </div>
               </template>
-            </template>
+            </slot>
           </div>
         </template>
 
@@ -172,10 +173,11 @@
 </template>
 
 <script lang="ts">
-import { onMounted, onUnmounted, ref, reactive, watch, toRefs, nextTick, defineComponent, PropType } from 'vue'
+import { onMounted, onUnmounted, ref, reactive, watch, toRefs, nextTick, defineComponent, PropType, createVNode, render } from 'vue'
 import type { ILgsLayerConfigs } from './type'
 import helper from './utils/helper'
 export default defineComponent({
+  name: 'LgsLayer',
   props: {
     modelValue: {
       type: Boolean,
@@ -406,10 +408,13 @@ export default defineComponent({
     const deActive = () => {
       state.activeClass = ''
     }
+    const refLgsLayerContainer = ref<HTMLElement>()
     // 打开弹窗
     const open = () => {
       if (state.opened) return
+
       state.opened = true
+
       props.config.onSuccess && props.config.onSuccess()
       // 弹层挂载位置
       if (props.config.teleport) {
@@ -601,6 +606,7 @@ export default defineComponent({
     return {
       ...toRefs(state),
       ...toRefs(props),
+      refLgsLayerContainer,
       elRef,
       lgsLayer,
       close,

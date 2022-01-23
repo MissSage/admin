@@ -6,15 +6,20 @@
     <button @click="closeFirstLayer">closeFirstLayer</button>
     <button @click="closeLastLayer">closeLastLayer</button>
     <button @click="closeAll">closeAll</button>
+    <div>
+      <LgsForm></LgsForm>
+    </div>
   </div>
 </template>
 <script lang="ts">
+import LgsForm from '@/components/LgsForm/index.vue'
 import { ILgsLayerConfigs } from '@/plugins/LgsLayer/type'
 import useGlobal from '@/composables/useGlobal'
 import { defineComponent, inject } from 'vue'
 import Test1 from './test1.vue'
 // import Test from './test.vue'
 export default defineComponent({
+  components: { LgsForm },
   setup () {
     const theme:string = inject('theme') || ''
     const { $layer } = useGlobal()

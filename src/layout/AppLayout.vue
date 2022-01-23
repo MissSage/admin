@@ -9,7 +9,7 @@
       <el-header>
         <AppHeader />
       </el-header>
-      <el-main :class="theme">
+      <el-main :class="theme" id="app-main">
         <router-view />
       </el-main>
     </el-container>
