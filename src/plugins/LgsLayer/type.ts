@@ -15,7 +15,7 @@ export type IBtn = {
   text: string
   disabled?: boolean
   icon?: string
-  click?: (...args: any[]) => Promise<any>
+  click?: (...args: any[]) => void
   style?: string
   type?: IBtnType
   class?: string
@@ -56,6 +56,7 @@ export interface ILgsLayerConfigs {
   layerStyle?: string
   icon?: string
   content?: any
+  props?:Record<string, any>
   resize?: boolean
   theme?: string
   dragOut?: boolean

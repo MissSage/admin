@@ -114,7 +114,13 @@
                   ref="refLgsLayerContainer"
                   :id="id"
                 ></div> -->
-                <component v-if="config.type==='component'" :is="config.content">传入的组件将替换这里的信息</component>
+                <component
+                  v-if="config.type==='component'"
+                  :is="config.content"
+                  @close="close"
+                >
+                  传入的组件将替换这里的信息
+                </component>
                 <iframe
                   v-else-if="config.type=='iframe'"
                   scrolling="auto"
@@ -162,8 +168,9 @@
               class="footer-btn"
               :style="btn.style"
               @click="btnClicked($event,index)"
-              v-html="btn.text"
-            ></button>
+            >
+              {{ btn.text }}
+            </button>
           </div>
         </div>
         <span v-if="config.resize" class="lgs-drag__resize"></span>

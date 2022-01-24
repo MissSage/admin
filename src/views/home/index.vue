@@ -6,20 +6,14 @@
     <button @click="closeFirstLayer">closeFirstLayer</button>
     <button @click="closeLastLayer">closeLastLayer</button>
     <button @click="closeAll">closeAll</button>
-    <div>
-      <LgsForm></LgsForm>
-    </div>
   </div>
 </template>
 <script lang="ts">
-import LgsForm from '@/components/LgsForm/index.vue'
 import { ILgsLayerConfigs } from '@/plugins/LgsLayer/type'
 import useGlobal from '@/composables/useGlobal'
 import { defineComponent, inject } from 'vue'
 import Test1 from './test1.vue'
-// import Test from './test.vue'
 export default defineComponent({
-  components: { LgsForm },
   setup () {
     const theme:string = inject('theme') || ''
     const { $layer } = useGlobal()
@@ -33,19 +27,19 @@ export default defineComponent({
           // component: Test1,
           text: '弹窗测试弹窗测试弹窗测试'
         },
-        btns: [
-          {
-            text: '按钮1',
-            click: () => Promise.resolve(alert('1'))
-          },
-          {
-            text: '按钮2',
-            click: () => Promise.resolve(alert('2'))
-          }, {
-            text: '按钮3',
-            click: () => Promise.resolve(alert('3'))
-          }
-        ],
+        // btns: [
+        //   {
+        //     text: '提交',
+        //     click: () =>
+        //   },
+        //   {
+        //     text: '按钮2',
+        //     click: () => Promise.resolve(alert('2'))
+        //   }, {
+        //     text: '按钮3',
+        //     click: () => Promise.resolve(alert('3'))
+        //   }
+        // ],
         // dragOut: false,
         modelValue: true,
         theme: theme,

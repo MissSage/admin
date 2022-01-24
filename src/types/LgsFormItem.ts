@@ -115,3 +115,14 @@ export type ILgsFormItem = ILgsFormSelect |
   ILgsFormDate |
   ILgsFormDateRange |
   ILgsFormTime
+
+export type IBtnType ='' | 'default' | 'text' | 'success' | 'warning' | 'info' | 'primary' | 'danger'
+export type ILgsFormBtn = {
+  text: string
+  disabled?: boolean
+  icon?: string
+  click?: (...args: any[]) => void
+  style?: string
+  type?: IBtnType
+  class?: string
+}

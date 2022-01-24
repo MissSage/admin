@@ -31,6 +31,9 @@ class LgsLayerBox {
     layerStyle: '',
     icon: '',
     content: '',
+    props: {
+      layerId: ''
+    },
     resize: false,
     theme: 'darkblue',
     dragOut: true,
