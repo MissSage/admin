@@ -6,6 +6,10 @@
     <button @click="closeFirstLayer">closeFirstLayer</button>
     <button @click="closeLastLayer">closeLastLayer</button>
     <button @click="closeAll">closeAll</button>
+    <button @click="toggleMinLayer">toggleMinLayer</button>
+    <button @click="toggleFullScreen">toggleFullScreen</button>
+    <button @click="message">message</button>
+    <button @click="toast">toast</button>
   </div>
 </template>
 <script lang="ts">
@@ -56,11 +60,27 @@ export default defineComponent({
     const closeLastLayer = () => {
       $layer.close(layerIds.pop())
     }
+    const toggleMinLayer = () => {
+      layerIds.length > 0 && $layer.toggleMin(layerIds[0])
+    }
+    const toggleFullScreen = () => {
+      layerIds.length > 0 && $layer.toggleFullScreen(layerIds[0])
+    }
+    const message = () => {
+      $layer.message({ message: 'mesage1', icon: 'icon-check' })
+    }
+    const toast = () => {
+      $layer.toast()
+    }
     return {
       openLayer,
       closeAll,
       closeFirstLayer,
-      closeLastLayer
+      closeLastLayer,
+      toggleMinLayer,
+      toggleFullScreen,
+      message,
+      toast
     }
   }
 })

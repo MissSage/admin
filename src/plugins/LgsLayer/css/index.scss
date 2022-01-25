@@ -13,6 +13,11 @@
     position: fixed;
     min-width: 250px;
 
+    &.popui__message{
+      min-height: 25px;
+      border-radius: 5px;
+      padding: 0 10px;
+    }
     .lgs-drag__wrap-header {
       height: 35px;
       line-height: 35px;
@@ -69,8 +74,6 @@
     }
 
     .lgs-drag__wrap-cntbox {
-      margin: 15px 15px 25px;
-      
       .lgs-drag-msg__group {
         height: 100%;
       }

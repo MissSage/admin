@@ -1,23 +1,24 @@
 <template>
-  <div
-    ref="elRef"
-    v-if="opened"
-    class="lgs-drag__layer"
-    :style="'z-index:'+zindex"
-    :id="id"
+  <transition
+    name="lgs-layer-fade"
+    @before-leave="config.beforeClose"
+    @after-leave="$emit('destroy')"
   >
-    <!-- //蒙版 -->
     <div
-      v-if="config.shade"
-      class="lgs-drag__overlay"
-      @click="shadeClicked"
-      :style="'opacity:'+config.opacity"
-    ></div>
-    <transition
-
-      @before-leave="config.beforeClose"
-      @after-leave="$emit('destroy')"
+      ref="elRef"
+      v-if="opened"
+      class="lgs-drag__layer"
+      :style="'z-index:'+zindex"
+      :id="id"
     >
+      <!-- //蒙版 -->
+      <div
+        v-if="config.shade"
+        class="lgs-drag__overlay"
+        @click="shadeClicked"
+        :style="'opacity:'+config.opacity"
+      ></div>
+
       <div
         ref="lgsLayer"
         class="lgs-drag__wrap"
@@ -27,7 +28,7 @@
       >
         <!-- header -->
         <div
-          v-if="config.header"
+          v-if="config.header&&!config.header.hide"
           :id="id+'_header'"
           class="lgs-drag__wrap-header"
           :class="[config.theme+'-drag--header',activeClass]"
@@ -96,11 +97,11 @@
         </div>
         <!-- toast -->
         <div
-          v-if="config.type=='toast'&&config.icon"
+          v-if="config.type=='toast'"
           class="lgs-drag__toast-icon"
-          :class="['lgs-drag__toast-'+config.icon]"
-          v-html="toastIcon[config.icon]"
-        ></div>
+        >
+          <i class="icon iconfont" :class="config.icon"></i>
+        </div>
         <template v-else>
           <div
             v-if="!isMinimized"
@@ -109,17 +110,11 @@
           >
             <slot>
               <template v-if="config.content">
-                <!-- <div
-                  v-if="config.type==='component'"
-                  ref="refLgsLayerContainer"
-                  :id="id"
-                ></div> -->
                 <component
                   v-if="config.type==='component'"
                   :is="config.content"
                   @close="close"
                 >
-                  传入的组件将替换这里的信息
                 </component>
                 <iframe
                   v-else-if="config.type=='iframe'"
@@ -129,8 +124,15 @@
                   :src="config.content"
                 ></iframe>
                 <!-- message|notify|popover -->
+                <Message
+                  v-else-if="config.type==='message'"
+                  :message="config.content"
+                  :icon="config.icon"
+                  :type="'info'"
+                  @close="close"
+                ></Message>
                 <div
-                  v-else-if="config.type=='message' || config.type=='notify' || config.type=='popover'"
+                  v-else-if="config.type=='notify' || config.type=='popover'"
                   class="lgs-drag__wrap-cnt"
                 >
                   <i
@@ -175,16 +177,18 @@
         </div>
         <span v-if="config.resize" class="lgs-drag__resize"></span>
       </div>
-    </transition>
-  </div>
+    </div>
+  </transition>
 </template>
 
 <script lang="ts">
+import Message from './components/Message.vue'
 import { onMounted, onUnmounted, ref, reactive, watch, toRefs, nextTick, defineComponent, PropType, createVNode, render } from 'vue'
 import type { ILgsLayerConfigs } from './type'
 import helper from './utils/helper'
 export default defineComponent({
   name: 'LgsLayer',
+  components: { Message },
   props: {
     modelValue: {
       type: Boolean,
@@ -251,7 +255,7 @@ export default defineComponent({
         left: '0',
         top: '0',
         width: props.config.width || '250',
-        height: props.config.height || '50'
+        height: props.config.height || '25'
       },
       tipArrow: null,
       offsetX: 500,
@@ -331,11 +335,13 @@ export default defineComponent({
       saveLayerRect()
       state.isFullScreen = helper.toggleFullScreen(lgsLayer.value)
       if (!state.isFullScreen) restoreRect()
+      return state.isFullScreen
     }
     const toggleMinimize = (event:MouseEvent) => {
       if (!lgsLayer.value) return
       state.isMinimized ? restoreRect() : setForMinimize()
       state.isMinimized = !state.isMinimized
+      return state.isMinimized
     }
     /**
      * 设置最小化后的状态

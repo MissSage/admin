@@ -70,7 +70,7 @@ class LgsLayerBox {
     vm.props && (vm.props.onActive = () => {
       this.layers.filter(item => item.id !== id)
         .map(item => {
-          const proxy = this.getLayerProxy(item.id)
+          const proxy = this._getLayerProxy(item.id)
           return proxy && proxy.deActive()
         })
     })
@@ -80,16 +80,31 @@ class LgsLayerBox {
     return id
   }
 
+  /**
+   * 打开message弹窗
+   * @param options 弹窗配置
+   * @returns 返回打开的弹窗id
+   */
   message (options:ILgsLayerMessageConfig):string {
     return this.open({
       type: 'message',
       content: options.message,
+      position: 't',
+      icon: options.icon,
       header: {
-        text: options.title,
-        showMaximize: false,
-        showClose: options.showClose || true
+        hide: true
+        // text: options.title,
+        // showMaximize: false,
+        // showClose: options.showClose || true
       },
       time: options.time
+    })
+  }
+
+  toast ():string {
+    return this.open({
+      type: 'toast',
+      icon: 'icon-HTML'
     })
   }
 
@@ -116,37 +131,33 @@ class LgsLayerBox {
    * @param id 弹窗id
    * @param userCallBack 回调函数
    */
-  min (id:string, userCallBack:(id:string) => void):void {
-
+  toggleMin (id?:string, userCallBack?:(id:string) => void):void {
+    if (!id) return
+    const proxy = this._getLayerProxy(id)
+    const isMined = proxy && proxy.toggleMinimize()
+    userCallBack && userCallBack(isMined)
   }
 
   /**
-   * 恢复弹窗状态
+   * 切换全屏
    * @param id 弹窗id
-   * @param userCallBack 回调函数
+   * @param userCallBack 回调，参数:boolean,是否全屏
    */
-  restore (id: string, userCallBack:(id:string) => void):void {
-
+  toggleFullScreen (id?:string, userCallBack?:(id:string)=>void):void {
+    if (!id) return
+    const proxy = this._getLayerProxy(id)
+    const isFullScreen = proxy && proxy.toggleFullScreen(id)
+    userCallBack && userCallBack(isFullScreen)
   }
 
   /**
    * 关闭全部弹窗
    */
   closeAll () {
-    // this.layers.map(item => {
-    //   const proxy = this.getLayerProxy(item.id)
-    //   return proxy && proxy.close()
-    // })
     for (let i = this.layers.length - 1; i >= 0; i--) {
-      const proxy = this.getLayerProxy(this.layers[i].id)
+      const proxy = this._getLayerProxy(this.layers[i].id)
       proxy && proxy.close()
     }
-    // let _a
-    // for (let i = this.layers.length - 1; i >= 0; i--) {
-    //   const instance:any = this.layers[i].layer.vm.component
-    //   _a = instance && instance.proxy
-    //   _a && _a.close()
-    // }
   }
 
   /**
@@ -154,7 +165,7 @@ class LgsLayerBox {
    * @param id 弹窗id
    * @returns 弹窗的组件实例Proxy
    */
-  getLayerProxy (id:string) {
+  _getLayerProxy (id:string) {
     const layerObj = this._getLayer(id)
     const instance:any = layerObj && layerObj.layer.component
     const proxy = instance && instance.proxy

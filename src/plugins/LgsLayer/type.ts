@@ -23,6 +23,7 @@ export type IBtn = {
 export type IAnims = 'scaleIn' | 'fadeIn' | 'footer' | 'fadeInUp' | 'fadeInDown' | 'fadeInLeft' | 'fadeInRight'
 export type IToastIcon = Record<string, string>
 export type ILgsLayerHeader = {
+  hide?:boolean
   component?: any
   text?: string
   showClose?: boolean
@@ -70,6 +71,7 @@ export type ILgsLayerMessageConfig = {
   showClose?: boolean
   time?: number
   title?: string
+  icon?:string
 }
 export type ILgsLayerProps = {
   modelValue: boolean

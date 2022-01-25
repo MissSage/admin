@@ -1,1 +1,65 @@
 // 全局过渡动画样式
+$directions: rtl,
+ltr,
+ttb,
+btt;
+
+.lgs-layer-fade {
+
+  &-enter-active,
+  &-leave-active {
+    transition: all 1s;
+  }
+
+  &-enter-from,
+  &-enter-active,
+  &-enter-to,
+  &-leave-from,
+  &-leave-active,
+  &-leave-to {
+    overflow: hidden !important;
+  }
+
+  &-enter-from,
+  &-leave-to {
+    opacity: 0;
+    right:1000px;
+  }
+
+  &-enter-to,
+  &-leave-from {
+    opacity: 1;
+    .lgs-drag__wrap{
+      right: 0;
+    }
+  }
+
+  &-enter-from,
+  &-leave-to {
+    .lgs-drag__wrap {
+      // transform: translateX(200%);
+      transform: scale(0.1) rotate(360deg);
+      transition: all .3s;
+    }
+
+    @each $direction in $directions {
+      .#{$direction} {
+        @if $direction==ltr {
+          transform: translateX(-100%);
+        }
+
+        @if $direction==rtl {
+          transform: translateX(100%);
+        }
+
+        @if $direction==ttb {
+          transform: translateY(-100%);
+        }
+
+        @if $direction==btt {
+          transform: translateY(100%);
+        }
+      }
+    }
+  }
+}
