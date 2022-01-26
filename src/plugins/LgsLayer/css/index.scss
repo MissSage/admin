@@ -1,6 +1,7 @@
 @import './variables.scss';
 @import './theme.scss';
 @import './animate.scss';
+@import './mixins.scss';
 
 .lgs-drag__layer {
   padding: 0;
@@ -12,12 +13,14 @@
     outline: none;
     position: fixed;
     min-width: 250px;
+    overflow: hidden;
 
-    &.popui__message{
+    &.popui__message {
       min-height: 25px;
       border-radius: 5px;
       padding: 0 10px;
     }
+
     .lgs-drag__wrap-header {
       height: 35px;
       line-height: 35px;
@@ -74,9 +77,13 @@
     }
 
     .lgs-drag__wrap-cntbox {
+      height: calc(100% - 51px);
+      margin: 0;
+      padding: 8px;
       .lgs-drag-msg__group {
         height: 100%;
       }
+      @include scrollBar;
     }
 
     .lgs-drag__wrap-footer {
@@ -91,9 +98,10 @@
         flex-direction: row;
         justify-content: flex-end;
         align-content: center;
-        .footer-btn{
+
+        .footer-btn {
           height: 28px;
-          margin:10px 6px 12px 6px;
+          margin: 10px 6px 12px 6px;
           cursor: pointer;
         }
       }

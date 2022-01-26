@@ -15,18 +15,18 @@
 <script lang="ts">
 import { ILgsLayerConfigs } from '@/plugins/LgsLayer/type'
 import useGlobal from '@/composables/useGlobal'
-import { defineComponent, inject } from 'vue'
+import { defineComponent, inject, ref } from 'vue'
 import Test1 from './test1.vue'
 export default defineComponent({
   setup () {
     const theme:string = inject('theme') || ''
     const { $layer } = useGlobal()
-    const layerIds:string[] = []
+    const layerIds = ref<string[]>([])
     const openLayer = () => {
       const options:Partial<ILgsLayerConfigs&{modelValue:boolean}> = {
-        width: '600',
-        height: '800',
-        position: ['50%', '10%'],
+        teleport: '#app-main',
+        position: ['50%', '20%'],
+        dragOut: false,
         header: {
           // component: Test1,
           text: '弹窗测试弹窗测试弹窗测试'
@@ -51,20 +51,23 @@ export default defineComponent({
         content: Test1
       }
       const id = $layer.open(options)
-      layerIds.push(id)
+      layerIds.value.push(id)
     }
-    const closeAll = () => $layer.closeAll()
+    const closeAll = () => {
+      $layer.closeAll()
+      layerIds.value = []
+    }
     const closeFirstLayer = () => {
-      $layer.close(layerIds.shift())
+      $layer.close(layerIds.value.shift())
     }
     const closeLastLayer = () => {
-      $layer.close(layerIds.pop())
+      $layer.close(layerIds.value.pop())
     }
     const toggleMinLayer = () => {
-      layerIds.length > 0 && $layer.toggleMin(layerIds[0])
+      layerIds.value.length > 0 && $layer.toggleMin(layerIds.value[0])
     }
     const toggleFullScreen = () => {
-      layerIds.length > 0 && $layer.toggleFullScreen(layerIds[0])
+      layerIds.value.length > 0 && $layer.toggleFullScreen(layerIds.value[0])
     }
     const message = () => {
       $layer.message({ message: 'mesage1', icon: 'icon-check' })
@@ -86,5 +89,15 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.datavisual-page{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  button{
+    margin: 5px auto;
+    height:35px;
+  }
+}
 </style>

@@ -5,8 +5,8 @@
     @after-leave="$emit('destroy')"
   >
     <div
-      ref="elRef"
       v-if="opened"
+      ref="elRef"
       class="lgs-drag__layer"
       :style="'z-index:'+zindex"
       :id="id"
@@ -255,7 +255,7 @@ export default defineComponent({
         left: '0',
         top: '0',
         width: props.config.width || '250',
-        height: props.config.height || '25'
+        height: props.config.height || '150'
       },
       tipArrow: null,
       offsetX: 500,
@@ -297,24 +297,25 @@ export default defineComponent({
           // 顶部边界
           !props.config.dragOut && (top = 0)
         }
-        // const docOffsetHeight = 0
         let left = state.offsetX + (event.clientX - state.eventStartLeft)
 
-        // const docOffsetWidth = 0
         if (left <= 0) {
           // 左侧边界
           !props.config.dragOut && (left = 0)
         }
-        const docHeight = document.documentElement.clientHeight
-        const docWidth = document.documentElement.clientWidth
-        const docOffsetWidth = lgsLayer.value.offsetWidth
-        const docOffsetHeight = lgsLayer.value.offsetHeight
-        const bottom = docHeight - docOffsetHeight
+        const telport = props.config.teleport || 'body'
+        const telportEl = document.querySelector(telport) || document.documentElement
+
+        const docHeight = telportEl.clientHeight
+        const docWidth = telportEl.clientWidth
+        const layerWidth = lgsLayer.value.offsetWidth
+        const layerHeight = lgsLayer.value.offsetHeight
+        const bottom = docHeight - layerHeight
         if (top >= bottom) {
           // 底部边界
           !props.config.dragOut && (top = bottom)
         }
-        const right = docWidth - docOffsetWidth
+        const right = docWidth - layerWidth
         if (left >= right) {
           // 右部边界
           !props.config.dragOut && (left = right)
@@ -331,6 +332,7 @@ export default defineComponent({
       state.cursor = isGrabbing ? 'grabbing' : 'grab'
     }
     const toggleFullScreen = (e:MouseEvent) => {
+      if (!lgsLayer.value) return
       // 先保存样式
       saveLayerRect()
       state.isFullScreen = helper.toggleFullScreen(lgsLayer.value)
@@ -366,30 +368,6 @@ export default defineComponent({
       state.layerOpts.width = lgsLayer.value.style.width
       state.layerOpts.height = lgsLayer.value.style.height
       return state.layerOpts
-    }
-    /**
-     * 恢复弹窗
-     */
-    const restoreRect = (opts?:{
-      left:string
-      top:string
-      width:string
-      height:string
-    }) => {
-      if (!lgsLayer.value) return
-      if (opts) {
-        // 根据传入的样式设置弹窗的样式
-        state.layerOpts.left = lgsLayer.value.style.left = parseFloat(opts.left) + 'px'
-        state.layerOpts.top = lgsLayer.value.style.top = parseFloat(opts.top) + 'px'
-        state.layerOpts.width = lgsLayer.value.style.width = parseFloat(opts.width) + 'px'
-        state.layerOpts.height = lgsLayer.value.style.height = parseFloat(opts.height) + 'px'
-      } else {
-        // 还原样式
-        lgsLayer.value.style.left = parseFloat(state.layerOpts.left) + 'px'
-        lgsLayer.value.style.top = parseFloat(state.layerOpts.top) + 'px'
-        lgsLayer.value.style.width = parseFloat(state.layerOpts.width) + 'px'
-        lgsLayer.value.style.height = parseFloat(state.layerOpts.height) + 'px'
-      }
     }
 
     const resetZIndex = () => {
@@ -438,7 +416,6 @@ export default defineComponent({
           auto()
         })
       }
-
       autoClose()
     }
 
@@ -453,19 +430,37 @@ export default defineComponent({
 
     // 弹窗位置
     const auto = () => {
-      // ...
       restoreRect(state.layerOpts)
       autopos()
-
-      // 全屏弹窗
-      // if (props.config.maximize) {
-      //   full()
-      // }
-
-      // 弹窗拖动|缩放
-      // move()
     }
-
+    /**
+     * 恢复弹窗
+     * @param opts 恢复到的位置和大小配置，可选，不传时恢复到state.layerOpts设置的状态
+     */
+    const restoreRect = (opts?:{
+      left:string
+      top:string
+      width:string
+      height:string
+    }) => {
+      if (!lgsLayer.value) return
+      if (opts) {
+        // 根据传入的样式设置弹窗的样式
+        state.layerOpts.left = lgsLayer.value.style.left = parseFloat(opts.left) + 'px'
+        state.layerOpts.top = lgsLayer.value.style.top = parseFloat(opts.top) + 'px'
+        state.layerOpts.width = lgsLayer.value.style.width = parseFloat(opts.width) + 'px'
+        state.layerOpts.height = lgsLayer.value.style.height = parseFloat(opts.height) + 'px'
+      } else {
+        // 还原样式
+        lgsLayer.value.style.left = parseFloat(state.layerOpts.left) + 'px'
+        lgsLayer.value.style.top = parseFloat(state.layerOpts.top) + 'px'
+        lgsLayer.value.style.width = parseFloat(state.layerOpts.width) + 'px'
+        lgsLayer.value.style.height = parseFloat(state.layerOpts.height) + 'px'
+      }
+    }
+    /**
+     * 根据配置信息自动定位
+     */
     const autopos = () => {
       if (!state.opened) return
       let oL, oT
@@ -473,12 +468,6 @@ export default defineComponent({
       const isFixed = props.config.fixed
       if (!elRef.value) return
       if (!lgsLayer.value) return
-
-      // const lgslayerIns:HTMLDivElement|null = elRef.value.querySelector('.lgs-drag__wrap')
-      // if (!lgslayerIns) return
-      // if (!isFixed || props.config.follow) {
-      //   lgslayerIns && (lgslayerIns.style.position = 'absolute')
-      // }
 
       const area = [helper.client('width'), helper.client('height'), lgsLayer.value.offsetWidth, lgsLayer.value.offsetHeight]
 

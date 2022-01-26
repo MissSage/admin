@@ -43,14 +43,14 @@
       }"
       :placeholder="config.placeholder||'请输入'"
     />
-    <!-- <el-input-number
+    <el-input-number
       v-else-if="config.type === 'number'"
       v-model="value"
       style="width: 100%"
       :min="config.min"
       :max="config.max"
       :controls-position="config.controlPosition"
-    /> -->
+    />
     <el-select
       v-else-if="config.type==='select'"
       v-show="!config.hidden"
@@ -112,7 +112,7 @@
       </el-radio>
     </el-radio-group>
 
-    <!-- <el-checkbox-group
+    <el-checkbox-group
       :disabled="config.readonly || config.disabled"
       v-show="!config.hidden"
       v-model="value"
@@ -126,7 +126,7 @@
       >
         {{ kv.label }}
       </el-checkbox>
-    </el-checkbox-group> -->
+    </el-checkbox-group>
     <el-date-picker
       v-else-if="config.type==='date'||config.type==='datetime'"
       clearable
@@ -208,20 +208,20 @@ export default defineComponent({
     ElFormItem,
     ElSelect,
     ElInput,
-    // ElInputNumber,
+    ElInputNumber,
     ElSwitch,
-    // ElCheckbox,
+    ElCheckbox,
     ElDatePicker,
     ElTimePicker,
     ElRadio,
     ElCascader,
-    // ElCheckboxGroup,
+    ElCheckboxGroup,
     ElRadioGroup,
     ElOption
   },
   props: {
     modelValue: {
-      type: String,
+      type: [String, Number, Array, Object],
       default: ''
     },
     config: {
@@ -232,9 +232,11 @@ export default defineComponent({
     }
   },
   setup (props, ctx) {
-    const state = reactive<{value:string}>({
-      value: props.modelValue
-    })
+    const state = reactive<{
+      value:any
+      }>({
+        value: props.modelValue
+      })
     const handleChange = (val:string) => {
       ctx.emit('update:model-value', val)
       props.config.onChange && props.config.onChange(val)
