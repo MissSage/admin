@@ -1,70 +1,7 @@
 
-import { max } from 'lodash'
+import { cloneWith, max } from 'lodash'
 import { IFollowTarget, ILgsLayer, IRectInfo } from '../type'
 export default class helper {
-  /**
-   * 点击mask关闭弹窗
-   * @param  {[type]} event [description]
-   * @param  {[type]} layer [description]
-   * @return {[type]}       [description]
-   */
-  static clickMaskCloseAll (event: any, layer: any, id: any) {
-    const mask = event.target.getAttribute('class')
-    if (mask && (mask.indexOf('notify-mask') > -1 || mask.indexOf('icon-remove') > -1)) {
-      layer.close(id)
-    }
-  }
-
-  /**
-   * 默认的yes按钮操作
-   * @param  {[type]} event [description]
-   * @return {[type]}       [description]
-   */
-  static btnyes (event: any, options: any, formValue: any) {
-    if (typeof (options.yes) === 'function') {
-      if (options.type === 6) {
-        options.yes(formValue, options.id)
-      } else {
-        options.yes(options.id)
-      }
-    } else {
-      options.layer.close(options.id)
-    }
-  }
-
-  /**
-   * 默认取消按钮操作
-   * @param  {[type]} event [description]
-   * @return {[type]}       [description]
-   */
-  static async btncancel (event: any, options: any) {
-    if (typeof (options.cancel) === 'function') {
-      await options.cancel(options.id)
-    } else {
-      options.layer.close(options.id)
-    }
-  }
-
-  /**
-   * 隐藏滚动条
-   */
-  static hiddenScrollBar (options: any) {
-    if (!options.scrollbar) {
-      const htmlDom = document.getElementsByTagName('html')[0]
-      const htmlClass = [...Array.from(htmlDom.classList)]
-      if (htmlClass.indexOf('vl-html-scrollbar-hidden') > -1) {
-        return
-      }
-
-      const htmlWidth = htmlDom.offsetWidth
-      // 隐藏滚动条
-      // htmlDom.style.overflowY = "hidden";
-      htmlDom.classList.add('vl-html-scrollbar-hidden')
-      const htmlWidthH = htmlDom.offsetWidth
-      htmlDom.style.marginRight = htmlWidthH - htmlWidth + 'px'
-    }
-  }
-
   /**
    * 鼠标拖动弹窗
    * @param  {[type]} event   [description]
@@ -86,20 +23,6 @@ export default class helper {
     options.offset[0] = (dom.offsetLeft)
     options.offset[1] = (dom.offsetTop)
   }
-
-  // /**
-  //  * 拖动弹窗
-  //  * @param  {[type]} event  [description]
-  //  * @param  {[type]} ismove [description]
-  //  * @return {[type]}        [description]
-  //  */
-  // static move (event:any, options:any, ismove:any) {
-  //   if (ismove) {
-  //     const o = document.getElementById(options.id + '_alert')
-  //     o.style.left = options.offset[0] + (event.clientX - this.moveLeft) + 'px'
-  //     o.style.top = options.offset[1] + (event.clientY - this.moveTop) + 'px'
-  //   }
-  // }
 
   /**
    * [sleep description]
@@ -182,15 +105,25 @@ export default class helper {
     return max(newArr)
   }
 
-  static client = (type: string) => {
+  static client = (type: 'width'|'height', dom?:Element|string|null, percent?:number) => {
+    let value = 0
+    if (dom) {
+      dom = typeof dom === 'string' ? document.querySelector(dom) : dom
+    } else {
+      dom = document.body
+    }
+
     switch (type) {
       case 'width':
-        return document.body.clientWidth
+        value = dom ? dom.clientWidth : 0
+        break
       case 'height':
-        return document.body.clientHeight
+        value = dom ? dom.clientHeight : 0
+        break
       default:
-        return 0
+        break
     }
+    return percent ? value * percent / 100 : value
   }
 
   static scroll = (type: string) => {

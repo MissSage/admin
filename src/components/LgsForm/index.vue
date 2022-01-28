@@ -4,6 +4,7 @@
     :label-width="120"
     :model="dataForm"
     :rules="rules"
+    style="width:100%;"
   >
     <template
       v-for="(item,i) in formFields"
@@ -35,7 +36,8 @@ import { ILgsFormBtn, ILgsFormItem } from '@/types/LgsFormItem'
 import { ElForm, ElButton } from 'element-plus'
 import { defineComponent, PropType, ref } from 'vue'
 import LgsFormItem from '../LgsFormItem/index.vue'
-type DataForm=Record<string, string>
+import { DataForm } from './type'
+
 export default defineComponent({
   name: 'LgsForm',
   components: {
@@ -47,7 +49,7 @@ export default defineComponent({
     dataForm: {
       type: Object as PropType<DataForm>,
       default: () => {
-
+        //
       }
     },
     formFields: {

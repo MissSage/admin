@@ -53,6 +53,9 @@ export default defineComponent({
     .lgs-message-info{
       flex: 1;
     }
+    .icon-close{
+      cursor: pointer;
+    }
   }
 }
 </style>

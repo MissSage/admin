@@ -2,13 +2,14 @@
   <transition
     name="lgs-layer-fade"
     @before-leave="config.beforeClose"
-    @after-leave="$emit('destroy')"
+    @after-leave="$emit('destroy',config.type)"
   >
     <div
       v-if="opened"
       ref="elRef"
       class="lgs-drag__layer"
-      :style="'z-index:'+zindex"
+      :class="config.shade?'lgs-drag__layer-shadebox':''"
+      :style="'z-index:'+zindex+';'"
       :id="id"
     >
       <!-- //蒙版 -->
@@ -16,13 +17,12 @@
         v-if="config.shade"
         class="lgs-drag__overlay"
         @click="shadeClicked"
-        :style="'opacity:'+config.opacity"
-      ></div>
-
+      >
+      </div>
       <div
-        ref="lgsLayer"
+        ref="refLgsLayer"
         class="lgs-drag__wrap"
-        :class="['anim-'+config.anim, 'popui__'+config.type, tipArrow, config.theme]"
+        :class="['anim-'+config.anim, 'popui__'+config.type, tipArrow, theme]"
         :style="[config.layerStyle?config.layerStyle:'']"
         @mousedown="Active"
       >
@@ -31,7 +31,7 @@
           v-if="config.header&&!config.header.hide"
           :id="id+'_header'"
           class="lgs-drag__wrap-header"
-          :class="[config.theme+'-drag--header',activeClass]"
+          :class="[theme+'-drag--header',activeClass]"
           @mousedown="moveStart"
           :style="{'cursor': cursor}"
         >
@@ -61,7 +61,7 @@
             </div>
             <div class="lgs-drag-header-fixedbtns">
               <div
-                v-if="config.header.showMinimize&&!isFullScreen"
+                v-if="!config.header.hideMinimize&&!isFullScreen"
                 class="header-btns"
                 @click.stop="toggleMinimize"
               >
@@ -72,7 +72,7 @@
                 </i>
               </div>
               <div
-                v-if="config.header.showMaximize&&!isMinimized"
+                v-if="!config.header.hideMaximize&&!isMinimized"
                 class="header-btns"
                 @click.stop="toggleFullScreen"
               >
@@ -83,7 +83,7 @@
                 </i>
               </div>
               <div
-                v-if="config.header.showClose"
+                v-if="!config.header.hideClose"
                 class="header-btns"
                 @click.stop="close"
               >
@@ -106,7 +106,7 @@
           <div
             v-if="!isMinimized"
             class="lgs-drag__wrap-cntbox"
-            :class="config.theme+'-drag--main'"
+            :class="theme+'-drag--main'"
           >
             <slot>
               <template v-if="config.content">
@@ -139,7 +139,6 @@
                     v-if="config.icon"
                     class="lgs-drag-msg__icon"
                     :class="config.icon"
-                    v-html="messageIcon[config.icon]"
                   ></i>
                   <div class="lgs-drag-msg__group">
                     <div v-html="config.content"></div>
@@ -159,7 +158,7 @@
         <div
           v-if="config.btns&&!isMinimized"
           class="lgs-drag__wrap-footer"
-          :class="[config.theme+'-drag--footer']"
+          :class="[theme+'-drag--footer']"
 
           :style="'text-align:'+config.btnAlign"
         >
@@ -169,13 +168,17 @@
               :key="index"
               class="footer-btn"
               :style="btn.style"
-              @click="btnClicked($event,index)"
+              @click="btnClicked($event,btn)"
             >
               {{ btn.text }}
             </button>
           </div>
         </div>
-        <span v-if="config.resize" class="lgs-drag__resize"></span>
+        <span
+          v-if="config.resize"
+          class="lgs-drag__resize"
+          @mousedown="resizeStart"
+        ></span>
       </div>
     </div>
   </transition>
@@ -183,8 +186,8 @@
 
 <script lang="ts">
 import Message from './components/Message.vue'
-import { onMounted, onUnmounted, ref, reactive, watch, toRefs, nextTick, defineComponent, PropType, createVNode, render } from 'vue'
-import type { ILgsLayerConfigs } from './type'
+import { onMounted, onUnmounted, ref, reactive, watch, toRefs, nextTick, defineComponent, PropType, createVNode, render, onBeforeMount } from 'vue'
+import type { IBtn, ILgsLayerConfigs } from './type'
 import helper from './utils/helper'
 export default defineComponent({
   name: 'LgsLayer',
@@ -210,18 +213,13 @@ export default defineComponent({
     const elRef = ref<HTMLDivElement>()
     const state = reactive<{
       id: string,
+      teleport: string,
       activeClass:string
       opened: boolean,
       isFullScreen:boolean
       isMinimized:boolean
-      toastIcon: Record<string, string>,
       messageIcon: any,
-      layerOpts: {
-        left:string,
-        top:string,
-        width:string,
-        height:string
-      },
+      layerOpts:Record<string, string>
       tipArrow: any
       offsetX:number
       offsetY:number
@@ -229,25 +227,24 @@ export default defineComponent({
       eventStartTop:number
       ismove:boolean
       cursor:'grab'|'grabbing'
-      resize: {
-        isResize: boolean
-        oWidth: number
-        oHeight: number
-        moveLeft: number
-        moveTop: number
-        tt: any
-      }
+      isResize: boolean
       zindex:number
-      timer:any
+      time:number | undefined
+      header: {
+        text: string,
+        hideClose: boolean,
+        hideMaximize: boolean,
+        hideMinimize: boolean
+      }
+      theme: string
+      isFixed: boolean
     }>({
       id: props.config.id || `lgslayer_${new Date().getTime()}`,
+      teleport: props.config.teleport || '#app-main',
       activeClass: '',
       opened: false,
       isFullScreen: false,
       isMinimized: false,
-      toastIcon: {
-        // ...
-      },
       messageIcon: {
         // ...
       },
@@ -264,32 +261,53 @@ export default defineComponent({
       eventStartTop: 0,
       ismove: false,
       cursor: 'grab',
-      resize: {
-        isResize: false,
-        oWidth: 0,
-        oHeight: 0,
-        moveLeft: 0,
-        moveTop: 0,
-        tt: {}
-      },
+      isResize: false,
       zindex: 2000,
-      timer: null
+      time: props.config.time,
+      header: {
+        text: props.config.header ? props.config.header.text ? props.config.header.text : '' : '',
+        hideClose: props.config.header ? props.config.header.hideClose ?? false : false,
+        hideMaximize: props.config.header ? props.config.header.hideMaximize ?? false : false,
+        hideMinimize: props.config.header ? props.config.header.hideMinimize ?? false : false
+      },
+      theme: props.config.theme || 'darkblue',
+      isFixed: false
     })
-    const lgsLayer = ref<HTMLDivElement>()
+    /**
+     * 弹窗Dom ref实例
+     */
+    const refLgsLayer = ref<HTMLDivElement>()
+    /**
+     * 拖拽开始前准备工作
+     * @param event Event
+     */
     const moveStart = (event:MouseEvent) => {
-      // 保存点击的初始位置
       handleGrab(true)
+      // 保存点击的初始位置
       state.eventStartLeft = event.clientX
       state.eventStartTop = event.clientY
       state.ismove = true
-      if (lgsLayer.value) {
-        state.offsetX = lgsLayer.value.offsetLeft
-        state.offsetY = lgsLayer.value.offsetTop
+      if (refLgsLayer.value) {
+        state.offsetX = refLgsLayer.value.offsetLeft
+        state.offsetY = refLgsLayer.value.offsetTop
       }
     }
+    /**
+     * 缩放开始前准备工作
+     * @param event Event
+     */
+    const resizeStart = (event:MouseEvent) => {
+      if (!refLgsLayer.value) return
+      _saveLayerRect()
+      state.isResize = true
+    }
+    /**
+     * 拖拽或者缩放
+     * @param event Event
+     */
     const move = (event:MouseEvent) => {
+      if (!refLgsLayer.value) return
       if (state.ismove) {
-        if (!lgsLayer.value) return
         // 计算鼠标运动后弹窗的位置
         let top = state.offsetY + (event.clientY - state.eventStartTop)
 
@@ -303,13 +321,10 @@ export default defineComponent({
           // 左侧边界
           !props.config.dragOut && (left = 0)
         }
-        const telport = props.config.teleport || 'body'
-        const telportEl = document.querySelector(telport) || document.documentElement
-
-        const docHeight = telportEl.clientHeight
-        const docWidth = telportEl.clientWidth
-        const layerWidth = lgsLayer.value.offsetWidth
-        const layerHeight = lgsLayer.value.offsetHeight
+        const docHeight = helper.client('height', state.teleport)
+        const docWidth = helper.client('width', state.teleport)
+        const layerWidth = refLgsLayer.value.offsetWidth
+        const layerHeight = refLgsLayer.value.offsetHeight
         const bottom = docHeight - layerHeight
         if (top >= bottom) {
           // 底部边界
@@ -320,56 +335,77 @@ export default defineComponent({
           // 右部边界
           !props.config.dragOut && (left = right)
         }
-        lgsLayer.value.style.left = left + 'px'
-        lgsLayer.value.style.top = top + 'px'
+        refLgsLayer.value.style.left = left + 'px'
+        refLgsLayer.value.style.top = top + 'px'
+      } else if (state.isResize) {
+        const height = event.y - (event.currentTarget as HTMLElement).offsetTop - parseFloat(state.layerOpts.top)
+        const width = event.x - (event.currentTarget as HTMLElement).offsetLeft - parseFloat(state.layerOpts.left)
+        console.log(width, height)
+        refLgsLayer.value.style.height = (height < 35 ? 35 : height) + 'px'
+        refLgsLayer.value.style.width = (width < 250 ? 250 : width) + 'px'
+
+        _saveLayerRect()
       }
+      event.preventDefault()
+      event.stopPropagation()
     }
+    /**
+     * 拖拽结束处理
+     */
     const moveEnd = () => {
       state.ismove = false
-      state.resize.isResize = false
+      state.isResize = false
     }
+
+    /**
+     * 控制鼠标小手是否抓住
+     * @param isGrabbing 是否抓住
+     */
     const handleGrab = (isGrabbing:boolean) => {
       state.cursor = isGrabbing ? 'grabbing' : 'grab'
     }
-    const toggleFullScreen = (e:MouseEvent) => {
-      if (!lgsLayer.value) return
-      // 先保存样式
-      saveLayerRect()
-      state.isFullScreen = helper.toggleFullScreen(lgsLayer.value)
-      if (!state.isFullScreen) restoreRect()
+    /**
+     * 切换全屏
+     * @param e 事件
+     */
+    const toggleFullScreen = (e?:MouseEvent) => {
+      if (!refLgsLayer.value) return
+      // 如果是最小化状态则先恢复
+      if (state.isMinimized) {
+        toggleMinimize()
+      }
+      // 保存样式
+      _saveLayerRect()
+      state.isFullScreen = helper.toggleFullScreen(refLgsLayer.value)
+      if (!state.isFullScreen) _restoreRect()
       return state.isFullScreen
     }
-    const toggleMinimize = (event:MouseEvent) => {
-      if (!lgsLayer.value) return
-      state.isMinimized ? restoreRect() : setForMinimize()
+    /**
+     * 切换最小化
+     * @param event 事件
+     */
+    const toggleMinimize = (event?:MouseEvent) => {
+      if (!refLgsLayer.value) return
+      state.isMinimized ? _restoreRect() : _setForMinimize()
       state.isMinimized = !state.isMinimized
       return state.isMinimized
     }
     /**
      * 设置最小化后的状态
      */
-    const setForMinimize = () => {
-      if (!lgsLayer.value) return
+    const _setForMinimize = () => {
+      if (!refLgsLayer.value) return
       // 先保存弹窗样式
-      saveLayerRect()
-      lgsLayer.value.style.width = '250px'
-      lgsLayer.value.style.height = '35px'
-      lgsLayer.value.style.left = 'auto'
-      lgsLayer.value.style.right = '20px'
-      lgsLayer.value.style.top = '20px'
-    }
-    /**
-     * 保存当前弹窗的矩形数据
-     */
-    const saveLayerRect = () => {
-      if (!lgsLayer.value) return
-      state.layerOpts.left = lgsLayer.value.style.left
-      state.layerOpts.top = lgsLayer.value.style.top
-      state.layerOpts.width = lgsLayer.value.style.width
-      state.layerOpts.height = lgsLayer.value.style.height
-      return state.layerOpts
+      _saveLayerRect()
+      refLgsLayer.value.style.width = '250px'
+      refLgsLayer.value.style.height = '35px'
+      refLgsLayer.value.style.left = (helper.client('width', state.teleport) - 250) + 'px'
+      refLgsLayer.value.style.top = '20px'
     }
 
+    /**
+     * 重置z-index到当前最大
+     */
     const resetZIndex = () => {
       let max = 2000
       const doms = document.querySelectorAll('.lgs-drag__layer') // vl-notify-iframe
@@ -392,7 +428,7 @@ export default defineComponent({
       console.log(state.zindex)
     }
     const Active = () => {
-      state.activeClass = props.config.theme + '-drag--header-active'
+      state.activeClass = state.theme + '-drag--header-active'
       resetZIndex()
       context.emit('active')
     }
@@ -405,17 +441,16 @@ export default defineComponent({
       if (state.opened) return
 
       state.opened = true
-
-      props.config.onSuccess && props.config.onSuccess()
       // 弹层挂载位置
-      if (props.config.teleport) {
+      if (state.teleport) {
         nextTick(() => {
-          const teleportNode = props.config.teleport && document.querySelector(props.config.teleport)
+          const teleportNode = state.teleport && document.querySelector(state.teleport)
           teleportNode && elRef.value && teleportNode.appendChild(elRef.value)
 
           auto()
         })
       }
+      props.config.onSuccess && props.config.onSuccess()
       autoClose()
     }
 
@@ -430,33 +465,38 @@ export default defineComponent({
 
     // 弹窗位置
     const auto = () => {
-      restoreRect(state.layerOpts)
+      _restoreRect()
       autopos()
+    }
+    /**
+     * 保存当前弹窗的矩形数据
+     */
+    const _saveLayerRect = () => {
+      if (!refLgsLayer.value) return
+      state.layerOpts.left = refLgsLayer.value.style.left
+      state.layerOpts.top = refLgsLayer.value.style.top
+      state.layerOpts.width = refLgsLayer.value.style.width
+      state.layerOpts.height = refLgsLayer.value.style.height
+      return state.layerOpts
     }
     /**
      * 恢复弹窗
      * @param opts 恢复到的位置和大小配置，可选，不传时恢复到state.layerOpts设置的状态
      */
-    const restoreRect = (opts?:{
-      left:string
-      top:string
-      width:string
-      height:string
-    }) => {
-      if (!lgsLayer.value) return
-      if (opts) {
-        // 根据传入的样式设置弹窗的样式
-        state.layerOpts.left = lgsLayer.value.style.left = parseFloat(opts.left) + 'px'
-        state.layerOpts.top = lgsLayer.value.style.top = parseFloat(opts.top) + 'px'
-        state.layerOpts.width = lgsLayer.value.style.width = parseFloat(opts.width) + 'px'
-        state.layerOpts.height = lgsLayer.value.style.height = parseFloat(opts.height) + 'px'
-      } else {
-        // 还原样式
-        lgsLayer.value.style.left = parseFloat(state.layerOpts.left) + 'px'
-        lgsLayer.value.style.top = parseFloat(state.layerOpts.top) + 'px'
-        lgsLayer.value.style.width = parseFloat(state.layerOpts.width) + 'px'
-        lgsLayer.value.style.height = parseFloat(state.layerOpts.height) + 'px'
+    const _restoreRect = () => {
+      if (!refLgsLayer.value) return
+      for (const key in state.layerOpts) {
+        if (state.layerOpts[key].indexOf('%') !== -1) {
+          const replaceKey:'width'|'height' = key === 'width' || key === 'left' ? 'width' : 'height'
+          const withPercent = key === 'width' || 'height'
+          state.layerOpts[key] = helper.client(replaceKey, state.teleport, withPercent && parseFloat(props.config.width || '0')) + ''
+        }
       }
+      // 还原样式
+      refLgsLayer.value.style.left = parseFloat(state.layerOpts.left) + 'px'
+      refLgsLayer.value.style.top = parseFloat(state.layerOpts.top) + 'px'
+      refLgsLayer.value.style.width = parseFloat(state.layerOpts.width) + 'px'
+      refLgsLayer.value.style.height = parseFloat(state.layerOpts.height) + 'px'
     }
     /**
      * 根据配置信息自动定位
@@ -465,11 +505,10 @@ export default defineComponent({
       if (!state.opened) return
       let oL, oT
       const pos = props.config.position
-      const isFixed = props.config.fixed
       if (!elRef.value) return
-      if (!lgsLayer.value) return
+      if (!refLgsLayer.value) return
 
-      const area = [helper.client('width'), helper.client('height'), lgsLayer.value.offsetWidth, lgsLayer.value.offsetHeight]
+      const area = [helper.client('width', state.teleport), helper.client('height', state.teleport), refLgsLayer.value.offsetWidth, refLgsLayer.value.offsetHeight]
 
       oL = (area[0] - area[2]) / 2
       oT = (area[1] - area[3]) / 2
@@ -480,15 +519,11 @@ export default defineComponent({
         if (pos instanceof Array) {
           oL = pos[0].toString()
           oT = pos[1].toString()
-          let container:HTMLElement | null = null
           if (oL.indexOf('%') !== -1) {
-            const olN = parseFloat(oL)
-            container = container || document.querySelector(props.config.teleport || 'body')
-            oL = container ? (container as HTMLElement).clientWidth * olN / 100 : 500
+            oL = helper.client('width', state.teleport, parseFloat(oL))
           }
           if (oT.indexOf('%') !== -1) {
-            container = container || document.querySelector(props.config.teleport || 'body')
-            oT = container ? (container as HTMLElement).clientHeight * parseFloat(oT) / 100 : 500
+            oT = helper.client('height', state.teleport, parseFloat(oT))
           }
         } else {
           switch (pos) {
@@ -527,10 +562,10 @@ export default defineComponent({
           }
         }
 
-        lgsLayer.value.style.left = (isFixed ? oL : helper.scroll('left') + oL.toString()) + 'px'
-        lgsLayer.value.style.top = (isFixed ? oT : helper.scroll('top') + oT.toString()) + 'px'
+        refLgsLayer.value.style.left = oL + 'px'
+        refLgsLayer.value.style.top = oT + 'px'
 
-        saveLayerRect()
+        _saveLayerRect()
       }
     }
 
@@ -539,51 +574,58 @@ export default defineComponent({
       if (!props.config.follow) return
       const dom = elRef.value
       if (!dom) return
-      if (!lgsLayer.value) return
+      if (!refLgsLayer.value) return
       // const lgslayerIns:HTMLDivElement|null = dom.querySelector('.lgs-drag__wrap')
       // if (!lgslayerIns) return
-      const oW = lgsLayer.value.offsetWidth
-      const oH = lgsLayer.value.offsetHeight
+      const oW = refLgsLayer.value.offsetWidth
+      const oH = refLgsLayer.value.offsetHeight
       const pS = helper.getFollowRect(props.config.follow, oW, oH)
       state.tipArrow = pS[4]
 
-      lgsLayer.value.style.left = pS[0] + 'px'
-      lgsLayer.value.style.top = pS[1] + 'px'
+      refLgsLayer.value.style.left = pS[0] + 'px'
+      refLgsLayer.value.style.top = pS[1] + 'px'
     }
 
-    // 事件处理
+    /**
+     * 自动关闭
+     */
     const autoClose = () => {
       if (!props.config.time) return
-      state.timer && clearTimeout(state.timer)
-      state.timer = setTimeout(() => {
-        close()
-      }, props.config.time)
+      helper.sleep(props.config.time).then(close)
     }
 
-    // 点击最大化按钮
-    // const maximizeClicked =
-    // 点击遮罩层
+    /**
+     * 点击遮罩层
+     */
     const shadeClicked = () => {
       if (props.config.shadeClose) {
         close()
       }
     }
-    // 按钮事件
-    const btnClicked = (e:MouseEvent, index:number) => {
-      const btn = props.config.btns && props.config.btns[index]
-      if (btn && !btn.disabled) {
-        btn.click && btn.click(e)
-      }
+    /**
+     * 按钮点击
+     * @param e
+     * @param index
+     */
+    const btnClicked = (e:MouseEvent, btn:IBtn) => {
+      !btn.disabled && btn.click && btn.click(e)
+    }
+    const resetTop = (top:number) => {
+      state.layerOpts.top = top + ''
+      _restoreRect()
     }
     onMounted(() => {
       if (props.modelValue) {
         open()
       }
       window.addEventListener('resize', autopos, false)
-      // 解决鼠标超出弹窗后不跟随的问题
-      document.addEventListener('mousemove', event => {
+      const telePort:HTMLElement|null = document.querySelector(props.config.teleport || 'body')
+      telePort && telePort.addEventListener('mousemove', event => {
         move(event)
       })
+      // document.addEventListener('mousemove', event => {
+      //   move(event)
+      // })
       document.addEventListener('mouseup', () => {
         moveEnd()
         handleGrab(false)
@@ -593,7 +635,6 @@ export default defineComponent({
 
     onUnmounted(() => {
       window.removeEventListener('resize', autopos)
-      state.timer && clearTimeout(state.timer)
     })
 
     // 监听弹层v-model
@@ -610,19 +651,20 @@ export default defineComponent({
       ...toRefs(props),
       refLgsLayerContainer,
       elRef,
-      lgsLayer,
+      refLgsLayer,
       close,
       resetZIndex,
       move,
       moveEnd,
-      // maximizeClicked,
       shadeClicked,
       btnClicked,
       moveStart,
       toggleFullScreen,
       toggleMinimize,
       deActive,
-      Active
+      Active,
+      resetTop,
+      resizeStart
     }
   }
 })

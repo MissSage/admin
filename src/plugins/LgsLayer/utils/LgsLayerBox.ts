@@ -10,52 +10,53 @@ class LgsLayerBox {
     this.minLayers = []
   }
 
-  defaultOptions: ILgsLayerConfigs = {
-    header: {
-      text: '',
-      showClose: true,
-      showMaximize: true,
-      showMinimize: true
-    },
-    teleport: 'body',
-    time: undefined,
-    fixed: true,
-    follow: undefined,
-    shade: false,
-    shadeClose: false,
-    btnAlign: 'right',
-    opacity: 1,
-    id: '',
-    anim: 'scaleIn',
-    type: 'message',
-    layerStyle: '',
-    icon: '',
-    content: '',
-    props: {
-      layerId: ''
-    },
-    resize: false,
-    theme: 'darkblue',
-    dragOut: true,
-    beforeClose: () => Promise.resolve(),
-    onSuccess: () => Promise.resolve(),
-    onClosed: () => Promise.resolve()
-  }
+  // defaultOptions: ILgsLayerConfigs = {
+  //   header: {
+  //     text: '',
+  //     showClose: true,
+  //     showMaximize: true,
+  //     showMinimize: true
+  //   },
+  //   teleport: '#app-main',
+  //   time: undefined,
+  //   fixed: true,
+  //   follow: undefined,
+  //   shade: false,
+  //   shadeClose: false,
+  //   btnAlign: 'right',
+  //   opacity: 1,
+  //   id: '',
+  //   anim: 'scaleIn',
+  //   type: 'message',
+  //   layerStyle: '',
+  //   icon: '',
+  //   content: '',
+  //   props: {
+  //     layerId: ''
+  //   },
+  //   resize: false,
+  //   theme: 'darkblue',
+  //   dragOut: true,
+  //   beforeClose: () => Promise.resolve(),
+  //   onSuccess: () => Promise.resolve(),
+  //   onClosed: () => Promise.resolve(),
+  //   onOpened: () => Promise.resolve()
+  // }
 
   minLayers:ILgsLayer[]
   currentId:string
   layers:ILgsLayer[]
-  open (options:ILgsLayerConfigs&{modelValue?:boolean}):string {
+  open (options:ILgsLayerConfigs):string {
     let maxSeed = Helper.getMaxSeed(this.layers)
     if (maxSeed === undefined) maxSeed = 0
     const id = `lgslayer_${new Date().getTime()}_${maxSeed++}`
     options.id = id
-    options.modelValue = true
-    Helper.mergeJson<ILgsLayerConfigs>(options.header, this.defaultOptions.header)
-    const configs:ILgsLayerConfigs = Helper.mergeJson<ILgsLayerConfigs>(options, this.defaultOptions)
+    // Helper.mergeJson<ILgsLayerConfigs>(options.header, this.defaultOptions.header)
+    // const configs:ILgsLayerConfigs = Object.assign(this.defaultOptions, options)
+    //  Helper.mergeJson<ILgsLayerConfigs>(options, this.defaultOptions)
     const props:ILgsLayerProps = {
-      modelValue: options.modelValue,
-      config: configs
+      modelValue: true,
+      config: options
     }
     const container = document.createElement('div')
     container.className = `${id}_container`
@@ -64,7 +65,15 @@ class LgsLayerBox {
       LgsLayerConstructor,
       props
     )
-    vm.props && (vm.props.onDestroy = () => {
+    vm.props && (vm.props.onDestroy = (type:string) => {
+      this.layers.splice(this._getLayerIndex(id), 1)
+      if (type === 'message') {
+        const messages = this.layers.filter(item => item.layer.props.config.type === 'message')
+        messages.forEach((item, i) => {
+          const proxy = this._getLayerProxy(item.id)
+          proxy && proxy.resetTop(i * 50)
+        })
+      }
       render(null, container)
     })
     vm.props && (vm.props.onActive = () => {
@@ -86,10 +95,12 @@ class LgsLayerBox {
    * @returns 返回打开的弹窗id
    */
   message (options:ILgsLayerMessageConfig):string {
+    const posTop = this.layers.filter(item => item.layer.props.config.type === 'message').length * 50
     return this.open({
       type: 'message',
       content: options.message,
-      position: 't',
+      position: ['50%', posTop],
+      height: '25px',
       icon: options.icon,
       header: {
         hide: true
@@ -101,29 +112,11 @@ class LgsLayerBox {
     })
   }
 
-  toast ():string {
-    return this.open({
+  toast (options:any):string {
+    return this.open(Object.assign({
       type: 'toast',
       icon: 'icon-HTML'
-    })
-  }
-
-  /**
-   * 关闭弹窗
-   * @param id 弹窗id
-   * @param userCallback 回调函数
-   * @returns void
-   */
-  close (id?:string) {
-    if (!id) return
-    const layer = this._getLayer(id)
-    if (!layer) return
-    const component = layer.layer.component
-
-    const instans = component && component.proxy
-    instans && instans.close()
-    const idx = this._getLayerIndex(id)
-    idx !== -1 && this.layers.splice(idx, 1)
+    }, options))
   }
 
   /**
@@ -148,6 +141,24 @@ class LgsLayerBox {
     const proxy = this._getLayerProxy(id)
     const isFullScreen = proxy && proxy.toggleFullScreen(id)
     userCallBack && userCallBack(isFullScreen)
+  }
+
+  /**
+   * 关闭弹窗
+   * @param id 弹窗id
+   * @param userCallback 回调函数
+   * @returns void
+   */
+  close (id?:string) {
+    if (!id) return
+    const layer = this._getLayer(id)
+    if (!layer) return
+    const component = layer.layer.component
+
+    const instans = component && component.proxy
+    instans && instans.close()
+    const idx = this._getLayerIndex(id)
+    idx !== -1 && this.layers.splice(idx, 1)
   }
 
   /**

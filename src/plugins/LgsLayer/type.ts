@@ -26,9 +26,9 @@ export type ILgsLayerHeader = {
   hide?:boolean
   component?: any
   text?: string
-  showClose?: boolean
-  showMaximize?: boolean
-  showMinimize?: boolean
+  hideClose?: boolean
+  hideMaximize?: boolean
+  hideMinimize?: boolean
   extrabtns?: IBtn[]
 }
 export type ILClose = {
@@ -41,10 +41,13 @@ export interface ILgsLayerConfigs {
   width?: string
   height?: string
   header?: ILgsLayerHeader
+  /**
+   * 指定弹窗放入的父容器
+   * 父容器需要指定定位为relative
+   */
   teleport?: string
   time?: number | undefined
   position?: IPosition
-  fixed?: boolean
   follow?: IFollowTarget | undefined
   shade?: boolean
   shadeClose?: boolean
@@ -64,6 +67,7 @@ export interface ILgsLayerConfigs {
   beforeClose?: () => Promise<void>
   onSuccess?: (...args: any[]) => Promise<void>
   onClosed?: (...args: any[]) => Promise<void>
+  onOpened?:() => Promise<void>
 }
 export type ILgsLayerMessageConfig = {
   message?: string

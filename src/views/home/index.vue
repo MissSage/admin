@@ -17,6 +17,7 @@ import { ILgsLayerConfigs } from '@/plugins/LgsLayer/type'
 import useGlobal from '@/composables/useGlobal'
 import { defineComponent, inject, ref } from 'vue'
 import Test1 from './test1.vue'
+import Test from './test.vue'
 export default defineComponent({
   setup () {
     const theme:string = inject('theme') || ''
@@ -26,10 +27,18 @@ export default defineComponent({
       const options:Partial<ILgsLayerConfigs&{modelValue:boolean}> = {
         teleport: '#app-main',
         position: ['50%', '20%'],
+        resize: true,
+        width: '20%',
+        height: '20%',
         dragOut: false,
+        shade: false,
+        shadeClose: true,
         header: {
           // component: Test1,
-          text: '弹窗测试弹窗测试弹窗测试'
+          text: '弹窗测试弹窗测试弹窗测试',
+          extrabtns: [
+            { text: 'extrabtns' }
+          ]
         },
         // btns: [
         //   {
@@ -73,7 +82,7 @@ export default defineComponent({
       $layer.message({ message: 'mesage1', icon: 'icon-check' })
     }
     const toast = () => {
-      $layer.toast()
+      $layer.toast({ time: 1000 })
     }
     return {
       openLayer,
