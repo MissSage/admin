@@ -1,7 +1,7 @@
 // import ILgsLayerBox from './type'
 import { createVNode, render } from 'vue'
 import Helper from './helper'
-import { ILgsLayer, ILgsLayerConfigs, ILgsLayerMessageConfig, ILgsLayerProps } from '../type'
+import { ILgsLayer, ILgsLayerConfigs, ILgsLayerMessageConfig, ILgsLayerPopoverConfig, ILgsLayerProps } from '../type'
 import LgsLayerConstructor from '../index.vue'
 class LgsLayerBox {
   constructor () {
@@ -109,6 +109,21 @@ class LgsLayerBox {
         // showClose: options.showClose || true
       },
       time: options.time
+    })
+  }
+
+  /**
+   * 气泡弹窗
+   * @param options 弹窗配置
+   * @returns 返回打开的弹窗id
+   */
+  popover (options:ILgsLayerPopoverConfig) {
+    return this.open({
+      type: 'popover',
+      content: '',
+      followPosition: options.position,
+      follow: options.follow,
+      autoFit: options.autoFit
     })
   }
 

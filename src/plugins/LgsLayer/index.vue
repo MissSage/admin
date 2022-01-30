@@ -20,9 +20,14 @@
       >
       </div>
       <div
+        ref="refLgsLayerBefore"
+        class="lgs-layer__before"
+        :class="[followPosition?'lgs-layer__before-'+followPosition:'',followPosition?'lgs-layer__before-'+followPosition+'-'+theme:'', tipArrow]"
+      ></div>
+      <div
         ref="refLgsLayer"
         class="lgs-drag__wrap"
-        :class="['anim-'+config.anim, 'popui__'+config.type, tipArrow, theme]"
+        :class="['anim-'+config.anim, 'lgs-layer__'+config.type, theme]"
         :style="[config.layerStyle?config.layerStyle:'']"
         @mousedown="Active"
       >
@@ -131,8 +136,17 @@
                   :type="'info'"
                   @close="close"
                 ></Message>
+                <Popover
+                  v-else-if="config.type='popover'"
+                  :follow="config.follow"
+                  :auto-fit="true"
+                  :position="followPosition"
+                  :content="config.content"
+                  :teleport="config.teleport"
+                >
+                </Popover>
                 <div
-                  v-else-if="config.type=='notify' || config.type=='popover'"
+                  v-else-if="config.type=='notify'"
                   class="lgs-drag__wrap-cnt"
                 >
                   <i
@@ -176,7 +190,7 @@
         </div>
         <span
           v-if="config.resize"
-          class="lgs-drag__resize"
+          class="lgs-drag__resize icon iconfont icon-caret-right"
           @mousedown="resizeStart"
         ></span>
       </div>
@@ -186,12 +200,13 @@
 
 <script lang="ts">
 import Message from './components/Message.vue'
+import Popover from './components/Popover.vue'
 import { onMounted, onUnmounted, ref, reactive, watch, toRefs, nextTick, defineComponent, PropType, createVNode, render, onBeforeMount } from 'vue'
-import type { IBtn, ILgsLayerConfigs } from './type'
+import type { IBtn, IFollowPosition, ILgsLayerConfigs } from './type'
 import helper from './utils/helper'
 export default defineComponent({
   name: 'LgsLayer',
-  components: { Message },
+  components: { Message, Popover },
   props: {
     modelValue: {
       type: Boolean,
@@ -238,6 +253,9 @@ export default defineComponent({
       }
       theme: string
       isFixed: boolean
+      resetPosNums:number
+      followPosition:IFollowPosition
+      followPadding:number // popover距target的距离
     }>({
       id: props.config.id || `lgslayer_${new Date().getTime()}`,
       teleport: props.config.teleport || '#app-main',
@@ -271,12 +289,16 @@ export default defineComponent({
         hideMinimize: props.config.header ? props.config.header.hideMinimize ?? false : false
       },
       theme: props.config.theme || 'darkblue',
-      isFixed: false
+      isFixed: false,
+      resetPosNums: 0,
+      followPosition: props.config.followPosition || 't',
+      followPadding: 16
     })
     /**
      * 弹窗Dom ref实例
      */
     const refLgsLayer = ref<HTMLDivElement>()
+    const refLgsLayerBefore = ref<HTMLDivElement>()
     /**
      * 拖拽开始前准备工作
      * @param event Event
@@ -346,8 +368,6 @@ export default defineComponent({
 
         _saveLayerRect()
       }
-      event.preventDefault()
-      event.stopPropagation()
     }
     /**
      * 拖拽结束处理
@@ -572,18 +592,132 @@ export default defineComponent({
     // 元素跟随定位
     const offset = () => {
       if (!props.config.follow) return
-      const dom = elRef.value
-      if (!dom) return
       if (!refLgsLayer.value) return
-      // const lgslayerIns:HTMLDivElement|null = dom.querySelector('.lgs-drag__wrap')
-      // if (!lgslayerIns) return
-      const oW = refLgsLayer.value.offsetWidth
-      const oH = refLgsLayer.value.offsetHeight
-      const pS = helper.getFollowRect(props.config.follow, oW, oH)
-      state.tipArrow = pS[4]
+      resetPos()
+      refLgsLayer.value.style.left = state.offsetX + 'px'
+      refLgsLayer.value.style.top = state.offsetY + 'px'
+      resetArrow()
+    }
+    /**
+     * 设置弹窗箭头样式
+     */
+    const resetArrow = () => {
+      if (!refLgsLayerBefore.value) return
+      if (!refLgsLayer.value) return
+      const { offsetWidth, offsetHeight } = refLgsLayer.value
+      const pS = helper.getFollowRect(props.config.follow, state.teleport)
+      let left = 0
+      let top = 0
+      switch (state.followPosition) {
+        case 'l':
+          left = state.offsetX + offsetWidth
+          top = state.offsetY + (offsetHeight - refLgsLayerBefore.value.offsetWidth) / 2
 
-      refLgsLayer.value.style.left = pS[0] + 'px'
-      refLgsLayer.value.style.top = pS[1] + 'px'
+          if (props.config.autoFit) {
+            top = top < pS[1] ? pS[1] : top > pS[3] - state.followPadding ? pS[3] - state.followPadding : top
+          }
+          break
+        case 'r':
+          left = state.offsetX - state.followPadding
+          top = state.offsetY + (offsetHeight - refLgsLayerBefore.value.offsetWidth) / 2
+          if (props.config.autoFit) {
+            top = top < pS[1] ? pS[1] : top > pS[3] - state.followPadding ? pS[3] - state.followPadding : top
+          }
+          break
+        case 't':
+          left = state.offsetX + (offsetWidth - refLgsLayerBefore.value.offsetWidth) / 2
+          top = state.offsetY + offsetHeight
+          if (props.config.autoFit) {
+            left = left < pS[0] ? pS[0] : left > pS[2] ? pS[2] : left
+          }
+          break
+        case 'b':
+          left = state.offsetX + (offsetWidth - refLgsLayerBefore.value.offsetWidth) / 2
+          top = state.offsetY - state.followPadding
+          if (props.config.autoFit) {
+            left = left < pS[0] ? pS[0] : left > pS[2] ? pS[2] : left
+          }
+          break
+        default:
+          break
+      }
+      refLgsLayerBefore.value.style.left = left + 'px'
+      refLgsLayerBefore.value.style.top = top + 'px'
+    }
+    /**
+     * 设置弹窗位置
+     */
+    const resetPos = ():any => {
+      console.log('resetpos')
+      if (!refLgsLayer.value) return
+      const tWidth = helper.client('width', state.teleport)
+      const tHeight = helper.client('height', state.teleport)
+      const { offsetWidth, offsetHeight } = refLgsLayer.value
+      const pS = helper.getFollowRect(props.config.follow, state.teleport)
+      state.offsetX = pS[0]
+      state.offsetY = pS[1]
+      state.tipArrow = pS[6]
+
+      if (state.resetPosNums > 3) state.followPosition = 'c'
+      switch (state.followPosition) {
+        case 'l':
+          state.offsetX = pS[0] - offsetWidth - state.followPadding
+          state.offsetY = pS[1] - (offsetHeight - pS[5]) / 2
+          state.offsetY = state.offsetY < 0 ? 0 : state.offsetY > tHeight - offsetHeight ? tHeight - offsetHeight : state.offsetY
+          // 当左则空间不够``存储元素时，调整到右侧
+          if (props.config.autoFit && state.offsetX < 0) {
+            state.followPosition = 't'
+            state.resetPosNums++
+            resetPos()
+            break
+          }
+          break
+        case 'r':
+          state.offsetX = pS[2] + state.followPadding
+          state.offsetY = pS[1] - (offsetHeight - pS[5]) / 2
+          state.offsetY = state.offsetY < 0 ? 0 : state.offsetY > tHeight - offsetHeight ? tHeight - offsetHeight : state.offsetY
+          if (props.config.autoFit && tWidth - state.offsetX < offsetWidth) {
+            state.followPosition = 'b'
+            state.resetPosNums++
+            resetPos()
+            break
+          }
+
+          break
+        case 't':
+          state.offsetX = pS[0] - (offsetWidth - pS[4]) / 2
+          state.offsetX = state.offsetX < 0 ? 0 : state.offsetX > tWidth - offsetWidth ? tWidth - offsetWidth : state.offsetX
+          state.offsetY = pS[1] - offsetHeight - state.followPadding
+          if (props.config.autoFit && state.offsetY < 0) {
+            state.followPosition = 'r'
+            state.resetPosNums++
+            resetPos()
+            break
+          }
+          break
+        case 'b':
+          state.offsetX = pS[0] - (offsetWidth - pS[4]) / 2
+          state.offsetX = state.offsetX < 0 ? 0 : state.offsetX > tWidth - offsetWidth ? tWidth - offsetWidth : state.offsetX
+          state.offsetY = pS[3] + state.followPadding
+          if (props.config.autoFit && tHeight - state.offsetY < offsetHeight) {
+            state.followPosition = 'l'
+            state.resetPosNums++
+            resetPos()
+            break
+          }
+
+          break
+        case 'c':
+          state.offsetX = pS[0] - (offsetWidth - pS[4]) / 2
+          state.offsetY = pS[1] - (offsetHeight - pS[5]) / 2
+          state.offsetY = state.offsetY < 0 ? 0 : state.offsetY > tHeight - offsetHeight ? tHeight - offsetHeight : state.offsetY
+          state.offsetX = state.offsetX < 0 ? 0 : state.offsetX > tWidth - offsetWidth ? tWidth - offsetWidth : state.offsetX
+          break
+        default:
+          state.followPosition = 'r'
+          resetPos()
+          break
+      }
     }
 
     /**
@@ -652,6 +786,7 @@ export default defineComponent({
       refLgsLayerContainer,
       elRef,
       refLgsLayer,
+      refLgsLayerBefore,
       close,
       resetZIndex,
       move,

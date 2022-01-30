@@ -1,14 +1,35 @@
-
 export interface ILgsLayer {
   id: string
   layer: any
 }
 export type ILTheme = 'primary' | 'darkblue' | 'dark'
-export type IPosition = 't' | 'r' | 'b' | 'l' | 'lt' | 'lb' | 'rt' | 'rb' | [number|string, number|string]
+export type IPosition =
+  | 't'
+  | 'r'
+  | 'b'
+  | 'l'
+  | 'lt'
+  | 'lb'
+  | 'rt'
+  | 'rb'
+  | [number | string, number | string]
 export type IXPosition = 'left' | 'right' | 'top' | 'bottom'
-export type ILType = 'component' | 'message' | 'notify' | 'popover' | 'toast' | 'footer' | 'actionsheet' | 'actionsheetPicker' | 'android' | 'ios' | 'contextmenu' | 'drawer' | 'iframe'
+export type ILType =
+  | 'component'
+  | 'message'
+  | 'notify'
+  | 'popover'
+  | 'toast'
+  | 'footer'
+  | 'actionsheet'
+  | 'actionsheetPicker'
+  | 'android'
+  | 'ios'
+  | 'contextmenu'
+  | 'drawer'
+  | 'iframe'
 export type IFollowTarget = string | [number, number]
-export type IRectInfo = [number, number, number, number, string]
+export type IRectInfo = [number, number, number, number, number, number, string]
 export type IBtnType = 'primary' | 'warning' | 'info' | 'error' | 'default'
 export type IMessageType = 'warning' | 'info' | 'error' | 'default'
 export type IBtn = {
@@ -20,10 +41,18 @@ export type IBtn = {
   type?: IBtnType
   class?: string
 }
-export type IAnims = 'scaleIn' | 'fadeIn' | 'footer' | 'fadeInUp' | 'fadeInDown' | 'fadeInLeft' | 'fadeInRight'
+export type IAnims =
+  | 'scaleIn'
+  | 'fadeIn'
+  | 'footer'
+  | 'fadeInUp'
+  | 'fadeInDown'
+  | 'fadeInLeft'
+  | 'fadeInRight'
 export type IToastIcon = Record<string, string>
+
 export type ILgsLayerHeader = {
-  hide?:boolean
+  hide?: boolean
   component?: any
   text?: string
   hideClose?: boolean
@@ -31,12 +60,14 @@ export type ILgsLayerHeader = {
   hideMinimize?: boolean
   extrabtns?: IBtn[]
 }
+
 export type ILClose = {
   show?: boolean
   postion?: IXPosition
   color?: string
   click?: () => void
 }
+export type IFollowPosition = 'l'|'r'|'t'|'b'|'c'
 export interface ILgsLayerConfigs {
   width?: string
   height?: string
@@ -49,10 +80,12 @@ export interface ILgsLayerConfigs {
   time?: number | undefined
   position?: IPosition
   follow?: IFollowTarget | undefined
+  followPosition?:IFollowPosition
+  autoFit?:boolean
   shade?: boolean
   shadeClose?: boolean
   btns?: IBtn[]
-  btnAlign?: 'right'|'left'|'center'
+  btnAlign?: 'right' | 'left' | 'center'
   opacity?: number
   id?: string
   anim?: IAnims
@@ -60,24 +93,31 @@ export interface ILgsLayerConfigs {
   layerStyle?: string
   icon?: string
   content?: any
-  props?:Record<string, any>
+  props?: Record<string, any>
   resize?: boolean
   theme?: string
   dragOut?: boolean
   beforeClose?: () => Promise<void>
   onSuccess?: (...args: any[]) => Promise<void>
   onClosed?: (...args: any[]) => Promise<void>
-  onOpened?:() => Promise<void>
+  onOpened?: () => Promise<void>
 }
+export type ILgsLayerProps = {
+  modelValue: boolean
+  config: ILgsLayerConfigs
+}
+
 export type ILgsLayerMessageConfig = {
   message?: string
   type?: IMessageType
   showClose?: boolean
   time?: number
   title?: string
-  icon?:string
+  icon?: string
 }
-export type ILgsLayerProps = {
-  modelValue: boolean
-  config: ILgsLayerConfigs
+export type ILgsLayerPopoverConfig = {
+  content?: string
+  position?:IFollowPosition
+  follow:IFollowTarget
+  autoFit?:boolean
 }

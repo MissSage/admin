@@ -105,10 +105,10 @@ export default class helper {
     return max(newArr)
   }
 
-  static client = (type: 'width'|'height', dom?:Element|string|null, percent?:number) => {
+  static client = (type: 'width'|'height', dom?:HTMLElement|string, percent?:number) => {
     let value = 0
     if (dom) {
-      dom = typeof dom === 'string' ? document.querySelector(dom) : dom
+      dom = typeof dom === 'string' ? document.querySelector(dom) as HTMLElement : dom
     } else {
       dom = document.body
     }
@@ -144,18 +144,19 @@ export default class helper {
  * @param h h
  * @returns [左，上，右，下，css类名]
  */
-  static getFollowRect = (follow?: IFollowTarget, w?: number, h?: number): IRectInfo => {
+  static getFollowRect = (follow?: IFollowTarget, teleport?:string, w?: number, h?: number): IRectInfo => {
     let t: number = 0
     let l: number = 0
     w = w || 0
     h = h || 0
-    const r: number = 0 + w
-    const b: number = 0 + h
+    let r: number = 0
+    let b: number = 0
     if (typeof follow === 'object') {
       //
-      return [follow[0], follow[1], r, b, '']
+      return [follow[0], follow[1], follow[0] + w, follow[1] + h, w, h, '']
     } else {
       const obj: HTMLElement | null = document.querySelector(follow || '')
+      const tel:HTMLElement | null = document.querySelector(teleport || '')
       if (obj) {
         t = obj.offsetTop // 获取该元素对应父容器的上边距
         l = obj.offsetLeft // 对应父容器的上边距
@@ -165,8 +166,22 @@ export default class helper {
           t += offsetParent.offsetTop // 叠加父容器的上边距
           l += offsetParent.offsetLeft // 叠加父容器的左边距
         }
+        if (tel) {
+          let telofL = tel.offsetLeft
+          let telofT = tel.offsetTop
+          if (tel.offsetParent) {
+            telofL = telofL + (tel.offsetParent as HTMLElement).offsetLeft
+            telofT = telofT + (tel.offsetParent as HTMLElement).offsetTop
+          }
+          l = l - telofL
+          t = t - telofT
+        }
+        r = l + obj.offsetWidth
+        b = t + obj.offsetHeight
+        w = obj.offsetWidth
+        h = obj.offsetHeight
       }
-      return [l, t, r, b, '']
+      return [l, t, r, b, w, h, '']
     }
   }
 

@@ -17,119 +17,162 @@
     height: 100%;
   }
 
-  .lgs-drag__wrap {
-    box-sizing: border-box;
-    outline: none;
+  .lgs-layer__before {
     position: absolute;
-    min-width: 250px;
-    overflow: hidden;
+    background-color: transparent;
+    width: 0;
+    height: 0;
+    box-sizing: border-box;
+    border: 8px solid;
+    border-color: transparent;
 
-    .lgs-drag__wrap-header {
-      height: 35px;
-      line-height: 35px;
-      user-select: none;
-      cursor: grab;
+    @each $direction in $followPositions {
 
-      .lgs-drag-header-box {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        justify-content: flex-start;
-        align-content: center;
-
-        .lgs-drag-header-text {
-          line-height: 35px;
-          font-size: 16px;
-          margin: 0 15px 0 8px;
-          flex: 1;
-          /*文本不换行*/
-          white-space: nowrap;
-          /*超出部分隐藏*/
-          overflow: hidden;
-          /*省略号展示*/
-          text-overflow: ellipsis;
-        }
-
-        .lgs-drag-header-extrabtns,
-        .lgs-drag-header-fixedbtns {
-          display: flex;
-          justify-content: flex-end;
-          align-content: center;
-          margin-right: 5px;
-
-          .header-btns {
-            cursor: pointer;
-            text-align: center;
-            height: 100%;
-            width: 25px;
-            flex-basis: 25px;
-
-            &:hover {
-              color: white;
-            }
-          }
-
-          .header-extrabtn {
-            cursor: pointer;
-            height: 28px;
-            margin: 4px 2px 3px 2px;
-          }
+      @each $key,
+      $theme in $themes {
+        &-#{''+$direction}-#{''+$key} {
+          border-left: 8px solid map-get($theme, base);
         }
       }
-    }
 
-    &.popui__message {
-      min-height: 41px;
-      border-radius: 5px;
-      padding: 0 10px;
+      &-#{''+$direction} {
+        @if $direction==l {}
 
-      .lgs-drag__wrap-cntbox {
-        height: 100%;
-      }
-    }
+        @if $direction==r {
+          transform: rotate(180deg);
+        }
 
-    .lgs-drag__wrap-cntbox {
-      height: calc(100% - 51px);
-      margin: 0;
-      padding: 8px;
+        @if $direction==t {
 
-      .lgs-drag-msg__group {
-        height: 100%;
+          transform: rotate(90deg);
+        }
+
+        @if $direction==b {
+          transform: rotate(-90deg);
+        }
       }
 
-      @include scrollBar;
     }
-    .lgs-drag__resize{
-      width: 7px;
-      height: 7px;
-      background-color: transparent;
-      position: absolute;
-      right: 0;
-      bottom: 0;
-      cursor: nwse-resize;
-      user-select: none;
-    }
+  }
+}
 
+.lgs-drag__wrap {
+  box-sizing: border-box;
+  outline: none;
+  position: absolute;
+  min-width: 250px;
+  overflow: hidden;
 
+  .lgs-drag__wrap-header {
+    height: 35px;
+    line-height: 35px;
+    user-select: none;
+    cursor: grab;
 
-    .lgs-drag__wrap-footer {
-      height: 50px;
-      margin: 0 15px;
-      border-top: 1px solid #465b6e;
+    .lgs-drag-header-box {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      justify-content: flex-start;
+      align-content: center;
 
-      .lgs-drag_footer-btns {
-        height: 100%;
+      .lgs-drag-header-text {
+        line-height: 35px;
+        font-size: 16px;
+        margin: 0 15px 0 8px;
+        flex: 1;
+        /*文本不换行*/
+        white-space: nowrap;
+        /*超出部分隐藏*/
+        overflow: hidden;
+        /*省略号展示*/
+        text-overflow: ellipsis;
+      }
+
+      .lgs-drag-header-extrabtns,
+      .lgs-drag-header-fixedbtns {
         display: flex;
-        flex-wrap: nowrap;
-        flex-direction: row;
         justify-content: flex-end;
         align-content: center;
+        margin-right: 5px;
 
-        .footer-btn {
-          height: 28px;
-          margin: 10px 6px 12px 6px;
+        .header-btns {
           cursor: pointer;
+          text-align: center;
+          height: 100%;
+          width: 25px;
+          flex-basis: 25px;
+
+          &:hover {
+            color: white;
+          }
         }
+
+        .header-extrabtn {
+          cursor: pointer;
+          height: 20px;
+          margin: 8px 2px 7px;
+        }
+      }
+    }
+  }
+
+  &.lgs-layer__message {
+    min-height: 41px;
+    border-radius: 5px;
+    padding: 0 10px;
+    transform: translateX(-50%);
+
+    .lgs-drag__wrap-cntbox {
+      height: 100%;
+    }
+  }
+
+  .lgs-drag__wrap-cntbox {
+    height: calc(100% - 51px);
+    margin: 0;
+    padding: 8px;
+
+    .lgs-drag-msg__group {
+      height: 100%;
+    }
+
+    @include scrollBar;
+  }
+
+  .lgs-drag__resize {
+    width: 7px;
+    height: 7px;
+    background-color: transparent;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    cursor: nwse-resize;
+    user-select: none;
+    font-size: 7px;
+    transform: rotate(45deg) translateY(-2px);
+    color: rgb(87, 133, 172);
+  }
+
+
+
+  .lgs-drag__wrap-footer {
+    height: 50px;
+    margin: 0 15px;
+    border-top: 1px solid #465b6e;
+
+    .lgs-drag_footer-btns {
+      height: 100%;
+      display: flex;
+      flex-wrap: nowrap;
+      flex-direction: row;
+      justify-content: flex-end;
+      align-content: center;
+
+      .footer-btn {
+        height: 28px;
+        margin: 10px 6px 12px 6px;
+        cursor: pointer;
       }
     }
   }

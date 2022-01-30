@@ -1,6 +1,12 @@
 
 <template>
   <div class="datavisual-page">
+    <div style="text-align: right;">
+      <button @click="popover" id="popover-l">popover-l</button>
+      <button @click="popover" id="popover-r">popover-r</button>
+      <button @click="popover" id="popover-t">popover-t</button>
+      <button @click="popover" id="popover-b">popover-b</button>
+    </div>
     <!-- <LgsDraggable :theme="theme">sdfadfasdf</LgsDraggable> -->
     <button @click="openLayer">openlayer</button>
     <button @click="closeFirstLayer">closeFirstLayer</button>
@@ -10,10 +16,16 @@
     <button @click="toggleFullScreen">toggleFullScreen</button>
     <button @click="message">message</button>
     <button @click="toast">toast</button>
+    <div style="text-align: right;">
+      <button @click="popover" id="popover1-l">popover-l</button>
+      <button @click="popover" id="popover1-r">popover-r</button>
+      <button @click="popover" id="popover1-t">popover-t</button>
+      <button @click="popover" id="popover1-b">popover-b</button>
+    </div>
   </div>
 </template>
 <script lang="ts">
-import { ILgsLayerConfigs } from '@/plugins/LgsLayer/type'
+import { IFollowPosition, ILgsLayerConfigs } from '@/plugins/LgsLayer/type'
 import useGlobal from '@/composables/useGlobal'
 import { defineComponent, inject, ref } from 'vue'
 import Test1 from './test1.vue'
@@ -81,6 +93,16 @@ export default defineComponent({
     const message = () => {
       $layer.message({ message: 'mesage1', icon: 'icon-check' })
     }
+    const popover = (e:MouseEvent) => {
+      const id = (e.target as HTMLElement).id
+      const position = id.split('-')[1] as IFollowPosition
+      $layer.popover({
+        content: 'popver',
+        follow: '#' + id,
+        position: position,
+        autoFit: true
+      })
+    }
     const toast = () => {
       $layer.toast({ time: 1000 })
     }
@@ -92,7 +114,8 @@ export default defineComponent({
       toggleMinLayer,
       toggleFullScreen,
       message,
-      toast
+      toast,
+      popover
     }
   }
 })
