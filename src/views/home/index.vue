@@ -40,6 +40,7 @@ export default defineComponent({
         teleport: '#app-main',
         position: ['50%', '20%'],
         resize: true,
+        dragable: true,
         width: '20%',
         height: '20%',
         dragOut: false,
@@ -100,7 +101,10 @@ export default defineComponent({
         content: 'popver',
         follow: '#' + id,
         position: position,
-        autoFit: true
+        autoFit: true,
+        title: 'popver',
+        showClose: true,
+        shadeClose: true
       })
     }
     const toast = () => {

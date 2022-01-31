@@ -126,12 +126,42 @@ export default class helper {
     return percent ? value * percent / 100 : value
   }
 
-  static scroll = (type: string) => {
+  static offset = (type: 'width'|'height', dom?:HTMLElement|string) => {
+    let value = 0
+    if (dom) {
+      dom = typeof dom === 'string' ? document.querySelector(dom) as HTMLElement : dom
+    } else {
+      dom = document.body
+    }
+
+    switch (type) {
+      case 'width':
+        value = dom ? dom.offsetWidth : 0
+        break
+      case 'height':
+        value = dom ? dom.offsetHeight : 0
+        break
+      default:
+        break
+    }
+    return value
+  }
+
+  static scroll = (type: 'left'|'top'|'width'|'height', dom?:HTMLElement|string) => {
+    if (dom) {
+      dom = typeof dom === 'string' ? document.querySelector(dom) as HTMLElement : dom
+    } else {
+      dom = document.body
+    }
     switch (type) {
       case 'left':
-        return document.body.scrollLeft
+        return dom.scrollLeft
       case 'top':
-        return document.body.scrollTop
+        return dom.scrollTop
+      case 'width':
+        return dom.scrollWidth
+      case 'height':
+        return dom.scrollHeight
       default:
         return 0
     }

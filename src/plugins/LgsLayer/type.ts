@@ -67,7 +67,7 @@ export type ILClose = {
   color?: string
   click?: () => void
 }
-export type IFollowPosition = 'l'|'r'|'t'|'b'|'c'
+export type IFollowPosition = 'l' | 'r' | 't' | 'b' | 'c'
 export interface ILgsLayerConfigs {
   width?: string
   height?: string
@@ -80,8 +80,8 @@ export interface ILgsLayerConfigs {
   time?: number | undefined
   position?: IPosition
   follow?: IFollowTarget | undefined
-  followPosition?:IFollowPosition
-  autoFit?:boolean
+  followPosition?: IFollowPosition
+  autoFit?: boolean
   shade?: boolean
   shadeClose?: boolean
   btns?: IBtn[]
@@ -96,6 +96,7 @@ export interface ILgsLayerConfigs {
   props?: Record<string, any>
   resize?: boolean
   theme?: string
+  dragable?: boolean
   dragOut?: boolean
   beforeClose?: () => Promise<void>
   onSuccess?: (...args: any[]) => Promise<void>
@@ -117,7 +118,10 @@ export type ILgsLayerMessageConfig = {
 }
 export type ILgsLayerPopoverConfig = {
   content?: string
-  position?:IFollowPosition
-  follow:IFollowTarget
-  autoFit?:boolean
+  position?: IFollowPosition
+  follow: IFollowTarget
+  autoFit?: boolean
+  title?: string
+  showClose?:boolean
+  shadeClose?:boolean
 }

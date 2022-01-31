@@ -123,7 +123,15 @@ class LgsLayerBox {
       content: '',
       followPosition: options.position,
       follow: options.follow,
-      autoFit: options.autoFit
+      autoFit: options.autoFit,
+      header: {
+        hide: !options.title,
+        text: options.title,
+        hideClose: !options.showClose,
+        hideMaximize: true,
+        hideMinimize: true
+      },
+      shadeClose: options.shadeClose
     })
   }
 

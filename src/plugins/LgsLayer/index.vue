@@ -20,6 +20,7 @@
       >
       </div>
       <div
+        v-if="config.type==='popover'"
         ref="refLgsLayerBefore"
         class="lgs-layer__before"
         :class="[followPosition?'lgs-layer__before-'+followPosition:'',followPosition?'lgs-layer__before-'+followPosition+'-'+theme:'', tipArrow]"
@@ -304,11 +305,12 @@ export default defineComponent({
      * @param event Event
      */
     const moveStart = (event:MouseEvent) => {
+      if (!props.config.dragable) return
       handleGrab(true)
       // 保存点击的初始位置
       state.eventStartLeft = event.clientX
       state.eventStartTop = event.clientY
-      state.ismove = true
+      state.ismove = Boolean(props.config.dragable)
       if (refLgsLayer.value) {
         state.offsetX = refLgsLayer.value.offsetLeft
         state.offsetY = refLgsLayer.value.offsetTop
@@ -428,20 +430,14 @@ export default defineComponent({
      */
     const resetZIndex = () => {
       let max = 2000
-      const doms = document.querySelectorAll('.lgs-drag__layer') // vl-notify-iframe
+      const doms = document.querySelectorAll('.lgs-drag__layer')
       let domZindex = 0
       for (let i = 0, len = doms.length; i < len; i++) {
         const index = helper.getStyle(doms[i].id, 'z-index')
-
-        if (state.id === doms[i].id) {
-          domZindex = index === 'auto' ? max : parseInt(index)
-        }
+        domZindex = index === 'auto' ? max : parseInt(index)
         if (max < domZindex) {
           max = domZindex
         }
-      }
-      if (domZindex === max && max !== 2000) {
-        return
       }
       // 预留遮罩层z-index
       state.zindex = max + 2
@@ -466,11 +462,11 @@ export default defineComponent({
         nextTick(() => {
           const teleportNode = state.teleport && document.querySelector(state.teleport)
           teleportNode && elRef.value && teleportNode.appendChild(elRef.value)
-
           auto()
         })
       }
       props.config.onSuccess && props.config.onSuccess()
+
       autoClose()
     }
 
@@ -650,8 +646,8 @@ export default defineComponent({
     const resetPos = ():any => {
       console.log('resetpos')
       if (!refLgsLayer.value) return
-      const tWidth = helper.client('width', state.teleport)
-      const tHeight = helper.client('height', state.teleport)
+      const tWidth = helper.scroll('width', state.teleport)
+      const tHeight = helper.scroll('height', state.teleport)
       const { offsetWidth, offsetHeight } = refLgsLayer.value
       const pS = helper.getFollowRect(props.config.follow, state.teleport)
       state.offsetX = pS[0]
@@ -757,9 +753,9 @@ export default defineComponent({
       telePort && telePort.addEventListener('mousemove', event => {
         move(event)
       })
-      // document.addEventListener('mousemove', event => {
-      //   move(event)
-      // })
+      telePort && telePort.addEventListener('click', function (e) {
+        e.stopPropagation()
+      })
       document.addEventListener('mouseup', () => {
         moveEnd()
         handleGrab(false)
@@ -773,7 +769,6 @@ export default defineComponent({
 
     // 监听弹层v-model
     watch(() => props.modelValue, (val) => {
-      // console.log('V3Layer is now [%s]', val ? 'show' : 'hide')
       if (val) {
         open()
       } else {

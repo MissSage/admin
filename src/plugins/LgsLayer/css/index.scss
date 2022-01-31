@@ -61,7 +61,9 @@
   outline: none;
   position: absolute;
   min-width: 250px;
+  border-radius: 4px;
   overflow: hidden;
+  border: 1px solid #ffff;
 
   .lgs-drag__wrap-header {
     height: 35px;
@@ -115,6 +117,10 @@
         }
       }
     }
+  }
+
+  &.lgs-layer__popover {
+    min-width: 100px;
   }
 
   &.lgs-layer__message {
