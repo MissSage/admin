@@ -44,6 +44,14 @@ export const routes: RouteRecordRaw[] = [{
       meta: {
         hidden: true
       }
+    },
+    {
+      path: '/games/game1',
+      component: () => import('@/views/games/game1.vue'),
+      meta: {
+        title: 'game1',
+        icon: 'icon-drag'
+      }
     }
   ]
 }]

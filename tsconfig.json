@@ -8,12 +8,11 @@
     "lib": ["esnext", "dom"],
     "jsx": "preserve",
     "module": "esnext",
+    "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
     "noImplicitAny": true,
-    "paths":{
-      "@/*":[
-        "./src/*"
-      ]
+    "paths": {
+      "@/*": ["./src/*"]
     },
     "preserveConstEnums": true,
     "resolveJsonModule": true,
@@ -21,8 +20,8 @@
     "strict": true,
     "target": "esnext",
     "types": ["vite/client"],
-    
-    "useDefineForClassFields": true,
+
+    "useDefineForClassFields": true
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"]
 }

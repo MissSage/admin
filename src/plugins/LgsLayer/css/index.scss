@@ -26,6 +26,7 @@
     border: 8px solid;
     border-color: transparent;
 
+
     @each $direction in $followPositions {
 
       @each $key,
@@ -63,7 +64,8 @@
   min-width: 250px;
   border-radius: 4px;
   overflow: hidden;
-  border: 1px solid #ffff;
+  border: 1px solid rgb(132, 142, 165);
+  box-shadow: 2px 2px 5px 0 #3d3b3b;
 
   .lgs-drag__wrap-header {
     height: 35px;
