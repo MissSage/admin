@@ -1,12 +1,8 @@
+import { NormalOption } from './global'
 
 // type FormItemType = 'text'|'textarea' | 'number' | 'date'|'radio'|'checkbox'|'select'|'cascader' | 'switch' | 'img' | 'excel' | 'file' | 'editor' | 'table' | 'custom'
 type SizeType = 'large' | 'medium' | 'small' | 'mini'
-type NormalOption = {
-  label: string
-  value: any
-  disabled?: boolean
-  children?: any[]
-}
+
 export type TableColum = {
   title: string
   field: string

@@ -50,7 +50,13 @@ module.exports = {
     //   }
     // ],
     'object-property-newline': 2,
-    'vue/html-self-closing': 0
+    'vue/html-self-closing': 0,
+    'no-unused-vars': [
+      'error',
+      // we are only using this rule to check for unused arguments since TS
+      // catches unused variables but not args.
+      { varsIgnorePattern: '.*', args: 'none' }
+    ]
   },
   ignorePatterns: ['src/styles/**/*.js'],
   overrides: [{
