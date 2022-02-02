@@ -11,7 +11,11 @@
         >
         <div v-if="img" class="upload-img">
           <!-- v-for="(file,index) in fileInfo.length>0?fileInfo: files" -->
-          <div v-for="(file, index) in files" :key="index" class="img-item">
+          <div
+            v-for="(file, index) in files"
+            :key="index"
+            class="img-item"
+          >
             <div class="operation">
               <div class="action">
                 <i class="el-icon-view view" @click="previewImg(index)" />
@@ -65,7 +69,11 @@
       <slot name="content" />
       <div v-if="!img">
         <ul class="upload-list" v-show="fileList">
-          <li class="list-file" v-for="(file, index) in files" :key="index">
+          <li
+            class="list-file"
+            v-for="(file, index) in files"
+            :key="index"
+          >
             <a>
               <span @click="fileOnClick(index, file)">
                 <i :class="format(file)" />

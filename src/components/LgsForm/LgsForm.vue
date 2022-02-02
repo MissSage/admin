@@ -114,7 +114,11 @@
               v-else-if="item.type === 'radio'"
               @change="item.onChange"
             >
-              <el-radio v-for="kv in item.data" :key="kv.key" :label="kv.key">
+              <el-radio
+                v-for="kv in item.data"
+                :key="kv.key"
+                :label="kv.key"
+              >
                 {{
                   kv.value
                 }}

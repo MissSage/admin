@@ -1,10 +1,19 @@
 <template>
-  <el-dialog ref="dialog" width="50%" :close-on-click-modal="false" :close-on-press-escape="false">
+  <el-dialog
+    ref="dialog"
+    width="50%"
+    :close-on-click-modal="false"
+    :close-on-press-escape="false"
+  >
     <slot />
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="handleCancel">取 消</el-button>
-        <el-button type="primary" :loading="confirmLoading" @click="handleConfirm">确 定</el-button>
+        <el-button
+          type="primary"
+          :loading="confirmLoading"
+          @click="handleConfirm"
+        >确 定</el-button>
       </span>
     </template>
   </el-dialog>
