@@ -4,12 +4,14 @@ import Helper from './helper'
 import { ILgsLayer, ILgsLayerConfigs, ILgsLayerMessageConfig, ILgsLayerPopoverConfig, ILgsLayerProps } from '../type'
 import LgsLayerConstructor from '../index.vue'
 class LgsLayerBox {
-  constructor () {
+  constructor (teleport?: string) {
     this.currentId = ''
     this.layers = []
     this.minLayers = []
+    this.teleport = teleport
   }
 
+  teleport?: string
   // defaultOptions: ILgsLayerConfigs = {
   //   header: {
   //     text: '',
@@ -51,6 +53,7 @@ class LgsLayerBox {
     if (maxSeed === undefined) maxSeed = 0
     const id = `lgslayer_${new Date().getTime()}_${maxSeed++}`
     options.id = id
+    options.teleport = options.teleport || this.teleport || 'body'
     // Helper.mergeJson<ILgsLayerConfigs>(options.header, this.defaultOptions.header)
     // const configs:ILgsLayerConfigs = Object.assign(this.defaultOptions, options)
     //  Helper.mergeJson<ILgsLayerConfigs>(options, this.defaultOptions)

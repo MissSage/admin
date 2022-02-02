@@ -1107,7 +1107,7 @@ export default defineComponent({
   margin-right: 10px;
 }
 .attr {
-  padding: 0px 15px 15px 15px;
+  padding: 0 15px 15px 15px;
 }
 .attr-item {
   text-align: left;
@@ -1127,8 +1127,8 @@ export default defineComponent({
   position: absolute;
   font-size: 26px;
   letter-spacing: 6px;
-  left: 0px;
-  right: 0px;
+  left: 0;
+  right: 0;
   top: 150px;
   width: 500px;
   margin: auto;
