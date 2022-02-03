@@ -31,7 +31,7 @@
   </div>
 </template>
 <script lang='ts'>
-import { IElForm, IFormRule, IFormRuleMap } from '@/types/element-plus'
+import { IElForm, IFormRuleMap } from '@/types/element-plus'
 import { ILgsFormBtn, ILgsFormItem } from '@/types/LgsFormItem'
 import { ElForm, ElButton } from 'element-plus'
 import { defineComponent, PropType, ref } from 'vue'

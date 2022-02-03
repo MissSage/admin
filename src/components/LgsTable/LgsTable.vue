@@ -1,5 +1,4 @@
 <template>
-  <!-- 2021.11.18移除voltable方法@cell-mouse-leave="rowEndEdit" -->
   <div
     class="lgs-table"
     :class="[textInline ? 'text-inline' : '', fxRight ? 'fx-right' : '']"
@@ -8,7 +7,6 @@
     <div class="message" v-show="loading">加载中.....</div>
     <el-table
       lazy
-      stripe
       tooltip-effect="dark"
       border
       ref="table"
@@ -66,9 +64,6 @@
             :column="column"
             :render="column.render"
           />
-          <!-- 启用双击编辑功能，带编辑功能的不会渲染下拉框文本背景颜色 -->
-          <!-- @click="rowBeginEdit(scope.$index,cindex)" -->
-          <!-- 2021.09.21增加编辑时对readonly属性判断 -->
           <div v-else-if="column.edit && !column.readonly" class="edit-el">
             <div
               @click.stop
@@ -76,7 +71,6 @@
               class="e-item"
             >
               <div>
-                <!-- 2020.07.24增加日期onChange事件 -->
                 <el-date-picker
                   clearable
                   size="small"
@@ -172,7 +166,6 @@
               <div v-else>{{ formatter(scope.row, column, true) }}</div>
             </template>
           </div>
-          <!--没有编辑功能的直接渲染标签-->
           <template v-else>
             <a
               href="javascript:void(0)"

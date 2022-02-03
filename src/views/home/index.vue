@@ -22,6 +22,7 @@
       <button @click="popover" id="popover1-t">popover-t</button>
       <button @click="popover" id="popover1-b">popover-b</button>
     </div>
+    <Test1></Test1>
   </div>
 </template>
 <script lang="ts">
@@ -31,6 +32,7 @@ import { defineComponent, inject, ref } from 'vue'
 import Test1 from './test1.vue'
 import Test from './test.vue'
 export default defineComponent({
+  components: { Test1 },
   setup () {
     const theme:string = inject('theme') || ''
     const { $layer } = useGlobal()

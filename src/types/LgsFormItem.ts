@@ -60,7 +60,7 @@ interface ILgsFormSwitch extends ILgsFormItemBase {
   type: 'switch'
   options?: NormalOption[]
   activeText?: string
-  inactiveText: string
+  inactiveText?: string
 }
 export interface ILgsFormDate extends ILgsFormItemBase {
   type: 'date' | 'datetime'

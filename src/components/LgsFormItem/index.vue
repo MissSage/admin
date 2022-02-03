@@ -61,7 +61,7 @@
       clearable
       :allow-create="config.allowCreate"
       :disabled="config.readonly || config.disabled"
-      :multiple="config.type === 'select' ? false : true"
+      :multiple="config.multiple"
       :placeholder="config.placeholder||'请选择'"
       :remote="config.remote"
       :remote-method="(val:any) => { remoteSearch(val); }"
@@ -221,7 +221,7 @@ export default defineComponent({
   },
   props: {
     modelValue: {
-      type: [String, Number, Array, Object],
+      type: [String, Number, Boolean, Array, Object],
       default: ''
     },
     config: {
@@ -302,7 +302,6 @@ export default defineComponent({
     watch(
       () => state.value,
       (val:string) => {
-        console.log(val)
         ctx.emit('update:model-value', val)
       }, {
 
