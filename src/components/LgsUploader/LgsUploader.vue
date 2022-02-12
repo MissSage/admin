@@ -3,12 +3,12 @@
     <div>
       <div class="input-btns" style="margin-bottom: 10px">
         <input
-          ref="input"
+          ref="refInput"
           type="file"
           style="display: none"
           @change="handleChange"
           :multiple="multiple"
-        >
+        />
         <div v-if="img" class="upload-img">
           <!-- v-for="(file,index) in fileInfo.length>0?fileInfo: files" -->
           <div
@@ -24,7 +24,7 @@
               <div class="mask" />
             </div>
 
-            <img :src="getImgSrc(file, index)" :onerror="require('@/assets/imgs/error-img.png')">
+            <img :src="getImgSrc(file, index)" :onerror="require('@/assets/imgs/error-img.png')" />
           </div>
           <div
             v-show="!autoUpload || (autoUpload && files.length < maxFile)"
@@ -38,15 +38,13 @@
               v-if="!autoUpload"
               class="s-btn"
               :class="{ readonly: changed }"
-              @click="upload"
+              @click="upload(true)"
             >
               <div>{{ loadText }}</div>
             </div>
           </div>
         </div>
-        <el-button v-else @click="handleClick">
-          选择{{ img ? "图片" : "文件" }}
-        </el-button>
+        <el-button v-else @click="handleClick">选择{{ img ? "图片" : "文件" }}</el-button>
 
         <el-button
           v-if="!autoUpload && !img"
@@ -90,11 +88,13 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
+import { store } from '@/store'
+import axios from 'axios'
 import { ElMessage } from 'element-plus'
-export default {
+import { defineComponent, onMounted, reactive, ref, toRefs, watch } from 'vue'
+export default defineComponent({
   name: 'LgsUploader',
-  components: {},
   props: {
     desc: {
       // 是否显示默认介绍
@@ -161,7 +161,7 @@ export default {
       // 返回false会中止执行
       // 上传前
       type: Function,
-      default: (files) => {
+      default: (files: any) => {
         return true
       }
     },
@@ -169,14 +169,14 @@ export default {
       // 返回false会中止执行
       // 上传后
       type: Function,
-      default: (result, files) => {
+      default: (result: any, files: any) => {
         return true
       }
     },
     onChange: {
       // 选择文件时  //返回false会中止执行
       type: Function,
-      default: (files) => {
+      default: (files: any) => {
         return true
       }
     },
@@ -193,14 +193,14 @@ export default {
     fileClick: {
       // 点击文件事件
       type: Function,
-      default: (index, file, files) => {
+      default: (index: number, file: any, files: any[]) => {
         return true
       }
     },
     removeBefore: {
       // 移除文件事件
       type: Function,
-      default: (index, file, files) => {
+      default: (index: number, file: any, files: any[]) => {
         return true
       }
     },
@@ -215,60 +215,54 @@ export default {
       default: false
     }
   },
-  data () {
-    return {
-      // errorImg: 'this.src="' + require('@/assets/imgs/error-img.png') + '"',
+  setup (props) {
+    const state = reactive<{
+      changed: boolean // 手动上传成功后禁止重复上传，必须重新选择
+      model: boolean
+      files: any[]
+      bigImg: string
+      loadingStatus: boolean
+      loadText: string
+      base: any
+      idAdress: string
+    }>({
       changed: false, // 手动上传成功后禁止重复上传，必须重新选择
       model: true,
       files: [],
       bigImg: '',
       loadingStatus: false,
-      loadText: '上传文件'
-    }
-  },
-  created () {
-    // 默认有图片的禁止上传操作
-    if (this.fileInfo) {
-      this.changed = true
-    }
-    this.cloneFile(this.fileInfo)
-  },
-  watch: {
-    fileInfo: {
-      handler (files) {
-        this.cloneFile(files)
-      },
-      deep: true
-    }
-  },
-  methods: {
-    cloneFile (files) {
-      this.files = files.map((x) => {
+      loadText: '上传文件',
+      base: {},
+      idAdress: ''
+    })
+    const refInput = ref<HTMLInputElement>()
+    const cloneFile = (files: any) => {
+      state.files = files.map((x: any) => {
         return {
-          name: x.name || this.getFileName(x.path),
+          name: x.name || getFileName(x.path),
           path: x.path
         }
       })
-    },
-    getFileName (path) {
+    }
+    const getFileName = (path: any) => {
       if (!path) {
         return '未定义文件名'
       }
       const _index = path.lastIndexOf('/')
       return path.substring(_index + 1)
-    },
-    previewImg (index) {
+    }
+    const previewImg = (index: number) => {
       // 查看大图预览模式待完
-      this.base.previewImg(this.getImgSrc(this.files[index]))
+      state.base.previewImg(getImgSrc(state.files[index]))
       //  window.open(this.getImgSrc((this.files.length>0?this.files:this.fileInfo)[index]));
-    },
-    getSelector () {
-      if (this.autoUpload) {
+    }
+    const getSelector = () => {
+      if (props.autoUpload) {
         return 'auto-selector'
       }
       return 'submit-selector'
-    },
-    getImgSrc (file, index) {
+    }
+    const getImgSrc = (file: any, index?: number) => {
       // if (file.hasOwnProperty('path')) {
       //   if (this.base.isUrl(file.path)) {
       //     return file.path
@@ -283,150 +277,157 @@ export default {
       //   return this.http.ipAddress + file.path
       // }
       return window.URL.createObjectURL(file)
-    },
-    fileOnClick (index, file) {
-      if (!this.fileClick(index, file, this.files)) {
+    }
+    const fileOnClick = (index: number, file: any) => {
+      if (!props.fileClick(index, file, state.files)) {
         return
       }
       // 点击不下载
-      if (!this.downLoad) {
+      if (!props.downLoad) {
         return
       }
       if (!file.path) {
-        this.$message.error('请先上传文件')
+        ElMessage.error('请先上传文件')
         return
       }
-      this.base.dowloadFile(
+      state.base.dowloadFile(
         file.path,
         file.name,
         {
-          Authorization: this.$store.getters.getToken()
+          Authorization: store.getters.getToken()
         },
-        this.http.ipAddress
+        state.idAdress
       )
-    },
-    getText () {
-      if (this.img) {
+    }
+    const getText = () => {
+      if (props.img) {
         return '只能上传图片,'
-      } else if (this.excel) {
+      } else if (props.excel) {
         return '只能上传excel文件,'
       }
-    },
-    handleClick () {
-      this.$refs.input.click()
-    },
-    handleChange (e) {
+    }
+    const handleClick = () => {
+      refInput.value && refInput.value.click()
+    }
+    const handleChange = (e: Event) => {
+      const target = e.target as HTMLInputElement
+      if (!target || !target.files) return
       // this.compress开启图片压缩,后面根据需要再完善
       // this.clearFiles();
-      const result = this.checkFile(e.target.files)
+      const result = checkFile(target.files)
       if (!result) {
         return
       }
 
-      this.changed = false
+      state.changed = false
       // 如果传入了FileInfo需要自行处理移除FileInfo
-      if (!this.onChange(e.target.files)) {
+      if (!props.onChange(target.files)) {
         return
       }
-      for (let index = 0; index < e.target.files.length; index++) {
-        const element = e.target.files[index]
+      for (let index = 0; index < target.files.length; index++) {
+        const element: any = target.files[index]
         element.input = true
       }
-      if (!this.multiple) {
-        this.files.splice(0)
+      if (!props.multiple) {
+        state.files.splice(0)
       }
-      this.files.push(...e.target.files)
+      for (let i = 0; i < target.files.length; i++) {
+        state.files.push(target.files[i])
+      }
+      // state.files.push(...target.files)
 
-      this.$refs.input.value = null
-      if (this.autoUpload && result) {
-        this.upload(false)
+      refInput.value && (refInput.value.value = '')
+      if (props.autoUpload && result) {
+        upload(false)
       }
-    },
-    removeFile (index) {
+    }
+    const removeFile = (index: number) => {
       // 如果传入了FileInfo需要自行处理移除FileInfo
       // t移除文件
-      const removeFile = this.files[index]
+      const removeFile = state.files[index]
       // 删除的还没上传的文件
       if (removeFile.input) {
-        this.files.splice(index, 1)
+        state.files.splice(index, 1)
       } else {
-        this.fileInfo.splice(index, 1)
+        props.fileInfo.splice(index, 1)
       }
-      if (!this.removeBefore(index, removeFile, this.fileInfo)) {
+      if (!props.removeBefore(index, removeFile, props.fileInfo)) {
         //
       }
-    },
-    clearFiles () {
-      this.files.splice(0)
-    },
-    getFiles () {
-      return this.files
-    },
-    upload (vail) {
-      if (vail && !this.checkFile()) return false
-      if (!this.url) {
-        return this.$message.error('没有配置好Url')
+    }
+    const clearFiles = () => {
+      state.files.splice(0)
+    }
+    const getFiles = () => {
+      return state.files
+    }
+    const upload = (vail: boolean) => {
+      if (vail && !checkFile()) return false
+      if (!props.url) {
+        return ElMessage.error('没有配置好Url')
       }
-      if (!this.files || this.files.length === 0) {
-        return this.$message.error('请选择文件')
+      if (!state.files || state.files.length === 0) {
+        return ElMessage.error('请选择文件')
       }
-      if (!this.uploadBefore(this.files)) {
+      if (!props.uploadBefore(state.files)) {
         return
       }
       const forms = new FormData()
-      this.files.forEach(function (file) {
+      state.files.forEach(function (file) {
         if (file.input) {
           forms.append('fileInput', file, file.name)
         }
       })
-      // forms.append("fileInput", this.files);
-      this.loadingStatus = true
-      this.loadText = '上传中..'
-      this.http
-        .post(this.url, forms, this.autoUpload ? '正在上传文件' : '')
+      // forms.append("fileInput", state.files);
+      state.loadingStatus = true
+      state.loadText = '上传中..'
+      axios
+        .post(props.url, forms
+          // props.autoUpload ? '正在上传文件' : ''
+        )
         .then(
-          (x) => {
+          (x: any) => {
             // this.$refs.uploadFile.clearFiles();
-            this.loadingStatus = false
-            this.loadText = '上传文件'
-            if (!this.uploadAfter(x, this.files)) {
-              this.changed = false
+            state.loadingStatus = false
+            state.loadText = '上传文件'
+            if (!props.uploadAfter(x, state.files)) {
+              state.changed = false
               return
             } else {
-              this.changed = true
+              state.changed = true
             }
-            this.$message.success(x.message)
-            this.changed = x.status
+            ElMessage.success(x.message)
+            state.changed = x.status
             if (!x.status) {
-              // this.files = null;
+              // state.files = null;
               return
             }
             // 单选清除以前的数据
-            //  if (!this.multiple) {
-            this.fileInfo.splice(0)
+            //  if (!state.multiple) {
+            props.fileInfo.splice(0)
             // }
-            const _files = this.files.map((file) => {
+            const _files = state.files.map((file) => {
               return {
                 name: file.name,
                 path: file.path || x.data + file.name
               }
             })
-            this.fileInfo.push(..._files)
+            props.fileInfo.push(..._files)
             // 2021.09.25修复文件上传后不能同时下载的问题
-            this.files = _files
+            state.files = _files
           },
           error => {
             ElMessage.error(error.message)
-            this.loadText = '上传文件'
-            this.loadingStatus = false
+            state.loadText = '上传文件'
+            state.loadingStatus = false
           }
         )
-    },
-    format (file, checkFileType) {
+    }
+    const format = (file: any, checkFileType?: any) => {
       const format = file.name.split('.').pop().toLocaleLowerCase() || ''
       let fileIcon = 'el-icon-document'
-      if (this.fileTypes.length > 0 && checkFileType !== undefined) {
-        if (this.fileTypes.indexOf(format) !== -1) {
+      if (props.fileTypes.length > 0 && checkFileType !== undefined) {
+        if (props.fileTypes.indexOf(format) !== -1) {
           return true
         }
         return false
@@ -533,26 +534,26 @@ export default {
         fileIcon = 'el-icon-document'
       }
       return fileIcon
-    },
-    beforeUpload () {},
-    checkFile (inputFiles) {
-      const files = this.files
+    }
+    const beforeUpload = () => { }
+    const checkFile = (inputFiles?: any) => {
+      const files = state.files
 
       if (
-        this.multiple &&
-        files.length + (inputFiles || []).length > (this.maxFile || 5)
+        props.multiple &&
+        files.length + (inputFiles || []).length > (props.maxFile || 5)
       ) {
-        this.$message.error(
+        ElMessage.error(
           '最多只能选【' +
-            (this.maxFile || 5) +
-            '】' +
-            (this.img ? '张图片' : '个文件') +
-            ''
+          (props.maxFile || 5) +
+          '】' +
+          (props.img ? '张图片' : '个文件') +
+          ''
         )
         return false
       }
       if (!inputFiles) {
-        inputFiles = this.files.filter((x) => {
+        inputFiles = state.files.filter((x: any) => {
           return x.input
         })
       }
@@ -563,43 +564,67 @@ export default {
           file.name = '(' + index + ')' + file.name
         }
         names.push(file.name)
-        if (this.img && !this.format(file, 'img')) {
-          this.$message.error('选择的文件【' + file.name + '】只能是图片格式')
+        if (props.img && !format(file, 'img')) {
+          ElMessage.error('选择的文件【' + file.name + '】只能是图片格式')
           return false
         }
-        if (this.excel && !this.format(file, 'excel')) {
-          this.$message.error('选择的文件【' + file.name + '】只能是excel文件')
+        if (props.excel && !format(file, 'excel')) {
+          ElMessage.error('选择的文件【' + file.name + '】只能是excel文件')
           return false
         }
         if (
-          this.fileTypes &&
-          this.fileTypes.length > 0 &&
-          !this.format(file, this.fileTypes)
+          props.fileTypes &&
+          props.fileTypes.length > 0 &&
+          !format(file, props.fileTypes)
         ) {
-          this.$message.error(
+          ElMessage.error(
             '选择的文件【' +
-              file.name +
-              '】只能是【' +
-              this.fileTypes.join(',') +
-              '】格式'
+            file.name +
+            '】只能是【' +
+            props.fileTypes.join(',') +
+            '】格式'
           )
           return false
         }
-        if (file.size > (this.maxSize || 3) * 1024 * 1024) {
-          this.$message.error(
+        if (file.size > (props.maxSize || 3) * 1024 * 1024) {
+          ElMessage.error(
             '选择的文件【' +
-              file.name +
-              '】不能超过:' +
-              (this.maxSize || 3) +
-              'M'
+            file.name +
+            '】不能超过:' +
+            (props.maxSize || 3) +
+            'M'
           )
           return false
         }
       }
       return true
     }
+    watch(() => props.fileInfo,
+      (newVal) => {
+        cloneFile(state.files)
+      },
+      { deep: true })
+    onMounted(() => {
+      if (props.fileInfo) {
+        state.changed = true
+      }
+      cloneFile(props.fileInfo)
+    })
+    return {
+      ...toRefs(state),
+      fileOnClick,
+      handleChange,
+      previewImg,
+      removeFile,
+      getImgSrc,
+      getSelector,
+      handleClick,
+      upload,
+      getText,
+      format
+    }
   }
-}
+})
 </script>
 <style lang="scss" scoped>
 .upload-list {
