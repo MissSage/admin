@@ -36,7 +36,7 @@
 <script lang='ts'>
 import { IElForm } from '@/types/element-plus'
 import { ElForm, ElButton } from 'element-plus'
-import { defineComponent, onBeforeMount, PropType, reactive, ref, toRefs } from 'vue'
+import { defineComponent, PropType, reactive, ref, toRefs } from 'vue'
 import LgsFormItem from '../LgsFormItem/index.vue'
 import { ILgsForm } from './type'
 
