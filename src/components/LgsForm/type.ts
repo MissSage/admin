@@ -5,6 +5,6 @@ export type ILgsForm = {
   labelPosition?:'left'
   rules?:IFormRule
   columns:ILgsFormItem[]
-  defaultValues:Record<string, any>
+  defaultValues?:Record<string, any>
   btns?: ILgsFormBtn[]
 }

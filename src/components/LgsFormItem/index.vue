@@ -65,7 +65,7 @@
       :placeholder="config.placeholder||'请选择'"
       :remote="config.remote"
       :remote-method="(val:any) => { remoteSearch(val); }"
-      @change="config.onChange"
+      @change="handleChange"
     >
       <el-option
         v-for="(obj,i) in config.options"
@@ -173,6 +173,7 @@
       v-else-if="config.type==='table'"
       v-model="value"
       :config="config.config"
+      @change="handleChange"
     ></lgs-form-table>
   </el-form-item>
 </template>
@@ -184,7 +185,7 @@ import LgsEditor from '../LgsEditor/LgsEditor.vue'
 
 export default defineComponent({
   name: 'LgsFormItem',
-  emits: ['update:model-value'],
+  emits: ['update:model-value', 'change'],
   components: {
     LgsEditor,
     ElFormItem,
@@ -214,14 +215,47 @@ export default defineComponent({
     }
   },
   setup (props, ctx) {
+    const formatModelValue = (value:String|Number|Boolean|Array<any>|Object) => {
+      switch (props.config.type) {
+        case 'cascader':
+        case 'checkbox':
+        case 'daterange':
+        case 'datetimerange':
+        case 'table':
+          return value instanceof Array ? value : []
+        case 'date':
+        case 'datetime':
+        case 'editor':
+        case 'input':
+        case 'password':
+        case 'radio':
+        case 'switch':
+        case 'text':
+        case 'textarea':
+        case 'time':
+        case 'uploader':
+          return typeof value === 'string' ? value : value.toString()
+
+        case 'select':
+          return props.config.multiple ? value instanceof Array ? value : [] : value.toString()
+        case 'number':
+          return typeof value === 'number' ? value : value ? parseFloat(value.toString()) : 0
+        default:
+          return value
+      }
+    }
     const state = reactive<{
       value:any
       }>({
-        value: props.modelValue
+        value: formatModelValue(props.modelValue)
       })
-    const handleChange = (val:string) => {
-      ctx.emit('update:model-value', val)
+
+    const handleChange = (val:any) => {
+      console.log(val)
+
       props.config.onChange && props.config.onChange(val)
+      ctx.emit('update:model-value', val)
+      ctx.emit('change', val)
     }
     // 远程搜索(打开弹出框时应该禁止搜索)
     const remoteSearch = async (val:any) => {

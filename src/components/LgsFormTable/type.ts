@@ -5,6 +5,7 @@ type ILgsTableColumnBase = {
   field:string
   formItem?:ILgsFormItem
   width?:string
+  onChange?:(row?:any, val?:any) => void
   formatter?:(row?:any, column?:any, cellValue?:any, index?:number) => any
 }
 

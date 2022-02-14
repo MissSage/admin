@@ -1,6 +1,6 @@
 <template>
   <el-table
-    :data="modelValue"
+    :data="data"
   >
     <el-table-column
       v-if="config.columnIndex"
@@ -26,6 +26,7 @@
           v-if="column.formItem"
           v-model="scope.row[column.field]"
           :config="column.formItem"
+          @change="(val:any)=>handleChange(column,scope.row,val)"
         ></lgs-form-item>
         <span v-else>{{ column.formatter?column.formatter(scope.row, column, true):scope.row[column.field] }}</span>
       </template>
@@ -33,9 +34,9 @@
   </el-table>
 </template>
 <script setup lang='ts'>
-import { PropType, ref } from 'vue'
+import { computed, PropType, ref } from 'vue'
 import { ILgsTableColumn, ILgsTableConfig } from './type'
-
+const emit = defineEmits(['update:model-value', 'change'])
 const props = defineProps({
   config: {
     type: Object as PropType<ILgsTableConfig>,
@@ -50,6 +51,12 @@ const props = defineProps({
     type: Array as PropType<ILgsTableColumn[]>
   }
 })
+const data = computed(() => props.modelValue)
+const handleChange = (column:ILgsTableColumn, row:any, value:any) => {
+  column.onChange && column.onChange(row, value)
+  emit('update:model-value', data.value)
+  emit('change', data.value)
+}
 </script>
 <style scoped lang='scss'>
 </style>

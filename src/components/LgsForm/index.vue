@@ -61,7 +61,7 @@ export default defineComponent({
       formData:Record<string, any>
     }>({
       formData: {
-        ...props.config.defaultValues
+        ...Object.assign({}, props.config.defaultValues)
       }
     })
     const submit = () => {
