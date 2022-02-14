@@ -54,10 +54,15 @@ export default defineComponent({
                 type: 'input', field: 'name'
               }
             }, {
-              label: '姓名',
-              field: 'name',
+              label: '民族',
+              field: 'nation',
               formItem: {
-                type: 'input', field: 'name'
+                type: 'select',
+                field: 'nation',
+                options: [
+                  { label: '汉族', value: '汉族' },
+                  { label: '其它', value: '其它' }
+                ]
               }
             }, {
               label: '职业',
@@ -85,9 +90,9 @@ export default defineComponent({
         name: '李四',
         age: 26,
         nation: '汉族',
-        family: [{ name: '张三', job: '农民', age: 41, relation: '母亲' },
-          { name: '李二', job: '农民', age: 21, relation: '弟弟' },
-          { name: '王二', job: '工人', age: 24, relation: '妻子' }]
+        family: [{ name: '张三', job: '农民', age: 41, relation: '母亲', nation: '汉族' },
+          { name: '李二', job: '农民', age: 21, relation: '弟弟', nation: '汉族' },
+          { name: '王二', job: '工人', age: 24, relation: '妻子', nation: '其它' }]
       }
     }
     return {
