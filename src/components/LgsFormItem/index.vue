@@ -163,47 +163,29 @@
       style="width: 100%"
       size="medium"
     />
-    <lgs-uploader
-      v-else-if="config.type==='uploader'"
-      v-show="!config.hidden"
-      :desc="config.desc"
-      :multiple="config.multiple"
-      :max-file="config.maxFile"
-      :max-size="config.maxSize"
-      :auto-upload="config.autoUpload"
-      :file-info="value"
-      :file-types="config.fileTypes ? config.fileTypes : []"
-      :upload-before="config.uploadBefore"
-      :upload-after="config.uploadAfter"
-      :append="config.multiple"
-      :on-change="
-        (files:any) => {
-          return config.onChange&&config.onChange(files);
-        }
-      "
-      :file-click="config.fileClick"
-      :remove-before="config.removeBefore"
-      :down-load="config.downLoad ? true : false"
-    />
+
     <lgs-editor
       v-else-if="config.type === 'editor'"
       ref="editor"
       v-model="value"
     />
+    <lgs-form-table
+      v-else-if="config.type==='table'"
+      v-model="value"
+      :config="config.config"
+    ></lgs-form-table>
   </el-form-item>
 </template>
 <script lang='ts'>
 import { defineComponent, PropType, reactive, toRefs, watch } from 'vue'
-import { ILgsFormDate, ILgsFormDateRange, ILgsFormItem } from '@/types/LgsFormItem'
+import { ILgsFormDate, ILgsFormDateRange, ILgsFormItem } from '@/components/LgsFormItem/type'
 import { ElOption, ElCheckboxGroup, ElRadioGroup, ElRadio, ElCascader, ElDatePicker, ElTimePicker, ElCheckbox, ElFormItem, ElInput, ElInputNumber, ElSelect, ElSwitch } from 'element-plus'
-import LgsUploader from '../LgsUploader/LgsUploader.vue'
 import LgsEditor from '../LgsEditor/LgsEditor.vue'
 
 export default defineComponent({
   name: 'LgsFormItem',
   emits: ['update:model-value'],
   components: {
-    LgsUploader,
     LgsEditor,
     ElFormItem,
     ElSelect,

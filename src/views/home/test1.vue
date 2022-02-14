@@ -11,7 +11,7 @@
 </template>
 <script lang='ts'>
 import { IFormRuleMap } from '@/types/element-plus'
-import { ILgsFormBtn, ILgsFormItem } from '@/types/LgsFormItem'
+import { ILgsFormBtn, ILgsFormItem } from '@/components/LgsFormItem/type'
 import { defineComponent, reactive, ref, toRefs } from 'vue'
 import LgsForm from '../../components/LgsForm/index.vue'
 

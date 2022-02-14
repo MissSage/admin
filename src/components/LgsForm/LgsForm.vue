@@ -1,5 +1,4 @@
 <template>
-div
   <el-form
     style="display: inline-block; width: 100%"
     :inline="true"

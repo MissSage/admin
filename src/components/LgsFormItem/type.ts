@@ -1,4 +1,5 @@
-import { NormalOption } from './global'
+import { NormalOption } from '../../types/global'
+import { ILgsTableConfig } from '../LgsFormTable/type'
 
 export interface ILgsFormItemBase {
   type: string
@@ -99,7 +100,10 @@ interface ILgsFormUploader extends ILgsFormItemBase {
   removeBefore?: (...args: any[]) => void
   fileClick?: (...args: any[]) => void
 }
-
+interface ILgsFormTable extends ILgsFormItemBase{
+  type:'table',
+  config:ILgsTableConfig
+}
 export type ILgsFormItem = ILgsFormSelect |
   ILgsFormInput |
   ILgsFormText |
@@ -114,7 +118,8 @@ export type ILgsFormItem = ILgsFormSelect |
   ILgsFormSwitch |
   ILgsFormDate |
   ILgsFormDateRange |
-  ILgsFormTime
+  ILgsFormTime |
+  ILgsFormTable
 
 export type IBtnType ='' | 'default' | 'text' | 'success' | 'warning' | 'info' | 'primary' | 'danger'
 export type ILgsFormBtn = {

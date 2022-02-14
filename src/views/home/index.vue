@@ -1,141 +1,104 @@
 
 <template>
-  <div class="datavisual-page">
-    <div style="text-align: right;">
-      <button @click="popover" id="popover-l">popover-l</button>
-      <button @click="popover" id="popover-r">popover-r</button>
-      <button @click="popover" id="popover-t">popover-t</button>
-      <button @click="popover" id="popover-b">popover-b</button>
-    </div>
-    <!-- <LgsDraggable :theme="theme">sdfadfasdf</LgsDraggable> -->
-    <button @click="openLayer">openlayer</button>
-    <button @click="closeFirstLayer">closeFirstLayer</button>
-    <button @click="closeLastLayer">closeLastLayer</button>
-    <button @click="closeAll">closeAll</button>
-    <button @click="toggleMinLayer">toggleMinLayer</button>
-    <button @click="toggleFullScreen">toggleFullScreen</button>
-    <button @click="message">message</button>
-    <button @click="toast">toast</button>
-    <div style="text-align: right;">
-      <button @click="popover" id="popover1-l">popover-l</button>
-      <button @click="popover" id="popover1-r">popover-r</button>
-      <button @click="popover" id="popover1-t">popover-t</button>
-      <button @click="popover" id="popover1-b">popover-b</button>
-    </div>
-    <Test1></Test1>
-  </div>
+  <LgsForm ref="refLgsForm" :config="lgsFormConfig"></LgsForm>
 </template>
 <script lang="ts">
-import { IFollowPosition, ILgsLayerConfigs } from '@/plugins/LgsLayer/type'
-import useGlobal from '@/composables/useGlobal'
-import { defineComponent, inject, ref } from 'vue'
-import Test1 from './test1.vue'
-import Test from './test.vue'
+import { ILgsForm } from '@/components/LgsForm/type'
+import LgsForm from '@/components/LgsForm/index.vue'
+import { defineComponent, ref } from 'vue'
 export default defineComponent({
-  components: { Test1 },
+  name: 'Home',
+  components: { LgsForm },
   setup () {
-    const theme:string = inject('theme') || ''
-    const { $layer } = useGlobal()
-    const layerIds = ref<string[]>([])
-    const openLayer = () => {
-      const options:Partial<ILgsLayerConfigs&{modelValue:boolean}> = {
-        teleport: '#app-main',
-        position: ['50%', '20%'],
-        resize: true,
-        dragable: true,
-        width: '20%',
-        height: '20%',
-        dragOut: false,
-        shade: false,
-        shadeClose: true,
-        header: {
-          // component: Test1,
-          text: '弹窗测试弹窗测试弹窗测试',
-          extrabtns: [
-            { text: 'extrabtns' }
+    const refLgsForm = ref<InstanceType<typeof LgsForm>>()
+    const lgsFormConfig:ILgsForm = {
+      btns: [
+        {
+          text: '确认',
+          type: 'primary',
+          click: () => {
+            refLgsForm.value && refLgsForm.value.submit()
+          }
+        },
+        {
+          text: '取消',
+          type: 'default',
+          click: () => {
+            console.log('canceled')
+          }
+        }
+      ],
+      columns: [
+        { label: '名称', field: 'name', type: 'input' },
+        { label: '年龄', field: 'age', type: 'number' },
+        {
+          label: '民族',
+          field: 'nation',
+          type: 'select',
+          options: [
+            { label: '汉族', value: '汉族' },
+            { label: '其它', value: '其它' }
           ]
         },
-        // btns: [
-        //   {
-        //     text: '提交',
-        //     click: () =>
-        //   },
-        //   {
-        //     text: '按钮2',
-        //     click: () => Promise.resolve(alert('2'))
-        //   }, {
-        //     text: '按钮3',
-        //     click: () => Promise.resolve(alert('3'))
-        //   }
-        // ],
-        // dragOut: false,
-        modelValue: true,
-        theme: theme,
-        type: 'component',
-        content: Test1
+        {
+          label: '家属',
+          field: 'family',
+          type: 'table',
+          config: {
+            columnIndex: true,
+            columnCheck: true,
+            columns: [{
+              label: '姓名',
+              field: 'name',
+              formItem: {
+                type: 'input', field: 'name'
+              }
+            }, {
+              label: '姓名',
+              field: 'name',
+              formItem: {
+                type: 'input', field: 'name'
+              }
+            }, {
+              label: '职业',
+              field: 'job',
+              formItem: {
+                type: 'input', field: 'job'
+              }
+            }, {
+              label: '年龄',
+              field: 'age',
+              formItem: {
+                type: 'number', field: 'age'
+              }
+            }, {
+              label: '关系',
+              field: 'relation',
+              formItem: {
+                type: 'input', field: 'relation'
+              }
+            }]
+          }
+        }
+      ],
+      defaultValues: {
+        name: '李四',
+        age: 26,
+        nation: '汉族',
+        family: [{ name: '张三', job: '农民', age: 41, relation: '母亲' },
+          { name: '李二', job: '农民', age: 21, relation: '弟弟' },
+          { name: '王二', job: '工人', age: 24, relation: '妻子' }]
       }
-      const id = $layer.open(options)
-      layerIds.value.push(id)
-    }
-    const closeAll = () => {
-      $layer.closeAll()
-      layerIds.value = []
-    }
-    const closeFirstLayer = () => {
-      $layer.close(layerIds.value.shift())
-    }
-    const closeLastLayer = () => {
-      $layer.close(layerIds.value.pop())
-    }
-    const toggleMinLayer = () => {
-      layerIds.value.length > 0 && $layer.toggleMin(layerIds.value[0])
-    }
-    const toggleFullScreen = () => {
-      layerIds.value.length > 0 && $layer.toggleFullScreen(layerIds.value[0])
-    }
-    const message = () => {
-      $layer.message({ message: 'mesage1', icon: 'icon-check' })
-    }
-    const popover = (e:MouseEvent) => {
-      const id = (e.target as HTMLElement).id
-      const position = id.split('-')[1] as IFollowPosition
-      $layer.popover({
-        content: 'popver',
-        follow: '#' + id,
-        position: position,
-        autoFit: true,
-        title: 'popver',
-        showClose: true,
-        shadeClose: true
-      })
-    }
-    const toast = () => {
-      $layer.toast({ time: 1000 })
     }
     return {
-      openLayer,
-      closeAll,
-      closeFirstLayer,
-      closeLastLayer,
-      toggleMinLayer,
-      toggleFullScreen,
-      message,
-      toast,
-      popover
+      refLgsForm,
+      lgsFormConfig
     }
   }
 })
+
 </script>
 
 <style lang="scss" scoped>
-.datavisual-page{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-content: center;
-  button{
-    margin: 5px auto;
-    height:35px;
-  }
-}
+
 </style>
