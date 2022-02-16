@@ -19,6 +19,14 @@ export const routes: RouteRecordRaw[] = [{
         title: '首页',
         icon: 'icon-home'
       }
+    }, {
+      path: '/webgl',
+      name: 'webgl',
+      component: () => import('@/views/webgl/index.vue'),
+      meta: {
+        title: 'webgl',
+        icon: 'icon-home'
+      }
     },
     {
       path: '/oneMap',
