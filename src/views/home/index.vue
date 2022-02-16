@@ -75,49 +75,91 @@ export default defineComponent({
           field: 'family',
           type: 'table',
           config: {
+            dataList: [{
+              id: 1,
+              date: '2016-05-02',
+              name: 'wangxiaohu'
+            },
+            {
+              id: 2,
+              date: '2016-05-04',
+              name: 'wangxiaohu'
+            },
+            {
+              id: 3,
+              date: '2016-05-01',
+              name: 'wangxiaohu',
+              children: [
+                {
+                  id: 31,
+                  date: '2016-05-01',
+                  name: 'wangxiaohu'
+                },
+                {
+                  id: 32,
+                  date: '2016-05-01',
+                  name: 'wangxiaohu'
+                }
+              ]
+            },
+            {
+              id: 4,
+              date: '2016-05-03',
+              name: 'wangxiaohu'
+            }
+            ],
+            rowKey: 'id',
+            defaultExpandAll: true,
             columnIndex: true,
             columnCheck: true,
-            columns: [{
-              label: '姓名',
-              field: 'name',
-              formItem: {
-                type: 'input', field: 'name'
-              }
-            }, {
-              label: '民族',
-              field: 'nation',
-              onChange: (row:any, val:any) => {
-                console.log(row, val)
-
-                row.job = '高危'
-              },
-              formItem: {
-                type: 'select',
+            columns: [
+              {
+                label: 'id',
+                field: 'id',
+                icon: (row:any, index:number) => {
+                  return row.children && row.children.length > 0 ? 'iconfont icon-folder-fill' : 'iconfont icon-file'
+                }
+              }, {
+                label: '姓名',
+                field: 'name',
+                formItem: {
+                  type: 'input', field: 'name'
+                }
+              }, { label: '生日', field: 'date' }, {
+                label: '民族',
                 field: 'nation',
-                options: [
-                  { label: '汉族', value: '汉族' },
-                  { label: '其它', value: '其它' }
-                ]
-              }
-            }, {
-              label: '职业',
-              field: 'job',
-              formItem: {
-                type: 'input', field: 'job'
-              }
-            }, {
-              label: '年龄',
-              field: 'age',
-              formItem: {
-                type: 'number', field: 'age'
-              }
-            }, {
-              label: '关系',
-              field: 'relation',
-              formItem: {
-                type: 'input', field: 'relation'
-              }
-            }]
+                onChange: (row:any, val:any) => {
+                  console.log(row, val)
+
+                  row.job = '高危'
+                },
+                formItem: {
+                  type: 'select',
+                  field: 'nation',
+                  options: [
+                    { label: '汉族', value: '汉族' },
+                    { label: '其它', value: '其它' }
+                  ]
+                }
+              }, {
+                label: '职业',
+                field: 'job',
+                formItem: {
+                  type: 'input', field: 'job'
+                }
+              }, {
+                label: '年龄',
+                field: 'age',
+                formItem: {
+                  type: 'number', field: 'age'
+                }
+              }, {
+                label: '关系',
+                field: 'relation',
+                formItem: {
+                  type: 'input', field: 'relation'
+                }
+              }]
           }
         }
       ],

@@ -100,9 +100,14 @@ interface ILgsFormUploader extends ILgsFormItemBase {
   removeBefore?: (...args: any[]) => void
   fileClick?: (...args: any[]) => void
 }
-interface ILgsFormTable extends ILgsFormItemBase{
-  type:'table',
-  config:ILgsTableConfig
+export interface ILgsFormTable extends ILgsFormItemBase{
+  type: 'table',
+  config: ILgsTableConfig
+  rowKey?: string
+  treeProp?: {
+    children: string
+    hasChildren: string
+  }
 }
 export type ILgsFormItem = ILgsFormSelect |
   ILgsFormInput |
@@ -121,7 +126,7 @@ export type ILgsFormItem = ILgsFormSelect |
   ILgsFormTime |
   ILgsFormTable
 
-export type IBtnType ='' | 'default' | 'text' | 'success' | 'warning' | 'info' | 'primary' | 'danger'
+export type IBtnType = '' | 'default' | 'text' | 'success' | 'warning' | 'info' | 'primary' | 'danger'
 export type ILgsFormBtn = {
   text: string
   disabled?: boolean

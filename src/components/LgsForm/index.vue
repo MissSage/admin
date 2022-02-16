@@ -12,10 +12,20 @@
         v-for="(item,i) in config.columns"
         :key="i"
       >
-        <LgsFormItem
-          v-model="formData[item.field]"
-          :config="item"
-        />
+        <lgs-form-table v-if="item.type==='table'" :config="item.config">
+        </lgs-form-table>
+        <el-form-item
+          v-else
+          v-show="!item.hidden"
+          :label="item.label"
+          :prop="item.field"
+          :style="item.style"
+        >
+          <lgs-form-item
+            v-model="formData[item.field]"
+            :config="item"
+          />
+        </el-form-item>
       </template>
     </el-form>
     <div class="lgs-form-footer">
@@ -35,18 +45,11 @@
 </template>
 <script lang='ts'>
 import { IElForm } from '@/types/element-plus'
-import { ElForm, ElButton } from 'element-plus'
 import { defineComponent, PropType, reactive, ref, toRefs } from 'vue'
-import LgsFormItem from '../LgsFormItem/index.vue'
 import { ILgsForm } from './type'
 
 export default defineComponent({
   name: 'LgsForm',
-  components: {
-    LgsFormItem,
-    ElForm,
-    ElButton
-  },
   props: {
     config: {
       type: Object as PropType<ILgsForm>,

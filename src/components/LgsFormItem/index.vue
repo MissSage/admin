@@ -1,181 +1,168 @@
 <template>
-  <el-form-item
+  <label v-if="config.type === 'text'" class="readonly-input">
+    {{ modelValue }}
+  </label>
+
+  <el-input
+    v-else-if="config.type === 'input'"
     v-show="!config.hidden"
-    :label="config.label"
-    :prop="config.field"
-    :style="config.style"
+    v-model="value"
+    size="medium"
+    clearable
+    :placeholder="config.placeholder||'请输入'"
+    :disabled="config.readonly || config.disabled"
+    @change="config.onChange"
+    @keyup.enter="config.onKeyUp"
+  />
+  <el-input
+    v-else-if="config.type === 'password'"
+    v-show="!config.hidden"
+    v-model="value"
+    type="password"
+    size="medium"
+    clearable
+    :disabled="config.readonly || config.disabled"
+    :placeholder="config.placeholder||'请输入'"
+  />
+  <el-input
+    v-else-if="config.type === 'textarea'"
+    v-model="value"
+    type="textarea"
+    clearable
+    :ref="config.field"
+    :disabled="config.readonly || config.disabled"
+    :autosize="{
+      minRows: config.minRow || 2,
+      maxRows: config.maxRow || 10,
+    }"
+    :placeholder="config.placeholder||'请输入'"
+  />
+  <el-input-number
+    v-else-if="config.type === 'number'"
+    v-model="value"
+    style="width: 100%"
+    :min="config.min"
+    :max="config.max"
+    :controls-position="config.controlPosition"
+  />
+  <el-select
+    v-else-if="config.type==='select'"
+    v-show="!config.hidden"
+    size="medium"
+    style="width: 100%"
+    v-model="value"
+    filterable
+    clearable
+    :allow-create="config.allowCreate"
+    :disabled="config.readonly || config.disabled"
+    :multiple="config.multiple"
+    :placeholder="config.placeholder||'请选择'"
+    :remote="config.remote"
+    :remote-method="(val:any) => { remoteSearch(val); }"
+    @change="handleChange"
   >
-    <label v-if="config.type === 'text'" class="readonly-input">
-      {{ modelValue }}
-    </label>
-
-    <el-input
-      v-else-if="config.type === 'input'"
-      v-show="!config.hidden"
-      v-model="value"
-      size="medium"
-      clearable
-      :placeholder="config.placeholder||'请输入'"
-      :disabled="config.readonly || config.disabled"
-      @change="config.onChange"
-      @keyup.enter="config.onKeyUp"
+    <el-option
+      v-for="(obj,i) in config.options"
+      :key="i"
+      :label="obj.label"
+      :value="obj.value"
     />
-    <el-input
-      v-else-if="config.type === 'password'"
-      v-show="!config.hidden"
-      v-model="value"
-      type="password"
-      size="medium"
-      clearable
-      :disabled="config.readonly || config.disabled"
-      :placeholder="config.placeholder||'请输入'"
-    />
-    <el-input
-      v-else-if="config.type === 'textarea'"
-      v-model="value"
-      type="textarea"
-      clearable
-      :ref="config.field"
-      :disabled="config.readonly || config.disabled"
-      :autosize="{
-        minRows: config.minRow || 2,
-        maxRows: config.maxRow || 10,
-      }"
-      :placeholder="config.placeholder||'请输入'"
-    />
-    <el-input-number
-      v-else-if="config.type === 'number'"
-      v-model="value"
-      style="width: 100%"
-      :min="config.min"
-      :max="config.max"
-      :controls-position="config.controlPosition"
-    />
-    <el-select
-      v-else-if="config.type==='select'"
-      v-show="!config.hidden"
-      size="medium"
-      style="width: 100%"
-      v-model="value"
-      filterable
-      clearable
-      :allow-create="config.allowCreate"
-      :disabled="config.readonly || config.disabled"
-      :multiple="config.multiple"
-      :placeholder="config.placeholder||'请选择'"
-      :remote="config.remote"
-      :remote-method="(val:any) => { remoteSearch(val); }"
-      @change="handleChange"
+  </el-select>
+  <el-cascader
+    v-else-if="config.type === 'cascader'"
+    clearable
+    size="medium"
+    style="width: 100%"
+    v-model="value"
+    :disabled="config.readonly || config.disabled"
+    :options="config.options"
+    :props="{
+      checkStrictly: config.checkStrictly,
+    }"
+    @change="config.onChange"
+  />
+  <el-switch
+    v-else-if="config.type === 'switch'"
+    v-show="!config.hidden"
+    v-model="value"
+    :disabled="config.readonly || config.disabled"
+    active-color="#0f84ff"
+    inactive-color="rgb(194 194 194)"
+    @change="config.onChange"
+  />
+  <el-radio-group
+    v-else-if="config.type === 'radio'"
+    v-show="!config.hidden"
+    v-model="value"
+    :disabled="config.readonly || config.disabled"
+    @change="config.onChange"
+  >
+    <el-radio
+      v-for="(kv,i) in config.options"
+      :key="i"
+      :label="kv.value"
     >
-      <el-option
-        v-for="(obj,i) in config.options"
-        :key="i"
-        :label="obj.label"
-        :value="obj.value"
-      />
-    </el-select>
-    <el-cascader
-      v-else-if="config.type === 'cascader'"
-      clearable
-      size="medium"
-      style="width: 100%"
-      v-model="value"
-      :disabled="config.readonly || config.disabled"
-      :options="config.options"
-      :props="{
-        checkStrictly: config.checkStrictly,
-      }"
-      @change="config.onChange"
-    />
-    <el-switch
-      v-else-if="config.type === 'switch'"
-      v-show="!config.hidden"
-      v-model="value"
-      :disabled="config.readonly || config.disabled"
-      active-color="#0f84ff"
-      inactive-color="rgb(194 194 194)"
-      @change="config.onChange"
-    />
-    <el-radio-group
-      v-else-if="config.type === 'radio'"
-      v-show="!config.hidden"
-      v-model="value"
-      :disabled="config.readonly || config.disabled"
-      @change="config.onChange"
-    >
-      <el-radio
-        v-for="(kv,i) in config.options"
-        :key="i"
-        :label="kv.value"
-      >
-        {{ kv.label }}
-      </el-radio>
-    </el-radio-group>
+      {{ kv.label }}
+    </el-radio>
+  </el-radio-group>
 
-    <el-checkbox-group
-      :disabled="config.readonly || config.disabled"
-      v-show="!config.hidden"
-      v-model="value"
-      v-else-if="config.type === 'checkbox'"
-      @change="config.onChange"
+  <el-checkbox-group
+    :disabled="config.readonly || config.disabled"
+    v-show="!config.hidden"
+    v-model="value"
+    v-else-if="config.type === 'checkbox'"
+    @change="config.onChange"
+  >
+    <el-checkbox
+      v-for="(kv, i) in config.options"
+      :key="i"
+      :label="kv.value"
     >
-      <el-checkbox
-        v-for="(kv, i) in config.options"
-        :key="i"
-        :label="kv.value"
-      >
-        {{ kv.label }}
-      </el-checkbox>
-    </el-checkbox-group>
-    <el-date-picker
-      v-else-if="config.type==='date'||config.type==='datetime'"
-      clearable
-      :disabled="config.readonly || config.disabled"
-      style="width: 100%"
-      size="medium"
-      v-model="value"
-      @change="config.onChange"
-      :type="config.type"
-      :placeholder="config.placeholder||'请选择'"
-      :disabled-date="(val:any) => getDateOptions(val)"
-      :value-format="config.type==='date'?'YYYY-MM-DD':'YYYY-MM-DD HH:mm:ss'"
-    />
-    <el-date-picker
-      v-else-if="config.type==='daterange'||config.type==='datetimerange'"
-      v-model="value"
-      style="width: 100%"
-      size="medium"
-      clearable
-      :type="config.type"
-      :range-separator="config.rangeSeparator||'到'"
-      :disabled="config.readonly || config.disabled"
-      :placeholder="config.placeholder||'请选择'"
-      :disabled-date="(val:any) => getDateOptions(val)"
-      :value-format="config.type==='daterange'?'YYYY-MM-DD':'YYYY-MM-DD HH:mm:ss'"
-      @change="config.onChange"
-    />
-    <el-time-picker
-      v-else-if="config.type === 'time'"
-      v-model="value"
-      placeholder="请选择时间"
-      :format="config.format"
-      :is-range="config.isRange"
-      style="width: 100%"
-      size="medium"
-    />
+      {{ kv.label }}
+    </el-checkbox>
+  </el-checkbox-group>
+  <el-date-picker
+    v-else-if="config.type==='date'||config.type==='datetime'"
+    clearable
+    :disabled="config.readonly || config.disabled"
+    style="width: 100%"
+    size="medium"
+    v-model="value"
+    @change="config.onChange"
+    :type="config.type"
+    :placeholder="config.placeholder||'请选择'"
+    :disabled-date="(val:any) => getDateOptions(val)"
+    :value-format="config.type==='date'?'YYYY-MM-DD':'YYYY-MM-DD HH:mm:ss'"
+  />
+  <el-date-picker
+    v-else-if="config.type==='daterange'||config.type==='datetimerange'"
+    v-model="value"
+    style="width: 100%"
+    size="medium"
+    clearable
+    :type="config.type"
+    :range-separator="config.rangeSeparator||'到'"
+    :disabled="config.readonly || config.disabled"
+    :placeholder="config.placeholder||'请选择'"
+    :disabled-date="(val:any) => getDateOptions(val)"
+    :value-format="config.type==='daterange'?'YYYY-MM-DD':'YYYY-MM-DD HH:mm:ss'"
+    @change="config.onChange"
+  />
+  <el-time-picker
+    v-else-if="config.type === 'time'"
+    v-model="value"
+    placeholder="请选择时间"
+    :format="config.format"
+    :is-range="config.isRange"
+    style="width: 100%"
+    size="medium"
+  />
 
-    <lgs-editor
-      v-else-if="config.type === 'editor'"
-      ref="editor"
-      v-model="value"
-    />
-    <lgs-form-table
-      v-else-if="config.type==='table'"
-      v-model="value"
-      :config="config.config"
-      @change="handleChange"
-    ></lgs-form-table>
-  </el-form-item>
+  <lgs-editor
+    v-else-if="config.type === 'editor'"
+    ref="editor"
+    v-model="value"
+  />
 </template>
 <script lang='ts'>
 import { defineComponent, PropType, reactive, toRefs, watch } from 'vue'
@@ -188,7 +175,6 @@ export default defineComponent({
   emits: ['update:model-value', 'change'],
   components: {
     LgsEditor,
-    ElFormItem,
     ElSelect,
     ElInput,
     ElInputNumber,
