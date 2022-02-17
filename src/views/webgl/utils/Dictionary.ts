@@ -5,23 +5,46 @@ export class Dictionary<T> {
     useES6Map ? (this._items = new Map<string, T>()) : (this._items = {})
   }
 
+  /**
+   * 键值对个数
+   */
   public get length ():number {
     return this._count
   }
 
+  /**
+   * 是否包含指定键
+   * @param key 键
+   * @returns boolean
+   */
   public contains (key:string):boolean {
     return this._items instanceof Map ? this._items.has(key) : this._items[key] !== undefined
   }
 
+  /**
+   * 根据键查找键值对
+   * @param key 键
+   * @returns 键值对
+   */
   public find (key:string):T|undefined {
     return this._items instanceof Map ? this._items.get(key) : this._items[key]
   }
 
+  /**
+   * 插入键值对
+   * @param key 键
+   * @param value 值
+   */
   public insert (key:string, value:T):void {
     this._items instanceof Map ? this._items.set(key, value) : (this._items[key] = value)
     this._count++
   }
 
+  /**
+   * 根据键移除键值对
+   * @param key 键
+   * @returns 是否成功
+   */
   public remove (key:string):boolean {
     const ret:T|undefined = this.find(key)
     if (ret === undefined) return false
@@ -30,6 +53,9 @@ export class Dictionary<T> {
     return true
   }
 
+  /**
+   * 获取所有的键
+   */
   public get keys ():string[] {
     const keys:string[] = []
     if (this._items instanceof Map) {
@@ -45,6 +71,9 @@ export class Dictionary<T> {
     return keys
   }
 
+  /**
+   * 获取所有的值
+   */
   public get values ():T[] {
     const values:T[] = []
     if (this._items instanceof Map) {
@@ -60,6 +89,10 @@ export class Dictionary<T> {
     return values
   }
 
+  /**
+   * 转换成字符串形式的键值对
+   * @returns 字符串
+   */
   public toString ():string {
     return JSON.stringify(this._items as Map<string, T>)
   }
