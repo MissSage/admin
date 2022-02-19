@@ -1,6 +1,8 @@
 
 import { EPSILON, Mat4, Quat, Vec2, Vec3, Vec4 } from './TSM'
-
+/**
+ * 坐标軕枚举
+ */
 export enum EAxisType
 {
     NONE = -1,
@@ -38,8 +40,12 @@ export class MathHelper {
     return (x < min) ? min : (x > max) ? max : x
   }
 
-  // 判断一个整数是否是2的n次方(1,2,4,8,16,32,64,128,258,512,1024,2048,....)
-  // 用于2的n次方纹理判断
+  /**
+   * 断一个整数是否是2的n次方(1,2,4,8,16,32,64,128,258,512,1024,2048,....)
+   * 用于2的n次方纹理判断
+   * @param value
+   * @returns
+   */
   public static isPowerOfTwo (value: number): boolean {
     return ((value & (value - 1)) === 0)
   }

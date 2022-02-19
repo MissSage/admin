@@ -94,6 +94,11 @@ export class Vec3 {
       return dest
     }
 
+    /**
+     * 坐标取反
+     * @param dest
+     * @returns
+     */
     public negate (dest: Vec3 | null = null): Vec3 {
       if (!dest) dest = this
 
@@ -114,6 +119,9 @@ export class Vec3 {
       return true
     }
 
+    /**
+     * 长度 = 三个坐标的平方求和再开方
+     */
     public get length (): number {
       return Math.sqrt(this.length2)
     }
@@ -126,6 +134,11 @@ export class Vec3 {
       return (x * x + y * y + z * z)
     }
 
+    /**
+     * 坐标值增加
+     * @param vector 坐标信息
+     * @returns 坐标增加后的坐标信息
+     */
     add (vector: Vec3): Vec3 {
       this.x += vector.x
       this.y += vector.y
@@ -134,6 +147,11 @@ export class Vec3 {
       return this
     }
 
+    /**
+     * 坐标减
+     * @param vector
+     * @returns
+     */
     subtract (vector: Vec3): Vec3 {
       this.x -= vector.x
       this.y -= vector.y
@@ -142,6 +160,12 @@ export class Vec3 {
       return this
     }
 
+    /**
+     * 缩放
+     * @param value 缩放比例
+     * @param dest 可选 缩放前的坐标，不传则是当前实例的坐标
+     * @returns
+     */
     public scale (value: number, dest: Vec3 | null = null): Vec3 {
       if (!dest) {
         dest = this
@@ -159,7 +183,7 @@ export class Vec3 {
     public normalize (dest: Vec3 | null = null): Vec3 {
       if (!dest) dest = this
 
-      let length = this.length
+      const length = this.length
 
       if (length === 1) {
         return this
@@ -173,11 +197,11 @@ export class Vec3 {
         return dest
       }
 
-      length = 1.0 / length
+      // length = 1.0 / length
 
-      dest.x *= length
-      dest.y *= length
-      dest.z *= length
+      dest.x /= length
+      dest.y /= length
+      dest.z /= length
 
       return dest
     }
@@ -389,6 +413,9 @@ export class Vec4 {
     static v2: Vec4 = new Vec4();
 }
 
+/**
+ * 四阶矩阵 4*4
+ */
 export class Mat4 {
     public values = new Float32Array(16);
 
@@ -691,7 +718,11 @@ export class Mat4 {
       return dest
     }
 
-    // 矩阵变换
+    /**
+     * 矩阵变换
+     * @param vector
+     * @returns
+     */
     public translate (vector: Vec3): Mat4 {
       const x = vector.x
       const y = vector.y

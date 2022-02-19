@@ -57,13 +57,14 @@ module.exports = {
       // catches unused variables but not args.
       { varsIgnorePattern: '.*', args: 'none' }
     ],
-    'no-array-constructor': 0
+    'no-array-constructor': 0,
+    camelcase: 0
   },
   ignorePatterns: ['src/styles/**/*.js'],
   overrides: [{
     files: ['src/api/**/*.ts'],
     rules: {
-      camelcase: 'off'
+      camelcase: 0
     }
   }]
 }

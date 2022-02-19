@@ -1,6 +1,6 @@
 export const GLShaderSource = {
-    colorShader: {
-        vs: `
+  colorShader: {
+    vs: `
         #ifdef GL_ES
             precision highp float;
         #endif
@@ -17,7 +17,7 @@ export const GLShaderSource = {
             vColor = aColor;
         }
         `,
-        fs: `
+    fs: `
         #ifdef GL_ES
             precision highp float;
         #endif
@@ -27,10 +27,10 @@ export const GLShaderSource = {
             gl_FragColor = vColor;
         }        
         `
-    },
-    textureShader: {
-        vs:
-    `
+  },
+  textureShader: {
+    vs:
+            `
         #ifdef GL_ES
             precision highp float;
         #endif
@@ -44,7 +44,7 @@ export const GLShaderSource = {
            vTextureCoord = aTexCoord;
         }
     `,
-        fs:    `
+    fs: `
       #ifdef GL_ES
       precision highp float;
       #endif
@@ -55,5 +55,5 @@ export const GLShaderSource = {
         gl_FragColor = texture2D(uSampler, vTextureCoord);
       }
     `
-    }
+  }
 }
