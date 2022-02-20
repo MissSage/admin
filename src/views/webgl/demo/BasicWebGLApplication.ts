@@ -1,9 +1,10 @@
 import { Application } from '../common/Application'
 import { TypedArrayList } from '../common/container/TypedArrayList'
+import { EShaderType } from '../common/interface/webgl'
 import { MathHelper } from '../common/math/MathHelper'
 import { Mat4, Vec3 } from '../common/math/TSM'
 import { GLCoordSystem } from '../webgl/WebGLCoordSystem'
-import { EShaderType, GLAttribMap, GLHelper, GLUniformMap } from '../webgl/WebGLHepler'
+import { GLAttribMap, GLHelper, GLUniformMap } from '../webgl/WebGLHepler'
 
 export class BasicWebGLApplication extends Application {
   /**
@@ -205,6 +206,9 @@ export class BasicWebGLApplication extends Application {
       this.coordSystem4s = this.makeViewportCoordSystems(2)
     }
 
+    /**
+     * 输出active状态的attributes和uniforms
+     */
     public printProgramActiveInfos (): void {
       GLHelper.getProgramActiveAttribs(this.gl, this.program, this.attribMap)
       console.log('attribMap = ', JSON.stringify(this.attribMap))

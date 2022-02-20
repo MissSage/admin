@@ -1,31 +1,4 @@
-// 枚举类
-export enum EShaderType
-{
-    VS_SHADER,
-    FS_SHADER
-}
-
-export enum EGLSLESDataType
-{
-    FLOAT_VEC2 = 0x8B50,
-    FLOAT_VEC3,
-    FLOAT_VEC4,
-    INT_VEC2,
-    INT_VEC3,
-    INT_VEC4,
-    BOOL,
-    BOOL_VEC2,
-    BOOL_VEC3,
-    BOOL_VEC4,
-    FLOAT_MAT2,
-    FLOAT_MAT3,
-    FLOAT_MAT4,
-    SAMPLER_2D,
-    SAMPLER_CUBE,
-
-    FLOAT = 0x1406,
-    INT = 0x1404
-}
+import { EGLSLESDataType, EShaderType } from '../common/interface/webgl'
 
 export class GLUniformInfo {
     public size: number; // size 是指type的个数，切记
@@ -146,6 +119,12 @@ export class GLHelper {
     gl.viewport(v[0], v[1], v[2], v[3])
   }
 
+  /**
+   * 创建着色器
+   * @param gl webgl上下文
+   * @param type 着色器类型
+   * @returns
+   */
   public static createShader (gl: WebGLRenderingContext, type: EShaderType): WebGLShader {
     let shader: WebGLShader | null = null
     if (type === EShaderType.VS_SHADER) {
@@ -160,6 +139,13 @@ export class GLHelper {
     return shader
   }
 
+  /**
+   * 编译着色器
+   * @param gl webgl上下文
+   * @param code 代码
+   * @param shader 着色器
+   * @returns
+   */
   public static compileShader (gl: WebGLRenderingContext, code: string, shader: WebGLShader): boolean {
     gl.shaderSource(shader, code) // 载入shader源码
     gl.compileShader(shader) // 编译shader源码
@@ -176,6 +162,12 @@ export class GLHelper {
     return true
   }
 
+  /**
+   * 创建一个WebGLProgram
+   *  WebGLProgram is a combination of two compiled WebGLShaders consisting of a vertex shader and a fragment shader (both written in GLSL).
+   * @param gl webgl上下文
+   * @returns
+   */
   public static createProgram (gl: WebGLRenderingContext): WebGLProgram {
     const program: WebGLProgram | null = gl.createProgram()
     if (program === null) {
@@ -185,6 +177,16 @@ export class GLHelper {
     return program
   }
 
+  /**
+   * 将顶点着色器和片段着色器链接成一个GPU可执行文件
+   * @param gl webgl上下文
+   * @param program WebGLProgram
+   * @param vsShader 顶点着色器
+   * @param fsShader 片段着色器
+   * @param beforeProgramLink 链接前勾子
+   * @param afterProgramLink 连接后勾子
+   * @returns 是否链接成功
+   */
   public static linkProgram (
     gl: WebGLRenderingContext, // 渲染上下文对象
     program: WebGLProgram, // 链接器对象
@@ -238,6 +240,12 @@ export class GLHelper {
     return true
   }
 
+  /**
+   * 获取当前active状态的atrributes
+   * @param gl webgl上下文
+   * @param program WebGLProgram
+   * @param out 用来存储输出结果
+   */
   public static getProgramActiveAttribs (gl: WebGLRenderingContext, program: WebGLProgram, out: GLAttribMap): void {
     // 获取当前active状态的attribute和uniform的数量
     // 很重要一点，active_attributes/uniforms必须在link后才能获得
@@ -253,6 +261,12 @@ export class GLHelper {
     }
   }
 
+  /**
+   * 获取当前active状态的uniforms
+   * @param gl webgl上下文
+   * @param program WebGLProgram
+   * @param out 用来存储输出结果
+   */
   public static getProgramAtciveUniforms (gl: WebGLRenderingContext, program: WebGLProgram, out: GLUniformMap): void {
     const uniformsCount: number = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS)
     for (let i = 0; i < uniformsCount; i++) {
@@ -266,6 +280,11 @@ export class GLHelper {
     }
   }
 
+  /**
+   * 创建WebGLBuffer
+   * @param gl webgl上下文
+   * @returns
+   */
   public static createBuffer (gl: WebGLRenderingContext): WebGLBuffer {
     const buffer: WebGLBuffer | null = gl.createBuffer()
     if (buffer === null) {
@@ -274,6 +293,11 @@ export class GLHelper {
     return buffer
   }
 
+  /**
+   * 获取颜色Buffer数据
+   * @param gl webgl上下文
+   * @returns
+   */
   public static getColorBufferData (gl: WebGLRenderingContext): Uint8Array {
     const pixels: Uint8Array = new Uint8Array(gl.drawingBufferWidth * gl.drawingBufferHeight * 4)
     gl.readPixels(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight, gl.RGBA, gl.UNSIGNED_BYTE, pixels)
