@@ -2,7 +2,8 @@ import { GLAttribBits, GLAttribState } from './WebGLAttribState'
 import { Vec4 as vec4, Vec2 as vec2, Vec3 as vec3, Mat4 as mat4, Quat as quat } from '../common/math/TSM'
 import { GLTexture } from './WebGLTexture'
 import { GLShaderSource } from './WebGLShaderSource'
-import { GLHelper, EShaderType, GLAttribMap, GLUniformMap } from './WebGLHepler'
+import { GLHelper, GLAttribMap, GLUniformMap } from './WebGLHepler'
+import { EShaderType } from '../common/interface/webgl'
 /*
 比较特别的是Texture Unit
 glActiveTexture 激活某个TextureUnit

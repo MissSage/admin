@@ -41,7 +41,6 @@ export class CanvasMouseEvent extends CanvasInputEvent {
     super(type, altKey, ctrlKey, shiftKey)
     this.canvasPosition = canvasPos
     this.button = button
-    console.log(this.button)
   }
 }
 
