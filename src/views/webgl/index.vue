@@ -44,7 +44,7 @@ export default defineComponent({
       fps: 0,
       tris: 0,
       verts: 0,
-      appIndex: 0,
+      appIndex: EAPPName.BASICWEBGL,
       config: {
         label: '请选择应用',
         field: 'appname',
@@ -74,7 +74,7 @@ export default defineComponent({
     }
     onMounted(() => {
       canvas.value &&
-      runApplication(EAPPName.ROTATINGCUBE, canvas.value, frameCallback)
+      runApplication(state.appIndex, canvas.value, frameCallback)
     })
     return {
       ...toRefs(state),

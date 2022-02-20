@@ -16,7 +16,13 @@ export class BasicWebGLApplication extends Application {
     public coordSystem4s: GLCoordSystem[];
 
     // 增加视矩阵和投影矩阵
+    /**
+     * 投影矩阵
+     */
     public projectMatrix: Mat4;
+    /**
+     * 视矩阵
+     */
     public viewMatrix: Mat4;
     public viewProjectMatrix: Mat4
 
@@ -67,7 +73,7 @@ export class BasicWebGLApplication extends Application {
    
        void main(void){
            gl_Position = uMVPMatrix * vec4(aPosition,1.0);
-           gl_PointSize = 10.0;
+           gl_PointSize = 5.0;
            vColor = aColor;
        }
        `;
@@ -91,7 +97,7 @@ export class BasicWebGLApplication extends Application {
 
     // BasicWebGLApplication增加EBO
     public evbo: WebGLBuffer; // e表示gl.ELEMENT_ARRAY_BUFFER
-    public indices: TypedArrayList<Uint16Array>; // 索引缓存的数据
+    public indexes: TypedArrayList<Uint16Array>; // 索引缓存的数据
 
     public constructor (canvas: HTMLCanvasElement) {
       // 1、创建WebGLRenderingContext上下文渲染对象
@@ -195,15 +201,15 @@ export class BasicWebGLApplication extends Application {
       this.ivbo = GLHelper.createBuffer(this.gl)
 
       // 初始化evbo
-      this.indices = new TypedArrayList(Uint16Array, 6)
+      this.indexes = new TypedArrayList(Uint16Array, 6)
       this.evbo = GLHelper.createBuffer(this.gl)
 
       // this.gl.frontFace(this.gl.CCW);
       this.gl.enable(this.gl.CULL_FACE)
       // this.gl.cullFace(this.gl.BACK);
 
-      this.coordSystem9s = this.makeViewportCoordSystems()
-      this.coordSystem4s = this.makeViewportCoordSystems(2)
+      this.coordSystem9s = GLCoordSystem.makeViewportCoordSystems(this.canvas.width, this.canvas.height, 3, 3)
+      this.coordSystem4s = GLCoordSystem.makeViewportCoordSystems(this.canvas.width, this.canvas.height)
     }
 
     /**
@@ -215,18 +221,6 @@ export class BasicWebGLApplication extends Application {
 
       GLHelper.getProgramAtciveUniforms(this.gl, this.program, this.uniformMap)
       console.log('unfiorms = ', JSON.stringify(this.uniformMap))
-    }
-
-    public makeViewportCoordSystems (num: number = 3): GLCoordSystem[] {
-      const coords: GLCoordSystem[] = []
-      const w: number = this.canvas.width / num
-      const h: number = this.canvas.height / num
-      for (let i: number = 0; i < num; i++) {
-        for (let j: number = 0; j < num; j++) {
-          coords.push(new GLCoordSystem([i * w, j * h, w, h]))
-        }
-      }
-      return coords
     }
 
     public render9Viewports (): void {
@@ -280,10 +274,18 @@ export class BasicWebGLApplication extends Application {
       // this.render4Viewports();
     }
 
+    /**
+     * 通过交错数组画形状
+     * @param first 从第几个点开始
+     * @param count 总共几个点
+     * @param mode 三角形（TRIANGLES）或三角带（TRIANGLE_STRIP）
+     */
     public drawRectByInterleavedVBO (first: number, count: number, mode: number = this.gl.TRIANGLES): void {
       // 重用动态数组，因此调用clear方法，将当前索引reset到0位置
       this.verts.clear()
-      // 声明interleaved存储的顶点数组。
+      /**
+       * 声明interleaved存储的顶点数组。
+       */
       let data: number[]
 
       if (mode === this.gl.TRIANGLES) {
@@ -317,9 +319,11 @@ export class BasicWebGLApplication extends Application {
         data
       )
 
+      // 将ivbo设置为当前激活的buffer对象，后续buffer相关操作都是针对ivbo进行的
       this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.ivbo)
       // 使用我们自己实现的动态类型数组的subArray方法，该方法不会重新创建Float32Array对象
       // 而是返回一个子数组的引用，这样效率比较高
+      // 因为要复用ivbo对象，所以使用DYNAMIC_DRAW
       this.gl.bufferData(this.gl.ARRAY_BUFFER, this.verts.subArray(), this.gl.DYNAMIC_DRAW)
 
       // vertexAttribPointer方法参数说明：
@@ -356,6 +360,14 @@ export class BasicWebGLApplication extends Application {
       this.gl.bindBuffer(this.gl.ARRAY_BUFFER, null)
     }
 
+    /**
+     * 使用顶点和索引缓存方式绘制几何
+     * @param byteOffset
+     * @param count 共几个点
+     * @param mode 模式
+     * @param isCCW
+     * @returns
+     */
     public drawRectByInterleavedVBOWithEBO (byteOffset: number, count: number, mode: number = this.gl.TRIANGLES, isCCW: boolean = true): void {
       // 重用动态数组，因此调用clear方法，将当前索引reset到0位置
       this.verts.clear()
@@ -370,17 +382,17 @@ export class BasicWebGLApplication extends Application {
         ]
       )
       // 清空索引类型数组
-      this.indices.clear()
+      this.indexes.clear()
       if (mode === this.gl.TRIANGLES || this.gl.TRIANGLE_FAN) {
         // 如果是TRIANGLES或TRIANGLE_FAN方式，我们的索引按照TRIANGLE_FAN方式排列
         if (isCCW === true) {
-          this.indices.pushArray([0, 1, 2, 0, 2, 3])
+          this.indexes.pushArray([0, 1, 2, 0, 2, 3])
         } else {
-          this.indices.pushArray([0, 2, 1, 0, 3, 2])
+          this.indexes.pushArray([0, 2, 1, 0, 3, 2])
         }
       } else if (mode === this.gl.TRIANGLE_STRIP) {
         // 如果是TRIANGLE_STRIP方式
-        this.indices.pushArray([0, 1, 2, 2, 3, 0])
+        this.indexes.pushArray([0, 1, 2, 2, 3, 0])
       } else {
         // 简单起见，本方法就只演示三角形相关内容。
         return
@@ -397,7 +409,7 @@ export class BasicWebGLApplication extends Application {
 
       // 绑定EBO
       this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.evbo)
-      this.gl.bufferData(this.gl.ELEMENT_ARRAY_BUFFER, this.indices.subArray(), this.gl.DYNAMIC_DRAW)
+      this.gl.bufferData(this.gl.ELEMENT_ARRAY_BUFFER, this.indexes.subArray(), this.gl.DYNAMIC_DRAW)
 
       this.gl.useProgram(this.program)
       const mat: Mat4 = new Mat4().scale(new Vec3([2, 2, 2]))
