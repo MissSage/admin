@@ -14,7 +14,7 @@ export default defineConfig({
   },
   envDir: 'root/env',
   server: {
-    port: 3456,
+    port: 3000,
     host: '0.0.0.0',
     cors: true
   },
@@ -28,6 +28,20 @@ export default defineConfig({
           primary: '#fff'
         }
       }
+    },
+    postcss: {
+      plugins: [
+        {
+          postcssPlugin: 'internal:charset-removal',
+          AtRule: {
+            charset: (atRule) => {
+              if (atRule.name === 'charset') {
+                atRule.remove()
+              }
+            }
+          }
+        }
+      ]
     }
   },
   build: {
