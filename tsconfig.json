@@ -4,24 +4,36 @@
     // "esModuleInterop": true,
     // "experimentalDecorators": true,
     "importHelpers": true,
-    "isolatedModules": false,
-    "lib": ["esnext", "dom"],
+    // "isolatedModules": false,
+    "lib": [
+      "esnext",
+      "dom"
+    ],
     "jsx": "preserve",
     "module": "esnext",
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
     "noImplicitAny": true,
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": [
+        "./src/*"
+      ]
     },
-    "preserveConstEnums": true,
+    // "preserveConstEnums": true,
     "resolveJsonModule": true,
-    "sourceMap": true,
+    // "sourceMap": true, // default false
     "strict": true,
     "target": "esnext",
-    "types": ["vite/client"],
-
-    "useDefineForClassFields": true
+    "types": [
+      "vite/client"
+    ],
+    // "useDefineForClassFields": true // default true
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "node_modules/element-plus/global.d.ts"
+  ]
 }

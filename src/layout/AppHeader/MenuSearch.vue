@@ -6,7 +6,7 @@
     placeholder="请输入内容"
     value-key="menu_name"
     :fetch-suggestions="querySearch"
-    @select="handleSelect"
+    @select="(menu:any)=>handleSelect(menu)"
   >
     <template #default="{ item }">
       <router-link

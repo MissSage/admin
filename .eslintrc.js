@@ -37,18 +37,6 @@ module.exports = {
     }],
     'vue/singleline-html-element-content-newline': 0,
     'vue/multi-word-component-names': 0,
-    // 'array-element-newline': [
-    //   'error',
-    //   {
-    //     minItems: 2
-    //   }
-    // ],
-    // 'array-bracket-newline': [
-    //   'error',
-    //   {
-    //     minItems: 2
-    //   }
-    // ],
     'object-property-newline': 2,
     'vue/html-self-closing': 0,
     'no-unused-vars': [

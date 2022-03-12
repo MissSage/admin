@@ -9,7 +9,7 @@ import { onMounted, onUnmounted, ref } from '@vue/runtime-core'
 import type { PropType } from 'vue'
 import Sortable from 'sortablejs'
 
-const draggableContainer = ref<HTMLDivElement | null>(null)
+const draggableContainer = ref<HTMLDivElement>()
 
 const props = defineProps({
   modelValue: {
@@ -26,7 +26,7 @@ interface EmitsType {
   (e: 'update:model-value', value: any[]): void
 }
 const emit = defineEmits<EmitsType>()
-const sortable = ref<Sortable | null>(null)
+const sortable = ref<InstanceType<typeof Sortable>>()
 
 onMounted(() => {
   initDraggable()

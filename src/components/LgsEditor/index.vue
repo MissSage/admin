@@ -19,7 +19,7 @@ interface EmitsType {
 
 const emit = defineEmits<EmitsType>()
 
-const editor = ref<InstanceType<typeof E> | null>(null)
+const editor = ref<InstanceType<typeof E>>()
 
 const unWatchModelValue = watch(() => props.modelValue, () => {
   // 操作 DOM 的方式修改内容

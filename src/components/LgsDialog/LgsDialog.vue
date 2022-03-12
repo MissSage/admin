@@ -1,5 +1,6 @@
 <template>
   <el-dialog
+    v-model="modelValue"
     ref="dialog"
     width="50%"
     :close-on-click-modal="false"
@@ -30,13 +31,17 @@ import type { IElDialog } from '@/types/element-plus'
 
 // const emit = defineEmits<EmitsType>()
 const props = defineProps({
+  modelValue: {
+    type: Boolean,
+    default: false
+  },
   confirm: {
     type: Function as PropType<() => Promise<void>>,
     default: () => Promise.resolve()
   }
 })
 
-const dialog = ref<IElDialog | null>(null)
+const dialog = ref<IElDialog>()
 const confirmLoading = ref(false)
 
 const handleCancel = () => {

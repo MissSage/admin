@@ -1,7 +1,7 @@
 import { NormalOption } from './global'
 
 // type FormItemType = 'text'|'textarea' | 'number' | 'date'|'radio'|'checkbox'|'select'|'cascader' | 'switch' | 'img' | 'excel' | 'file' | 'editor' | 'table' | 'custom'
-type SizeType = 'large' | 'medium' | 'small' | 'mini'
+type SizeType = 'large' | 'small' | 'default'
 
 export type TableColum = {
   title: string

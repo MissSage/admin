@@ -1,15 +1,12 @@
 <template>
-  <label v-if="config.type === 'text'" class="readonly-input">
-    {{ modelValue }}
-  </label>
+  <label v-if="config.type === 'text'" class="readonly-input">{{ modelValue }}</label>
 
   <el-input
     v-else-if="config.type === 'input'"
     v-show="!config.hidden"
     v-model="value"
-    size="medium"
     clearable
-    :placeholder="config.placeholder||'请输入'"
+    :placeholder="config.placeholder || '请输入'"
     :disabled="config.readonly || config.disabled"
     @change="config.onChange"
     @keyup.enter="config.onKeyUp"
@@ -19,10 +16,9 @@
     v-show="!config.hidden"
     v-model="value"
     type="password"
-    size="medium"
     clearable
     :disabled="config.readonly || config.disabled"
-    :placeholder="config.placeholder||'请输入'"
+    :placeholder="config.placeholder || '请输入'"
   />
   <el-input
     v-else-if="config.type === 'textarea'"
@@ -35,7 +31,7 @@
       minRows: config.minRow || 2,
       maxRows: config.maxRow || 10,
     }"
-    :placeholder="config.placeholder||'请输入'"
+    :placeholder="config.placeholder || '请输入'"
   />
   <el-input-number
     v-else-if="config.type === 'number'"
@@ -46,9 +42,8 @@
     :controls-position="config.controlPosition"
   />
   <el-select
-    v-else-if="config.type==='select'"
+    v-else-if="config.type === 'select'"
     v-show="!config.hidden"
-    size="medium"
     style="width: 100%"
     v-model="value"
     filterable
@@ -56,13 +51,13 @@
     :allow-create="config.allowCreate"
     :disabled="config.readonly || config.disabled"
     :multiple="config.multiple"
-    :placeholder="config.placeholder||'请选择'"
+    :placeholder="config.placeholder || '请选择'"
     :remote="config.remote"
-    :remote-method="(val:any) => { remoteSearch(val); }"
+    :remote-method="(val: any) => { remoteSearch(val); }"
     @change="handleChange"
   >
     <el-option
-      v-for="(obj,i) in config.options"
+      v-for="(obj, i) in config.options"
       :key="i"
       :label="obj.label"
       :value="obj.value"
@@ -71,7 +66,6 @@
   <el-cascader
     v-else-if="config.type === 'cascader'"
     clearable
-    size="medium"
     style="width: 100%"
     v-model="value"
     :disabled="config.readonly || config.disabled"
@@ -98,7 +92,7 @@
     @change="config.onChange"
   >
     <el-radio
-      v-for="(kv,i) in config.options"
+      v-for="(kv, i) in config.options"
       :key="i"
       :label="kv.value"
     >
@@ -122,30 +116,28 @@
     </el-checkbox>
   </el-checkbox-group>
   <el-date-picker
-    v-else-if="config.type==='date'||config.type==='datetime'"
+    v-else-if="config.type === 'date' || config.type === 'datetime'"
     clearable
     :disabled="config.readonly || config.disabled"
     style="width: 100%"
-    size="medium"
     v-model="value"
     @change="config.onChange"
     :type="config.type"
-    :placeholder="config.placeholder||'请选择'"
-    :disabled-date="(val:any) => getDateOptions(val)"
-    :value-format="config.type==='date'?'YYYY-MM-DD':'YYYY-MM-DD HH:mm:ss'"
+    :placeholder="config.placeholder || '请选择'"
+    :disabled-date="(val: any) => getDateOptions(val)"
+    :value-format="config.type === 'date' ? 'YYYY-MM-DD' : 'YYYY-MM-DD HH:mm:ss'"
   />
   <el-date-picker
-    v-else-if="config.type==='daterange'||config.type==='datetimerange'"
+    v-else-if="config.type === 'daterange' || config.type === 'datetimerange'"
     v-model="value"
     style="width: 100%"
-    size="medium"
     clearable
     :type="config.type"
-    :range-separator="config.rangeSeparator||'到'"
+    :range-separator="config.rangeSeparator || '到'"
     :disabled="config.readonly || config.disabled"
-    :placeholder="config.placeholder||'请选择'"
-    :disabled-date="(val:any) => getDateOptions(val)"
-    :value-format="config.type==='daterange'?'YYYY-MM-DD':'YYYY-MM-DD HH:mm:ss'"
+    :placeholder="config.placeholder || '请选择'"
+    :disabled-date="(val: any) => getDateOptions(val)"
+    :value-format="config.type === 'daterange' ? 'YYYY-MM-DD' : 'YYYY-MM-DD HH:mm:ss'"
     @change="config.onChange"
   />
   <el-time-picker
@@ -155,7 +147,6 @@
     :format="config.format"
     :is-range="config.isRange"
     style="width: 100%"
-    size="medium"
   />
 
   <lgs-editor
@@ -201,7 +192,7 @@ export default defineComponent({
     }
   },
   setup (props, ctx) {
-    const formatModelValue = (value:String|Number|Boolean|Array<any>|Object) => {
+    const formatModelValue = (value: String | Number | Boolean | Array<any> | Object) => {
       switch (props.config.type) {
         case 'cascader':
         case 'checkbox':
@@ -231,12 +222,12 @@ export default defineComponent({
       }
     }
     const state = reactive<{
-      value:any
-      }>({
-        value: formatModelValue(props.modelValue)
-      })
+      value: any
+    }>({
+      value: formatModelValue(props.modelValue)
+    })
 
-    const handleChange = (val:any) => {
+    const handleChange = (val: any) => {
       console.log(val)
 
       props.config.onChange && props.config.onChange(val)
@@ -244,7 +235,7 @@ export default defineComponent({
       ctx.emit('change', val)
     }
     // 远程搜索(打开弹出框时应该禁止搜索)
-    const remoteSearch = async (val:any) => {
+    const remoteSearch = async (val: any) => {
       if (props.config.type === 'select') {
         const res = props.config.remoteMethod && await props.config.remoteMethod(val)
         if (res) {
@@ -278,7 +269,7 @@ export default defineComponent({
       //   this.formRules[item.point.x].splice(item.point.y, 1, item)
       // })
     }
-    const getDateOptions = (date:any) => {
+    const getDateOptions = (date: any) => {
       const item = props.config as ILgsFormDate | ILgsFormDateRange
       // 2021.07.17设置时间可选范围
       if ((!item.min && !item.max) || !date) {
@@ -292,7 +283,7 @@ export default defineComponent({
         compareDate(date, item.min) || !compareDate(date, item.max)
       )
     }
-    const compareDate = (date1:any, date2:any) => {
+    const compareDate = (date1: any, date2: any) => {
       if (!date2) {
         return true
       }
@@ -303,7 +294,7 @@ export default defineComponent({
     }
     watch(
       () => state.value,
-      (val:string) => {
+      (val: string) => {
         ctx.emit('update:model-value', val)
       }, {
 

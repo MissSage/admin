@@ -5,7 +5,6 @@
       :rules="rules"
       ref="form"
       :model="user"
-      size="medium"
       @submit.prevent="handleSubmit"
     >
       <div class="login-form__header">

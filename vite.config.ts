@@ -30,6 +30,7 @@ export default defineConfig({
       }
     },
     postcss: {
+      map: false,
       plugins: [
         {
           postcssPlugin: 'internal:charset-removal',
@@ -45,6 +46,6 @@ export default defineConfig({
     }
   },
   build: {
-    sourcemap: 'inline'
+    sourcemap: false
   }
 })

@@ -53,7 +53,7 @@ interface EmitsType {
 }
 const emit = defineEmits<EmitsType>()
 const refEditor = ref<Element>()
-const editor = ref<InstanceType<typeof E> | null>(null)
+const editor = ref<InstanceType<typeof E>>()
 const initEditor = () => {
   editor.value = new E(refEditor.value)
 
@@ -116,7 +116,7 @@ onMounted(() => {
   initEditor()
 })
 onUnmounted(() => {
-  editor.value = null
+  editor.value = undefined
 })
 </script>
 

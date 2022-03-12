@@ -1,5 +1,5 @@
 
-import { cloneWith, max } from 'lodash'
+import { max } from 'lodash-es'
 import { IFollowTarget, ILgsLayer, IRectInfo } from '../type'
 export default class helper {
   /**

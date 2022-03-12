@@ -27,8 +27,8 @@
 </template>
 <script lang='ts'>
 import { defineComponent, onMounted, reactive, ref, toRefs } from 'vue'
-import { Application } from './common/Application'
-import { runApplication, EAPPName } from './Main'
+import { Application } from '@/lib/webgl/common/Application'
+import { runApplication, EAPPName } from '@/lib/webgl/Main'
 import LgsFormItem from '@/components/LgsFormItem/index.vue'
 import { ILgsFormItem } from '@/components/LgsFormItem/type'
 export default defineComponent({

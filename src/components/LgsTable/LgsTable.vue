@@ -268,7 +268,7 @@ export default defineComponent({
     },
     loadTreeChildren: {
     // 树形结构加载子节点
-      type: Function,
+      type: Function as PropType<(...args:any[])=>any>,
       default: (tree:any, treeNode:any, resolve:any) => {
         return resolve([])
       }
@@ -629,10 +629,11 @@ export default defineComponent({
       column.click && column.click(row, column, event)
       event.stopPropagation()
     }
-    const initIndex = ({ row, rowIndex }:any) => {
+    const initIndex = (data:any) => {
       if (props.index) {
-        row.elementIndex = rowIndex
+        data.row.elementIndex = data.rowIndex
       }
+      return data.rowIndex % 2 !== 0 ? 'even-row' : ''
       // if (rowIndex%2!==0) {
       //  return "even-row";
       // }
@@ -1169,7 +1170,7 @@ export default defineComponent({
       // 见https://day.js.org/docs/zh-CN/display/format
       return column.edit.type === 'date' ? 'YYYY-MM-DD' : 'YYYY-MM-DD HH:mm:ss'
     }
-    function userSelect (selection:any, row:any) {
+    function userSelect (selection:any, row?:any) {
       state.selectRows = selection
       if (!props.single) {
         ctx.emit('rowChange', { row, selection })
