@@ -31,7 +31,7 @@ export default defineConfig({
       {
         name: 'element-plus',
         var: 'ElementPlus',
-        css: 'https://cdn.jsdelivr.net/npm/element-plus/dist/index.css',
+        css: 'https://cdn.jsdelivr.net/npm/element-plus@2.1.0/dist/index.css',
         path: 'https://cdn.jsdelivr.net/npm/element-plus@2.1.0'
       }
     ]
