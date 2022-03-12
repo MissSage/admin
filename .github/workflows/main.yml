@@ -56,7 +56,7 @@ jobs:
           cd /usr/local/nginx/html
           rm -rf dist.tgz
           rm -rf dist
-          wget https://github.com/ligoushi/vite-ts-quick/releases/latest/download/release.tgz -O dist.tgz -t2 -T20
+          wget https://github.com/ligoushi/admin/releases/latest/download/release.tgz -O dist.tgz -t2 -T20
           tar zxvf dist.tgz
           cd /usr/local/nginx/sbin
           ./nginx -s reload
