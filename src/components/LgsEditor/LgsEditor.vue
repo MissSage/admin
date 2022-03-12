@@ -5,8 +5,7 @@
 <script lang="ts" setup>
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
-import { onMounted, onUnmounted, ref, watch } from 'vue'
-import { PropType } from 'vue-demi'
+import { onMounted, onUnmounted, ref, watch, PropType } from 'vue'
 import E from 'wangeditor'
 const props = defineProps({
   url: {
