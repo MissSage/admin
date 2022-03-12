@@ -2,7 +2,7 @@ import { CameraApplication } from '../lib/CameraApplication'
 import { MathHelper, EAxisType } from '../common/math/MathHelper'
 import { DrawHelper, CoordSystem } from '../lib/DrawHelper'
 import { Mat4, Vec3, Vec4 } from '../common/math/TSM'
-import { CanvasKeyBoardEvent } from '../common/Application'
+import { CanvasKeyBoardEvent } from '../lib/Event'
 import { GLCoordSystem } from '../webgl/WebGLCoordSystem'
 
 export class CoordSystemApplication extends CameraApplication {

@@ -29,28 +29,12 @@ export const routes: RouteRecordRaw[] = [{
       }
     },
     {
-      path: '/oneMap',
-      name: 'oneMap',
-      component: () => import('@/views/oneMap/index.vue'),
-      meta: {
-        title: '一张图',
-        icon: 'icon-earth'
-      }
-    },
-    {
       path: '/draggableForm',
       name: 'draggableForm',
       component: () => import('@/views/draggableForm/index.vue'),
       meta: {
         title: '可视化编辑器',
         icon: 'icon-drag'
-      }
-    },
-    {
-      path: '/onemap/one',
-      component: () => import('@/components/Map/MoreScreen.vue'),
-      meta: {
-        hidden: true
       }
     },
     {
