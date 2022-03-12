@@ -10,30 +10,30 @@ export default defineConfig({
   }),
   importToCDN({
     modules: [
-      autoComplete('vue'),
-      autoComplete('axios'),
-      autoComplete('lodash'),
-      {
-        name: 'vue',
-        var: 'Vue',
-        path: 'https://cdn.jsdelivr.net/npm/vue@next'
-      },
-      {
-        name: 'vuex',
-        var: 'Vuex',
-        path: 'https://cdn.jsdelivr.net/npm/vuex@4.0.2/dist/vuex.global.prod.js'
-      },
-      {
-        name: 'vue-router',
-        var: 'VueRouter',
-        path: 'https://cdn.jsdelivr.net/npm/vue-router@4.0.14/dist/vue-router.global.prod.js'
-      },
-      {
-        name: 'element-plus',
-        var: 'ElementPlus',
-        css: 'https://cdn.jsdelivr.net/npm/element-plus@2.1.0/dist/index.css',
-        path: 'https://cdn.jsdelivr.net/npm/element-plus@2.1.0'
-      }
+      // autoComplete('vue'),
+      // autoComplete('axios'),
+      // autoComplete('lodash'),
+      // {
+      //   name: 'vue',
+      //   var: 'Vue',
+      //   path: 'https://cdn.jsdelivr.net/npm/vue@next'
+      // },
+      // {
+      //   name: 'vuex',
+      //   var: 'Vuex',
+      //   path: 'https://cdn.jsdelivr.net/npm/vuex@4.0.2/dist/vuex.global.prod.js'
+      // },
+      // {
+      //   name: 'vue-router',
+      //   var: 'VueRouter',
+      //   path: 'https://cdn.jsdelivr.net/npm/vue-router@4.0.14/dist/vue-router.global.prod.js'
+      // }
+      // {
+      //   name: 'element-plus',
+      //   var: 'ElementPlus',
+      //   css: 'https://cdn.jsdelivr.net/npm/element-plus@2.1.0/dist/index.css',
+      //   path: 'https://cdn.jsdelivr.net/npm/element-plus@2.1.0'
+      // }
     ]
   })
   ],
