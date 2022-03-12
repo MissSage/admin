@@ -12,6 +12,11 @@
       <el-main :class="theme" id="app-main">
         <router-view />
       </el-main>
+      <el-footer>
+        <a href="https://beian.miit.gov.cn">
+          <img :src="getImageUrl('备案图标.png')" alt="" />蜀ICP备20000164号
+        </a>
+      </el-footer>
     </el-container>
   </el-container>
 </template>
@@ -20,6 +25,7 @@
 import AppHeader from './AppHeader/index.vue'
 import AppMenu from './AppMenu/index.vue'
 import { provide, ref } from 'vue'
+import { getImageUrl } from '@/utils/helper'
 const theme = ref<string>('darkblue')
 const themes = ref<string[]>(['darkblue', 'dark', 'primary'])
 const index = ref<number>(0)

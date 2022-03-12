@@ -25,7 +25,8 @@
     "strict": true,
     "target": "esnext",
     "types": [
-      "vite/client"
+      "vite/client",
+      "element-plus/global"
     ],
     // "useDefineForClassFields": true // default true
   },
@@ -33,7 +34,6 @@
     "src/**/*.ts",
     "src/**/*.d.ts",
     "src/**/*.tsx",
-    "src/**/*.vue",
-    "node_modules/element-plus/global.d.ts"
+    "src/**/*.vue"
   ]
 }
