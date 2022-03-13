@@ -24,6 +24,7 @@ import { getImageUrl } from '@/utils/helper'
   &-img,&-text{
     display: inline-block;
     vertical-align: middle;
+    color: #929292;
   }
 }
 </style>

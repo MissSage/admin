@@ -1,3 +1,40 @@
+@forward 'element-plus/theme-chalk/src/common/var.scss'with ( // colors
+  $colors: ( // colors override
+    'white': #25465e,
+    'black': #000000,
+    'primary': ('base': #799ab3,
+    ),
+    'success': ('base': #67c23a,
+    ),
+    'warning': ('base': #e6a23c,
+    ),
+    'danger': ('base': #f56c6c,
+    ),
+    'error': ('base': #f56c6c,
+    ),
+    'info': ('base': #909399,
+    ),
+  ),
+  $text-color: ( // textcolor override
+    'primary': #ffffff,
+    'regular': #dddddd,
+    'secondary': #bbbbbb,
+    'placeholder': #999999,
+  ),
+  $border-color: ( // bordercolor override
+    'base': #456379,
+    'light': #456379,
+    'lighter': #456379,
+    'extra-light': #456379,
+  ),
+  $bg-color: #456379,
+);
 
-@import 'element-plus/dist/index.css';
+
+@use "element-plus/theme-chalk/src/index.scss"as *;
+@import '../themes.scss';
 @import './el-footer.scss';
+@import './el-header.scss';
+@import './el-main.scss';
+@import './el-aside.scss';
+

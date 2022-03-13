@@ -14,5 +14,8 @@ export const mutations = {
   setMenus: (state:State, payload: IMenu | IMenu[]) => {
     state.menus = payload
     setItem(MENU, state.menus)
+  },
+  changeTheme: (state:State) => {
+    state.theme = !state.theme
   }
 }

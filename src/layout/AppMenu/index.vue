@@ -4,8 +4,8 @@
     :unique-opened="false"
     :default-active="$route.path"
     class="el-menu"
-    background-color="#304156"
-    text-color="rgba(255, 255, 255, 0.7)"
+    :background-color="theme==='dark'?'#0e3c52':'#4b4b4b'"
+    text-color="#ffffff"
     active-text-color="#2d8cf0"
     router
   >
@@ -21,7 +21,10 @@ import MenuItem from './MenuItem.vue'
 import { routes } from '@/router/MenuRoutes'
 import { IMenu } from '@/api/types/common'
 import { RouteRecordRaw } from 'vue-router'
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
+import { useStore } from '@/store'
+const store = useStore()
+const theme = computed(() => store.getters._getTheme)
 const menus = ref<IMenu[]>([])
 const filterMenus = (routes:RouteRecordRaw[]) => {
   const menus = routes.filter(item => !(item.meta?.hidden)).map(item => {

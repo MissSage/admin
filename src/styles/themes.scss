@@ -1,40 +1,37 @@
 // Primary color palette 
 $themes:( // newtral  
-  neutral:( // xdark  
-    xdark: #2C3643,
-    dark: #3B444F,
-    base: #67747C,
-    light: #99A9B3,
-    xlight: #DBE6EC),
+  dark:( // xdark  
+    xdark: #00374c,
+    dark: #0e3c52,
+    base: #1e4963,
+    light: #305368,
+    xlight: #afc1ca),
   primary:( // dark  
-    xdark: #041c3b,
-    dark: #103664,
-    base: #1452af,
-    light: #2d89d4,
-    xlight: #85c2e4,
-    red: #FA5E5B,
-    green: #16C98D,
-    orange: #FFC83F,
-    yellow: #FEEF6D,
+    xdark: #464646,
+    dark: #4b4b4b,
+    base: #b1b1b1,
+    light: #e6e6e6,
+    xlight: #ffffff,
+    // red: #FA5E5B,
+    // green: #16C98D,
+    // orange: #FFC83F,
+    // yellow: #FEEF6D,
   ));
 
 @each $themeName,
 $theme in $themes {
   .#{$themeName} {
+    a {
+      color: map-get($map: $theme, $key: xlight)
+    }
+
     color: map-get($theme, xlight);
     background-color: map-get($theme, dark);
 
-  }
-
-  .#{$themeName}-drag--header {
-    background-color: map-get($theme, xdark);
-  }
-
-  .#{$themeName}-drag--main {
-    background-color: map-get($theme, base);
-  }
-
-  .#{$themeName}-drag--footer {
-    background-color: map-get($theme, base);
+    // a {
+    //   color: map-get($theme, xlight);
+    //   text-decoration: none;
+    //   cursor: pointer;
+    // }
   }
 }

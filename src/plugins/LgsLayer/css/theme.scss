@@ -2,12 +2,6 @@
 
 @each $themeName,
 $theme in $themes {
-  .#{''+$themeName} {
-    color: map-get($theme, xlight);
-    background-color: map-get($theme, base);
-
-  }
-
   .#{''+$themeName}-drag--header {
     background-color: map-get($theme, deactive);
     color:map-get($theme, light )

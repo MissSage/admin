@@ -6,4 +6,5 @@ export interface State{
     token: string;
 } & IUserInfo) | null,
   menus:IMenu | IMenu[]
+  theme:boolean
 }

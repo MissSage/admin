@@ -1,14 +1,6 @@
 // Primary color palette 
-$themes:( // newtral  
-  dark:( // dark  
-    deactive:#737577d7,
-    xdark: #2C3643,
-    dark: #3B444F,
-    base: #67747C,
-    light: #99A9B3,
-    xlight: #DBE6EC),
-  darkblue:( // darkblue  
-    deactive:#516170d7,
+$themes:( // dark 
+  dark:(deactive:#516170d7,
     xdark: #041c3b,
     dark: #083163,
     base: #225186,

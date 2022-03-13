@@ -8,6 +8,7 @@
     "lint": "eslint ./src/**/*.{js,jsx,vue,ts,tsx} --fix"
   },
   "dependencies": {
+    "@element-plus/icons-vue": "^1.1.1",
     "axios": "^0.26.1",
     "element-plus": "^2.1.0",
     "lodash-es": "^4.17.21",

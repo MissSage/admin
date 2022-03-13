@@ -1,13 +1,7 @@
-.el-footer {
-  height: 20px;
-  font-size: 12px;
-  text-align: right;
-}
-
 @each $themeName,
 $theme in $themes {
   .#{$themeName} {
-    .el-footer {
+    .el-main {
       background-color: map-get($theme, base);
       color: map-get($theme, xlight)
     }

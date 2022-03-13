@@ -9,7 +9,8 @@ import { mutations } from './mutations'
 export const state:State = {
   isCollapse: false,
   user: getItem<{ token: string } & IUserInfo>(USER),
-  menus: getItem<IMenu>(MENU) || [] as IMenu[]
+  menus: getItem<IMenu>(MENU) || [] as IMenu[],
+  theme: true
 }
 // export type State = typeof state
 export const key:InjectionKey<Store<State>> = Symbol('store')
