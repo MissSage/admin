@@ -1,5 +1,5 @@
 {
-  "name": "vite-vue3-ts-element",
+  "name": "lgs-admin",
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",

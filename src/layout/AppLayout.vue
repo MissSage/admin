@@ -13,9 +13,7 @@
         <router-view />
       </el-main>
       <el-footer>
-        <a href="https://beian.miit.gov.cn">
-          <img :src="getImageUrl('备案图标.png')" alt="" />蜀ICP备20000164号
-        </a>
+        <AppFooter></AppFooter>
       </el-footer>
     </el-container>
   </el-container>
@@ -25,7 +23,7 @@
 import AppHeader from './AppHeader/index.vue'
 import AppMenu from './AppMenu/index.vue'
 import { provide, ref } from 'vue'
-import { getImageUrl } from '@/utils/helper'
+import AppFooter from './AppFooter/index.vue'
 const theme = ref<string>('darkblue')
 const themes = ref<string[]>(['darkblue', 'dark', 'primary'])
 const index = ref<number>(0)
@@ -63,4 +61,5 @@ provide('changeTheme', changeTheme)
     }
   }
 }
+
 </style>

@@ -1,7 +1,8 @@
-import path from 'path'
-import eslintPlugin from 'vite-plugin-eslint'
+import { resolve } from 'path'
+import { readdirSync } from 'fs'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import eslintPlugin from 'vite-plugin-eslint'
 import importToCDN, { autoComplete } from 'vite-plugin-cdn-import'
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -10,6 +11,7 @@ export default defineConfig({
   }),
   importToCDN({
     modules: [
+
       autoComplete('vue'),
       autoComplete('axios'),
       autoComplete('lodash'),
@@ -28,23 +30,24 @@ export default defineConfig({
         var: 'VueRouter',
         path: 'https://cdn.jsdelivr.net/npm/vue-router@4.0.14/dist/vue-router.global.prod.js'
       },
-      {
-        name: 'element-plus',
-        var: 'ElementPlus',
-        css: 'https://cdn.jsdelivr.net/npm/element-plus@2.1.0/dist/index.css',
-        path: 'https://cdn.jsdelivr.net/npm/element-plus@2.1.0'
-      },
+
       {
         name: 'wangeditor',
         var: 'WangEditor',
         path: 'https://cdn.jsdelivr.net/npm/wangeditor@4.7.12/dist/wangEditor.min.js'
+      },
+      {
+        name: 'element-plus',
+        var: 'ElementPlus',
+        // css: 'https://cdn.jsdelivr.net/npm/element-plus@2.1.0/dist/index.css',
+        path: 'https://cdn.jsdelivr.net/npm/element-plus@2.1.0'
       }
     ]
   })
   ],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src')
+      '@': resolve(__dirname, './src')
     }
   },
   envDir: 'root/env',
@@ -57,11 +60,6 @@ export default defineConfig({
     preprocessorOptions: {
       scss: {
         additionalData: '@import "@/styles/variables.scss";'
-      },
-      less: {
-        globalVars: {
-          primary: '#fff'
-        }
       }
     },
     postcss: {
@@ -103,3 +101,20 @@ export default defineConfig({
     include: []
   }
 })
+/**
+ * 获取多入口文件
+ * @returns
+ */
+export function getPages () {
+  const pagePath = resolve(__dirname, './src/pages')
+  const files: string[] = readdirSync(pagePath)
+  const pages: { [key: string]: string } = {
+    main: resolve(__dirname, 'index.html')
+  }
+  for (let i = 0; i < files.length; i++) {
+    const key = files[i].replace('.html', '')
+    if (key === 'index') continue
+    pages[key] = resolve(__dirname, `src/pages/${files[i]}`)
+  }
+  return pages
+}

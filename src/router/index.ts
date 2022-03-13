@@ -1,11 +1,11 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 import nprogress from 'nprogress'
 import 'nprogress/nprogress.css'
 // import { store } from '../store/index'
 import { store } from '@/store'
 import { routes } from './MenuRoutes'
 const router = createRouter({
-  history: createWebHashHistory(), // 路由模式 history
+  history: createWebHistory(), // 路由模式 history
   routes: [
     ...routes,
     {
