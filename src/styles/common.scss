@@ -8,9 +8,11 @@ body {
     width: 100%;
     height: 100%;
 }
-a{
+
+a {
     text-decoration: none;
 }
+
 @each $themeName,
 $theme in $themes {
     .#{$themeName} {
@@ -21,7 +23,7 @@ $theme in $themes {
                 width: 6px;
                 /*高宽分别对应横竖滚动条的尺寸*/
                 height: 6px;
-                background-color: map-get($map: $theme, $key: dark);
+                background-color: map-get($map: $theme, $key:light);
             }
 
             &::-webkit-scrollbar-corner {
@@ -31,7 +33,7 @@ $theme in $themes {
             &::-webkit-scrollbar-thumb {
                 /*滚动条里面小方块*/
                 border-radius: 10px;
-                background: map-get($map: $theme, $key: light);
+                background: map-get($map: $theme, $key: base);
             }
 
             &::-webkit-scrollbar-track {

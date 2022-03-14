@@ -3,12 +3,12 @@ $themes:( // newtral
   dark:( // xdark  
     xdark: #00374c,
     dark: #0e3c52,
-    base: #1e4963,
-    light: #305368,
-    xlight: #afc1ca),
+    base: #365d75,
+    light: #7c8f9b,
+    xlight: #eaeff1),
   primary:( // dark  
-    xdark: #464646,
-    dark: #4b4b4b,
+    xdark: #333333,
+    dark: #383838,
     base: #b1b1b1,
     light: #e6e6e6,
     xlight: #ffffff,
@@ -27,11 +27,5 @@ $theme in $themes {
 
     color: map-get($theme, xlight);
     background-color: map-get($theme, dark);
-
-    // a {
-    //   color: map-get($theme, xlight);
-    //   text-decoration: none;
-    //   cursor: pointer;
-    // }
   }
 }

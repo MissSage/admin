@@ -1,9 +1,7 @@
 <template>
   <el-container :class="theme">
     <el-aside>
-      <el-scrollbar>
-        <AppMenu />
-      </el-scrollbar>
+      <AppMenu />
     </el-aside>
     <el-container>
       <el-header>

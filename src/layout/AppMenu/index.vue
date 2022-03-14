@@ -4,9 +4,6 @@
     :unique-opened="false"
     :default-active="$route.path"
     class="el-menu"
-    :background-color="theme==='dark'?'#0e3c52':'#4b4b4b'"
-    text-color="#ffffff"
-    active-text-color="#2d8cf0"
     router
   >
     <menu-item
@@ -47,15 +44,4 @@ onMounted(() => {
 })
 </script>
 <style lang="scss" scoped>
-  .el-menu {
-    border-right: none;
-  }
-
-  .el-menu:not(.el-menu--collapse) {
-    width: 200px;
-    min-height: 400px;
-  }
-  ::-webkit-scrollbar {
-    display: none;
-  }
 </style>

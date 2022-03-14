@@ -1,3 +1,5 @@
+@import '../themes.scss';
+
 @each $themeName,
 $theme in $themes {
   .#{$themeName} {

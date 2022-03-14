@@ -1,9 +1,0 @@
-@each $themeName,
-$theme in $themes {
-  .#{$themeName} {
-    .el-aside {
-      background-color: map-get($theme, dark);
-      color: map-get($theme, xlight)
-    }
-  }
-}

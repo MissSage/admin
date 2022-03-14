@@ -1,0 +1,715 @@
+@use 'sass:math';
+@use 'sass:map';
+
+@forward 'element-plus/theme-chalk/src/common/var.scss'with ( // Color
+  $colors: ('white': #ffffff,
+    'black': #000000,
+    'primary': ('base': #409eff,
+    ),
+    'success': ('base': #67c23a,
+    ),
+    'warning': ('base': #e6a23c,
+    ),
+    'danger': ('base': #f56c6c,
+    ),
+    'error': ('base': #f56c6c,
+    ),
+    'info': ('base': #909399,
+    ),
+  ),
+
+  // $text-color: ('primary': #303133,
+  //   'regular': #606266,
+  //   'secondary': #909399,
+  //   'placeholder': #c0c4cc,
+  // ),
+  $text-color: ('primary': #f2f2f2,
+    'regular': #e2e2e2,
+    'secondary': #c0c0c0,
+    'placeholder': #b1b1b1,
+  ),
+  $border-color: ('base': #dcdfe6,
+    'light': #e4e7ed,
+    'lighter': #ebeef5,
+    'extra-light': #f2f6fc,
+  ),
+  $bg-color: #f5f7fa,
+
+  // Border
+  // $border-width-base: 1px,
+  // $border-style-base: solid,
+  $border-color-hover: var(--el-text-color-placeholder),
+  // $border-base: $border-width-base $border-style-base map.get($border-color, 'base'),
+  /// borderRadius|1|Radius|0
+
+  $border-radius: ('base': 4px,
+    'small': 2px,
+    'round': 20px,
+    'circle': 100%,
+  ),
+  // Box-shadow
+  $box-shadow: ('base': (0 2px 4px rgba(0, 0, 0, 0.12),
+      0 0 6px rgba(0, 0, 0, 0.04),
+    ),
+    'light': 0 2px 12px 0 rgba(0, 0, 0, 0.1),
+  ),
+
+  // Typography
+  $font-size: ('extra-large': 20px,
+    'large': 18px,
+    'medium': 16px,
+    'base': 14px,
+    'small': 13px,
+    'extra-small': 12px,
+  ),
+  // Disable default
+  $disabled: ('bg-color': var(--el-bg-color),
+    'text-color': var(--el-text-color-placeholder),
+    'border-color': var(--el-border-color-light),
+  ),
+  $common-component-size: ('large': 40px,
+    'default': 32px,
+    'small': 24px,
+  ),
+  // Checkbox
+  // css3 var in packages/theme-chalk/src/checkbox.scss
+  $checkbox: ('font-size': 14px,
+    'font-weight': var(--el-font-weight-primary),
+    'text-color': var(--el-text-color-regular),
+    'input-height': 14px,
+    'input-width': 14px,
+    'border-radius': var(--el-border-radius-small),
+    'bg-color': var(--el-color-white),
+    'input-border': var(--el-border-base),
+    'disabled-border-color': var(--el-border-color-base),
+    'disabled-input-fill': #edf2fc,
+    'disabled-icon-color': var(--el-text-color-placeholder),
+    'disabled-checked-input-fill': var(--el-border-color-extra-light),
+    'disabled-checked-input-border-color': var(--el-border-color-base),
+    'disabled-checked-icon-color': var(--el-text-color-placeholder),
+    'checked-text-color': var(--el-color-primary),
+    'checked-input-border-color': var(--el-color-primary),
+    'checked-bg-color': var(--el-color-primary),
+    'checked-icon-color': var(--el-fill-base),
+    'input-border-color-hover': var(--el-color-primary),
+  ),
+
+  $checkbox-button: ('checked-bg-color': var(--el-color-primary),
+    'checked-text-color': var(--el-color-white),
+    'checked-border-color': var(--el-color-primary),
+  ),
+
+  $checkbox-bordered-padding-left: ('large': 12px,
+    'default': 10px,
+    'small': 8px,
+  ),
+
+  $checkbox-bordered-padding-right: ('large': 20px,
+    'default': 16px,
+    'small': 12px,
+  ),
+  // Radio
+  /// fontSize||Font|1
+  $radio: ('font-size': var(--el-font-size-base),
+    'text-color': var(--el-text-color-regular),
+    'font-weight': var(--el-font-weight-primary),
+    'input-height': 14px,
+    'input-width': 14px,
+    'input-border-radius': var(--el-border-radius-circle),
+    'input-bg-color': var(--el-color-white),
+    'input-border': var(--el-border-base),
+    'input-border-color': var(--el-border-color-base),
+    'input-border-color-hover': var(--el-color-primary),
+  ),
+
+  // $radio-height: ($common-component-size, $radio-height),
+  $radio-button: ('checked-bg-color': var(--el-color-primary),
+    'checked-text-color': var(--el-color-white),
+    'checked-border-color': var(--el-color-primary),
+    'disabled-checked-fill': var(--el-border-color-extra-light),
+  ),
+  $radio-disabled: ('input-border-color': var(--el-disabled-border-color),
+    'input-fill': var(--el-disabled-bg-color),
+    'icon-color': var(--el-disabled-bg-color),
+    'checked-input-border-color': var(--el-disabled-border-color),
+    'checked-input-fill': var(--el-disabled-bg-color),
+    'checked-icon-color': var(--el-text-color-placeholder),
+  ),
+
+  $radio-checked: ('text-color': var(--el-color-primary),
+    'input-border-color': var(--el-color-primary),
+    'icon-color': var(--el-color-primary),
+  ),
+
+  $radio-bordered-input-height:('large': 14px,
+    'default': 12px,
+    'small': 12px,
+  ),
+  $radio-bordered-input-width: ('large': 14px,
+    'default': 12px,
+    'small': 12px,
+  ),
+  // Select
+  $select: ('border-color-hover': var(--el-border-color-hover),
+    'disabled-border': var(--el-disabled-border-color),
+    'font-size': var(--el-font-size-base),
+    'close-hover-color': var(--el-text-color-secondary),
+    'input-color': var(--el-text-color-placeholder),
+    'multiple-input-color': var(--el-text-color-regular),
+    'input-focus-border-color': var(--el-color-primary),
+    'input-font-size': 14px,
+  ),
+  $select-option: ('text-color': var(--el-text-color-regular),
+    'disabled-color': var(--el-text-color-placeholder),
+    'height': 34px,
+    'hover-background': var(--el-bg-color),
+    'selected-text-color': var(--el-color-primary),
+  ),
+
+  $select-group: ('text-color': var(--el-color-info),
+    'height': 30px,
+    'font-size': 12px,
+  ),
+  $select-dropdown: ('bg-color': var(--el-color-white),
+    'shadow': var(--el-box-shadow-light),
+    'empty-color': var(--el-text-color-secondary),
+    'max-height': 274px,
+    'padding': 6px 0,
+    'empty-padding': 10px 0,
+    'border': 1px solid var(--el-border-color-light),
+  ),
+  $select-tags-prefix-padding: ('large': 8px,
+    'default': 6px,
+    'small': 4px,
+  ),
+  // Alert
+  // css3 var in packages/theme-chalk/src/alert.scss
+  $alert: ('padding': 8px 16px,
+    'border-radius-base': var(--el-border-radius-base),
+    'title-font-size': 13px,
+    'description-font-size': 12px,
+    'close-font-size': 12px,
+    'close-customed-font-size': 13px,
+    'icon-size': 16px,
+    'icon-large-size': 28px,
+  ),
+  // MessageBox
+  // css3 var in packages/theme-chalk/src/message-box.scss
+  $messagebox: ('title-color': var(--el-text-color-primary),
+    'width': 420px,
+    'border-radius': 4px,
+    'font-size': var(--el-font-size-large),
+    'content-font-size': var(--el-font-size-base),
+    'content-color': var(--el-text-color-regular),
+    'error-font-size': 12px,
+    'padding-primary': 15px,
+  ),
+  // Message
+  // css3 var in packages/theme-chalk/src/message.scss
+  $message: ('min-width': 380px,
+    'bg-color': #edf2fc,
+    'border-color': var(--el-border-color-lighter),
+    'padding': 15px 15px 15px 20px,
+    'close-size': 16px,
+    'close-icon-color': var(--el-text-color-placeholder),
+    'close-hover-color': var(--el-text-color-secondary),
+  ),
+  // Notification
+  // css3 var in packages/theme-chalk/src/notification.scss
+  $notification: ('width': 330px,
+    'padding': 14px 26px 14px 13px,
+    'radius': 8px,
+    'shadow': var(--el-box-shadow-light),
+    'border-color': var(--el-border-color-lighter),
+    'icon-size': 24px,
+    // 'close-font-size': var(--el-message-close-size, map.get($message, 'close-size')),
+    'group-margin-left': 13px,
+    'group-margin-right': 8px,
+    'content-font-size': var(--el-font-size-base),
+    'content-color': var(--el-text-color-regular),
+    'title-font-size': 16px,
+    'title-color': var(--el-text-color-primary),
+    'close-color': var(--el-text-color-secondary),
+    'close-hover-color': var(--el-text-color-regular),
+  ),
+  // Input
+  // css3 var in packages/theme-chalk/src/input.scss
+  $input: ('text-color': var(--el-text-color-regular),
+    'border': var(--el-border-base),
+    'hover-border': var(--el-border-color-hover),
+    'focus-border': var(--el-color-primary),
+    'transparent-border': 0 0 0 1px transparent inset,
+    'border-color': var(--el-border-color-base),
+    'border-radius': var(--el-border-radius-base),
+    'bg-color': var(--el-color-white),
+    'icon-color': var(--el-text-color-placeholder),
+    'placeholder-color': var(--el-text-color-placeholder),
+    'hover-border-color': var(--el-border-color-hover),
+    'clear-hover-color': var(--el-text-color-secondary),
+    'focus-border-color': var(--el-color-primary),
+  ),
+
+  $input-disabled: ('fill': var(--el-disabled-bg-color),
+    'border': var(--el-disabled-border-color),
+    'text-color': var(--el-disabled-text-color),
+    'placeholder-color': var(--el-text-color-placeholder),
+  ),
+
+  $input-font-size: ('large': 14px,
+    'default': 14px,
+    'small': 12px,
+  ),
+  // $input-height: $common-component-size,
+  // $input-line-height: ($common-component-size, $input-line-height),
+
+  $input-number-width: ('large': 180px,
+    'default': 150px,
+    'small': 120px,
+  ),
+
+  $input-padding-horizontal: ('large': 16px,
+    'default': 12px,
+    'small': 8px,
+  ),
+
+  // Cascader
+  // css3 var in packages/theme-chalk/src/cascader.scss
+  $cascader:('menu-text-color': var(--el-text-color-regular),
+    'menu-selected-text-color': var(--el-color-primary),
+    'menu-fill': var(--el-fill-base),
+    'menu-font-size': var(--el-font-size-base),
+    'menu-radius': var(--el-border-radius-base),
+    'menu-border': solid 1px var(--el-border-color-light),
+    'menu-shadow': var(--el-box-shadow-light),
+    'node-background-hover': var(--el-bg-color),
+    'node-color-disabled': var(--el-text-color-placeholder),
+    'color-empty': var(--el-text-color-placeholder),
+    'tag-background': #f0f2f5,
+  ),
+
+  // Button
+  // css3 var in packages/theme-chalk/src/button.scss
+  $button: ('font-weight': var(--el-font-weight-primary),
+    'border-color': var(--el-border-color-base),
+    'bg-color': var(--el-color-white),
+    'text-color': var(--el-text-color-regular),
+    'disabled-text-color': var(--el-disabled-text-color),
+    'disabled-bg-color': var(--el-color-white),
+    'disabled-border-color': var(--el-border-color-light),
+    // 'divide-border-color': rgba($color-white, 0.5),
+    'hover-text-color': var(--el-color-primary),
+    'hover-bg-color': var(--el-color-primary-light-9),
+    'hover-border-color': var(--el-color-primary-light-7),
+    'active-text-color': var(--el-button-hover-text-color),
+    'active-border-color': var(--el-color-primary),
+    'active-bg-color': var(--el-button-hover-bg-color),
+  ),
+
+
+  $button-border-color: (),
+  $button-bg-color: (),
+  $button-text-color: (),
+
+  // $button-font-size: ('large': var(--el-font-size-base, map.get($font-size, 'base')),
+  //   'default': var(--el-font-size-base, map.get($font-size, 'base')),
+  //   'small': 12px,
+  // ),
+  $button-border-radius: ('large': var(--el-border-radius-base),
+    'default': var(--el-border-radius-base),
+    'small': calc(var(--el-border-radius-base) - 1px),
+  ),
+
+  $button-padding-vertical: ('large': 13px,
+    'default': 9px,
+    'small': 6px,
+  ),
+  $button-padding-horizontal: ('large': 20px,
+    'default': 16px,
+    'small': 12px,
+  ),
+
+  // Switch
+  // css3 var in packages/theme-chalk/src/switch.scss
+  $switch: ('on-color': var(--el-color-primary),
+    'off-color': var(--el-border-color-base),
+    'core-border-radius': 10px,
+    'width': 40px,
+    'height': 20px,
+    'button-size': 16px,
+  ),
+  // Dialog
+  // css3 var in packages/theme-chalk/src/dialog.scss
+  $dialog: ('width': 50%,
+    'margin-top': 15vh,
+    'bg-color': var(--el-color-white),
+    'box-shadow': 0 1px 3px rgba(0, 0, 0, 0.3),
+    'title-font-size': var(--el-font-size-large),
+    'content-font-size': 14px,
+    'font-line-height': var(--el-font-line-height-primary),
+    'padding-primary': 20px,
+    'border-radius': var(--el-border-radius-small),
+  ),
+
+  // Table
+  // css3 var in packages/theme-chalk/src/table.scss
+  $table: ('border-color': var(--el-border-color-lighter),
+    'border': 1px solid var(--el-table-border-color),
+    'text-color': var(--el-text-color-regular),
+    'header-text-color': var(--el-text-color-secondary),
+    'row-hover-bg-color': var(--el-bg-color),
+    'current-row-bg-color': var(--el-color-primary-light-9),
+    'header-bg-color': var(--el-color-white),
+    'fixed-box-shadow': 0 0 10px rgba(0, 0, 0, 0.12),
+    'bg-color': var(--el-color-white),
+    'tr-bg-color': var(--el-color-white),
+    'expanded-cell-bg-color': var(--el-color-white),
+    'fixed-left-column': inset 10px 0 10px -10px rgb(0 0 0 / 15%),
+    'fixed-right-column': inset -10px 0 10px -10px rgb(0 0 0 / 15%),
+  ),
+
+  // $table-font-size: ('large': var(--el-font-size-base, map.get($font-size, 'base')),
+  //   'default': 14px,
+  //   'small': 12px,
+  // ),
+
+  $table-padding: ('large': 12px 0,
+    'default': 8px 0,
+    'small': 4px 0,
+  ),
+
+  $table-cell-padding: ('large': 0 16px,
+    'default': 0 12px,
+    'small': 0 8px,
+  ),
+
+  // Pagination
+  // css3 var in packages/theme-chalk/src/pagination.scss
+  $pagination: ('font-size': 14px,
+    'bg-color': var(--el-color-white),
+    'text-color': var(--el-text-color-primary),
+    'border-radius': 3px,
+    'button-color': var(--el-text-color-primary),
+    'button-width': 32px,
+    'button-height': 32px,
+    'button-disabled-color': var(--el-text-color-placeholder),
+    'button-disabled-bg-color': var(--el-color-white),
+    // 'button-bg-color': map.get($colors, 'info', 'light-9'),
+    'hover-color': var(--el-color-primary),
+    'height-extra-small': 24px,
+    'line-height-extra-small': var(--el-pagination-height-extra-small),
+  ),
+  // Popup
+  // css3 var in packages/theme-chalk/src/popup.scss
+  $popup: ('modal-bg-color': var(--el-color-black),
+    'modal-opacity': 0.5,
+  ),
+
+  // Popover
+  // css3 var in packages/theme-chalk/src/popover.scss
+  $popover: ('bg-color': var(--el-color-white),
+    'font-size': var(--el-font-size-base),
+    'border-color': var(--el-border-color-lighter),
+    'padding': 12px,
+    'padding-large': 18px 20px,
+    'title-font-size': 16px,
+    'title-text-color': var(--el-text-color-primary),
+    'border-radius': 4px,
+  ),
+
+  // popper
+  $popper: ('border-radius': var(--el-popover-border-radius, 4px),
+  ),
+
+  // skeleton
+  $skeleton: ('color': #f2f2f2,
+    'to-color': #e6e6e6,
+  ),
+
+  // Tag
+  // css3 var in packages/theme-chalk/src/tag.scss
+  $tag: ('font-size': 12px,
+    'border-radius': 4px,
+  ),
+  $tag-height: ('large': 32px,
+    'default': 24px,
+    'small': 20px,
+  ),
+
+  $tag-padding: ('large': 12px,
+    'default': 10px,
+    'small': 8px,
+  ),
+
+  $tag-icon-size: ('large': 16px,
+    'default': 14px,
+    'small': 12px,
+  ),
+
+  // Tree
+  // css3 var in packages/theme-chalk/src/tree.scss
+  $tree: ('node-hover-bg-color': var(--el-bg-color),
+    'text-color': var(--el-text-color-regular),
+    'expand-icon-color': var(--el-text-color-placeholder),
+  ),
+
+  // Dropdown
+
+  $dropdown: ('menu-box-shadow': var(--el-box-shadow-light),
+    'menuItem-hover-fill': var(--el-color-primary-light-9),
+    'menuItem-hover-color': var(--el-color-primary-light-3),
+    'menu-index': 10,
+  ),
+
+  // drawer
+  $drawer: ('bg-color': var(--el-dialog-bg-color, var(--el-color-white)),
+    'padding-primary': var(--el-dialog-padding-primary, 20px),
+  ),
+
+  // Badge
+  // css3 var in packages/theme-chalk/src/badge.scss
+  $badge: ('bg-color': var(--el-color-danger),
+    'radius': 10px,
+    'font-size': 12px,
+    'padding': 6px,
+    'size': 18px,
+  ),
+  // Card
+  // $card: ('border-color': var(--el-border-color-light, map.get($border-color, 'lighter')),
+  //   'border-radius': 4px,
+  //   'padding': 20px,
+  //   'bg-color': var(--el-color-white),
+  // ),
+
+  $dark-card: ('bg-color': var(--el-color-black),
+  ),
+  // Slider
+  // css3 var in packages/theme-chalk/src/slider.scss
+  $slider: ('main-bg-color': var(--el-color-primary),
+    'runway-bg-color': var(--el-border-color-light),
+    'stop-bg-color': var(--el-color-white),
+    'disable-color': var(--el-text-color-placeholder),
+    'border-radius': 3px,
+    'height': 6px,
+    'button-size': 20px,
+    'button-wrapper-size': 36px,
+    'button-wrapper-offset': -15px,
+  ),
+  // Menu
+  // css3 var in packages/theme-chalk/src/menu.scss
+  $menu: ('active-color': var(--el-color-primary),
+    'text-color': var(--el-text-color-primary),
+    'hover-text-color': var(--el-text-color-primary),
+    'bg-color': var(--el-color-white),
+    'hover-bg-color': var(--el-color-primary-light-9),
+    'item-height': 56px,
+    'item-font-size': var(--el-font-size-base),
+    'item-hover-fill': var(--el-color-primary-light-9),
+    'border-color': #e6e6e6,
+  ),
+  // Rate
+  $rate: ('height': 20px,
+    'font-size': var(--el-font-size-base),
+    'icon-size': 18px,
+    'icon-margin': 6px,
+    'icon-color': var(--el-text-color-placeholder),
+    'void-color': #c6d1de,
+    'star-color': #f7ba2a,
+    'disable-void-color': #eff2f7,
+    'text-color': #1f2d3d,
+  ),
+  // DatePicker
+  // css3 var packages/theme-chalk/src/date-picker/var.scss
+  $datepicker: ('text-color': var(--el-text-color-regular),
+    'off-text-color': var(--el-text-color-placeholder),
+    'header-text-color': var(--el-text-color-regular),
+    'icon-color': var(--el-text-color-primary),
+    'border-color': var(--el-disabled-border-color),
+    'inner-border-color': var(--el-border-color-light),
+    'inrange-bg-color': var(--el-border-color-extra-light),
+    'inrange-hover-bg-color': var(--el-border-color-extra-light),
+    'active-color': var(--el-color-primary),
+    'hover-text-color': var(--el-color-primary),
+  ),
+  $date-editor: ('width': 220px,
+    'monthrange-width': 300px,
+    'daterange-width': 350px,
+    'datetimerange-width': 400px,
+  ),
+
+  // Loading
+  // css3 var in packages/theme-chalk/src/loading.scss
+  $loading:('spinner-size': 42px,
+    'fullscreen-spinner-size': 50px,
+  ),
+
+  // Scrollbar
+  // css3 var in packages/theme-chalk/src/scrollbar.scss
+  $scrollbar: ('opacity': 0.3,
+    'bg-color': var(--el-text-color-secondary),
+    'hover-opacity': 0.5,
+    'hover-bg-color': var(--el-text-color-secondary),
+  ),
+
+  // Carousel
+  // css3 var in packages/theme-chalk/src/carousel.scss
+  $carousel: ('arrow-font-size': 12px,
+    'arrow-size': 36px,
+    'arrow-background': rgba(31, 45, 61, 0.11),
+    'arrow-hover-background': rgba(31, 45, 61, 0.23),
+    'indicator-width': 30px,
+    'indicator-height': 2px,
+    'indicator-padding-horizontal': 4px,
+    'indicator-padding-vertical': 12px,
+    'indicator-out-color': var(--el-border-color-hover),
+  ),
+
+  // Collapse
+  // css3 var in packages/theme-chalk/src/collapse.scss
+  $collapse: ('border-color': var(--el-border-color-lighter),
+    'header-height': 48px,
+    'header-bg-color': var(--el-color-white),
+    'header-text-color': var(--el-text-color-primary),
+    'header-font-size': 13px,
+    'content-bg-color': var(--el-color-white),
+    'content-font-size': 13px,
+    'content-text-color': var(--el-text-color-primary),
+  ),
+
+  // Transfer
+  // css3 var in packages/theme-chalk/src/transfer.scss
+  $transfer: ('border-color': var(--el-border-color-lighter),
+    'border-radius': var(--el-border-radius-base),
+    'panel-width': 200px,
+    'panel-header-height': 40px,
+    'panel-header-bg-color': var(--el-bg-color),
+    'panel-footer-height': 40px,
+    'panel-body-height': 278px,
+    'item-height': 30px,
+    'filter-height': 32px,
+  ),
+  // Timeline
+  // css3 var in packages/theme-chalk/src/timeline-item.scss
+  $timeline: ('node-size-normal': 12px,
+    'node-size-large': 14px,
+    'node-color': var(--el-border-color-light),
+  ),
+
+  // Backtop
+  // css3 var in packages/theme-chalk/src/backtop.scss
+  $backtop: ('bg-color': var(--el-color-white),
+    'text-color': var(--el-color-primary),
+    'hover-bg-color': var(--el-border-color-extra-light),
+  ),
+  // Link
+  // css3 var in packages/theme-chalk/src/link.scss
+  $link: ('font-size': var(--el-font-size-base),
+    'font-weight': var(--el-font-weight-primary),
+    'text-color': var(--el-text-color-regular),
+    'hover-text-color': var(--el-color-primary),
+    'disabled-text-color': var(--el-text-color-placeholder),
+  ),
+
+  $link-text-color: (),
+
+  // Calendar
+  // css3 var in packages/theme-chalk/src/calendar.scss
+  $calendar: ('border': var(--el-table-border, 1px solid var(--el-border-color-lighter)),
+    'header-border-bottom': var(--el-calendar-border),
+    'selected-bg-color': #f2f8fe,
+    'cell-width': 85px,
+  ),
+  // Form
+
+  // css3 var in packages/theme-chalk/src/form.scss
+  $form: ('label-font-size': var(--el-font-size-base),
+  ),
+
+  // Avatar
+  // css3 var in packages/theme-chalk/src/avatar.scss
+  $avatar: ('text-color': #fff,
+    'bg-color': #c0c4cc,
+    'text-size': 14px,
+    'icon-size': 18px,
+    'border-radius': var(--el-border-radius-base),
+  ),
+  $avatar-size: ('large': 56px,
+    'default': 40px,
+    'small': 24px,
+  ),
+
+  // Empty
+
+  // css3 var in packages/theme-chalk/src/empty.scss
+  $empty: ('padding': 40px 0,
+    'image-width': 160px,
+    'description-margin-top': 20px,
+    'bottom-margin-top': 20px,
+    'fill-color-0': var(--el-color-white),
+    'fill-color-1': #fcfcfd,
+    'fill-color-2': #f8f9fb,
+    'fill-color-3': #f7f8fc,
+    'fill-color-4': #eeeff3,
+    'fill-color-5': #edeef2,
+    'fill-color-6': #e9ebef,
+    'fill-color-7': #e5e7e9,
+    'fill-color-8': #e0e3e9,
+    'fill-color-9': #d5d7de,
+  ),
+
+  // Descriptions
+
+  // css3 var in packages/theme-chalk/src/descriptions.scss
+  $descriptions:('table-border': 1px solid var(--el-border-color-lighter),
+    'item-bordered-label-background': #f5f7fa,
+  ),
+
+  // Result
+
+  // css3 var in packages/theme-chalk/src/result.scss
+  $result: ('padding': 40px 30px,
+    'icon-font-size': 64px,
+    'title-font-size': 20px,
+    'title-margin-top': 20px,
+    'subtitle-margin-top': 10px,
+    'extra-margin-top': 30px,
+  ),
+  // transition
+  $transition: ('all': all var(--el-transition-duration) var(--el-transition-function-ease-in-out-bezier),
+    'fade': opacity var(--el-transition-duration) var(--el-transition-function-fast-bezier),
+    'md-fade': (transform var(--el-transition-duration) var(--el-transition-function-fast-bezier),
+      opacity var(--el-transition-duration) var(--el-transition-function-fast-bezier),
+    ),
+    'fade-linear': opacity var(--el-transition-duration-fast) linear,
+    'border': border-color var(--el-transition-duration-fast) var(--el-transition-function-ease-in-out-bezier),
+    'box-shadow': box-shadow var(--el-transition-duration-fast) var(--el-transition-function-ease-in-out-bezier),
+    'color': color var(--el-transition-duration-fast) var(--el-transition-function-ease-in-out-bezier),
+  ),
+  $transition-duration: ('': 0.3s,
+    'fast': 0.2s,
+  ),
+
+  $transition-function: ('ease-in-out-bezier': cubic-bezier(0.645, 0.045, 0.355, 1),
+    'fast-bezier': cubic-bezier(0.23, 1, 0.32, 1),
+  ),
+
+  // header
+  $header: ('padding': 0 20px,
+    'height': 60px,
+  ),
+  // main
+  $main: ('padding': 20px,
+  ),
+  // footer
+  $footer: ('padding': 0 20px,
+    'height': 60px,
+  ),
+
+  // Break-point
+  $sm: 768px,
+  $md: 992px,
+  $lg: 1200px,
+  $xl: 1920px,
+);
+
+
+@use "element-plus/theme-chalk/src/index.scss"as *;
