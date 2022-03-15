@@ -1,5 +1,6 @@
 import { request } from '@/utils/axios'
 import { request_scada } from '@/utils/axios/scada'
+import { getItem } from '@/utils/storage'
 
 import Cookies from 'js-cookie'
 
@@ -77,8 +78,7 @@ export function scadaLogin (params:any) {
 }
 
 export function getYinShouLoginParams () {
-  const infostr = localStorage.getItem('ysinfo')
-  const info = infostr ? JSON.parse(infostr) : null
+  const info = getItem<any>('ysinfo')
   if (info) {
     const params = {
       key: 'yingshou',

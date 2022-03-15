@@ -4,13 +4,7 @@
     :index="menu.path"
   >
     <template #title>
-      <lgs-icon
-        v-if="menu.icon"
-        :name="menu.icon"
-        :size="20"
-        color="rgba(255, 255, 255, 0.7)"
-        class="menu-icon"
-      />
+      <el-icon class="iconfont" :class="menu.icon"></el-icon>
       <span class="sub-menu-title">{{ menu.title }}</span>
     </template>
     <MenuItem
@@ -23,12 +17,7 @@
     v-else
     :index="menu.path"
   >
-    <lgs-icon
-      v-if="menu.icon"
-      :name="menu.icon"
-      color="rgba(255, 255, 255, 0.7)"
-      class="menu-icon"
-    />
+    <el-icon class="iconfont" :class="menu.icon"></el-icon>
     <template #title>
       <span>{{ menu.title }}</span>
     </template>

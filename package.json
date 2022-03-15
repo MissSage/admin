@@ -8,6 +8,8 @@
     "lint": "eslint ./src/**/*.{js,jsx,vue,ts,tsx} --fix"
   },
   "dependencies": {
+    "@amap/amap-jsapi-loader": "^1.0.1",
+    "@amap/amap-vue": "^2.0.13",
     "@element-plus/icons-vue": "^1.1.1",
     "axios": "^0.26.1",
     "crypto-js": "^4.1.1",

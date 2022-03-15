@@ -10,7 +10,7 @@
 $theme in $themes {
   .#{$themeName} {
     .el-footer {
-      background-color: map-get($theme, base);
+      background-color: map-get($theme, xlight);
       color: map-get($theme, xlight)
     }
   }

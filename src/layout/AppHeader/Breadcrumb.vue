@@ -19,5 +19,4 @@ const routes = computed(() => {
   return router.currentRoute.value.matched.filter(item => item.meta.title)
 })
 </script>
-
-  <style lang="scss" scoped></style>
+<style lang="scss" scoped></style>

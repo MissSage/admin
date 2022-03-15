@@ -4,6 +4,8 @@
     :unique-opened="false"
     :default-active="$route.path"
     class="el-menu"
+    text-color="#eeeeee"
+    background-color="transparent"
     router
   >
     <menu-item

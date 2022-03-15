@@ -20,10 +20,10 @@ $theme in $themes {
             &::-webkit-scrollbar {
 
                 /*滚动条整体样式*/
-                width: 6px;
+                width: 7px;
                 /*高宽分别对应横竖滚动条的尺寸*/
-                height: 6px;
-                background-color: map-get($map: $theme, $key:light);
+                height: 7px;
+                background-color: transparent;
             }
 
             &::-webkit-scrollbar-corner {

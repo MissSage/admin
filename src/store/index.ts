@@ -1,5 +1,5 @@
 
-import { State } from '@/types/Store'
+import { State } from '@/common/types/Store'
 import { InjectionKey } from 'vue'
 import { createStore, Store, useStore as baseUseStore } from 'vuex'
 import { getters } from './getters'

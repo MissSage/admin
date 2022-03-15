@@ -1,4 +1,5 @@
-import { State } from '@/types/Store'
+import { State } from '@/common/types/Store'
+
 export const mutations = {
   setIsCollapse: (state:State, payload:boolean) => {
     state.isCollapse = payload

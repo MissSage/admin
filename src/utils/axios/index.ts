@@ -1,6 +1,6 @@
 
-import { getToken } from '@/api/login'
 import axios, { AxiosRequestConfig } from 'axios'
+import { getToken } from '../cookies'
 import { SLMessage } from '../global'
 
 const _axios = axios.create({
@@ -19,7 +19,6 @@ _axios.interceptors.request.use(
 _axios.interceptors.response.use(function (response) {
   return response
 }, function (error) {
-  console.dir(error)
   let message = error.response?.data?.message || error.response?.message || error?.message
   const status = error.response?.data?.status || error.response?.status || error?.status
   switch (status) {

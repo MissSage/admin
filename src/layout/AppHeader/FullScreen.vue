@@ -1,11 +1,12 @@
 <template>
-  <i
-    class="el-icon-full-screen"
-    @click="toggleFullScreen"
-  />
+  <el-icon @click="toggleFullScreen">
+    <FullScreen></FullScreen>
+  </el-icon>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" setup>import { computed } from 'vue'
+import { FullScreen } from '@element-plus/icons-vue'
+const fullFlag = computed(() => document.fullscreenElement === null)
 const toggleFullScreen = () => {
   if (!document.fullscreenElement) {
     document.documentElement.requestFullscreen()
@@ -17,4 +18,8 @@ const toggleFullScreen = () => {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.el-icon{
+  cursor: pointer;
+}
+</style>

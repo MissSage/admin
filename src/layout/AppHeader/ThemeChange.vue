@@ -16,4 +16,8 @@ const changeTheme = () => store.commit('changeTheme')
 const theme = computed(() => store.getters._getTheme)
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.el-icon{
+  cursor: pointer;
+}
+</style>

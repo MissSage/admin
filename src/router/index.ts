@@ -12,7 +12,7 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      component: () => import('../views/login/index.vue')
+      component: () => import('../views/login/index1.vue')
     }
   ] // 路由规则
 })

@@ -1,7 +1,7 @@
 <template>
   <el-dropdown>
     <span class="el-dropdown-link">
-      {{ $store.state.user?.account || '游客' }}
+      {{ '游客' }}
       <i class="el-icon-arrow-down el-icon--right" />
     </span>
     <template #dropdown>
@@ -17,7 +17,6 @@
 
 <script lang="ts" setup>
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { logout } from '@/api/common'
 import { useRouter } from 'vue-router'
 import { useStore } from '@/store'
 
@@ -32,7 +31,7 @@ const handleLogou = () => {
     type: 'warning'
   }).then(async () => {
     // 确认发出退出请求
-    await logout()
+    // await logout()
 
     // 清除用户登录信息
     store.commit('setUser', null)

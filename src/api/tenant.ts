@@ -1,6 +1,5 @@
 
 import { request } from '@/utils/axios'
-import Cookies from 'js-cookie'
 
 // 获取账户下的企业
 export const getCurrentTenantList = () => {

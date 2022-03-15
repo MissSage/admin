@@ -21,8 +21,4 @@ import Notification from './Notification.vue'
 import UserInfo from './UserInfo.vue'
 </script>
 <style lang="scss" scoped>
-i {
-    font-size: 19px;
-    cursor: pointer;
-}
 </style>

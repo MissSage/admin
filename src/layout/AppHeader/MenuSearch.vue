@@ -32,10 +32,7 @@
 
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
-// import { getMenus } from '@/api/home'
-import type { Menu } from '@/api/types/home'
-
-const menus = ref<Menu[]>([])
+const menus = ref<any[]>([])
 const state1 = ref('')
 
 onMounted(() => {
@@ -56,12 +53,12 @@ const querySearch = (queryString: string, cb: (val: any) => void) => {
   cb(results)
 }
 
-const handleSelect = (item: Menu) => {
+const handleSelect = (item: any) => {
   console.log(item)
   return false
 }
 
-const handleLinkClick = (item: Menu, e: Event) => {
+const handleLinkClick = (item: any, e: Event) => {
   if (item.type === 1) {
     e.preventDefault()
     e.stopPropagation()
