@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/runtime-core'
+import { defineComponent, PropType } from 'vue'
 import { ISLPaginationConfig } from './type'
 
 export default defineComponent({

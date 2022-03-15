@@ -38,7 +38,7 @@ import { useStore } from 'vuex'
 import { computed, defineComponent, onMounted, PropType, reactive, toRefs } from 'vue'
 import { formateFiles } from './index'
 import { FileItem } from '@/common/types/common'
-import { SLMessage } from '@/utils/Message'
+import { SLMessage } from '@/utils/global'
 
 export default defineComponent({
   name: 'SLUploader',
@@ -92,7 +92,7 @@ export default defineComponent({
 
       SLMessage.warning(`最多可添加${props.limit}份文件`)
     }
-    const handleRemove = (file, fileList) => {
+    const handleRemove = (file: any, fileList: any[]) => {
       const list = fileList
         ? fileList.map(item => {
           const obj = {
@@ -104,19 +104,19 @@ export default defineComponent({
         : []
       emitValue(list)
     }
-    const handlePictureCardPreview = file => {
+    const handlePictureCardPreview = (file:any) => {
       console.log(file.url)
       state.dialogImageUrl = file.url
       state.dialogTitle = file.name
       state.dialogVisible = true
     }
-    const handleDownload = file => {
+    const handleDownload = (file: any) => {
       console.log(file)
     }
     const isDisabled = computed(() => props.disabled)
-    const handleSuccess = (response, file, fileList) => {
+    const handleSuccess = (response: any, file: any, fileList: any[]) => {
       const list = fileList
-        ? fileList.map(item => {
+        ? fileList.map((item: { response: any; url: any; name: any }) => {
           const obj = {
             url: item.response || item.url,
             name: item.name
@@ -130,7 +130,7 @@ export default defineComponent({
     const emitValue = (list: any) => {
       ctx.emit(
         'update:modelValue',
-        props.returnType === 'arrStr' ? JSON.stringify(list) : list.map(item => item.url).join(',')
+        props.returnType === 'arrStr' ? JSON.stringify(list) : list.map((item: { url: any }) => item.url).join(',')
       )
     }
     const beforeUpload = (file: any) => {

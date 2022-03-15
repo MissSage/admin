@@ -25,12 +25,11 @@
 </template>
 
 <script lang="ts" setup>
-import type { PropType } from '@vue/runtime-core'
-import type { IMenu } from '@/api/types/common'
+import type { PropType } from 'vue'
 
 defineProps({
   menu: {
-    type: Object as PropType<IMenu>,
+    type: Object as PropType<any>,
     required: true
   }
 })
