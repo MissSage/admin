@@ -19,14 +19,6 @@ export const routes: RouteRecordRaw[] = [{
         title: '首页',
         icon: 'icon-home'
       }
-    }, {
-      path: '/webgl',
-      name: 'webgl',
-      component: () => import('@/views/webgl/index.vue'),
-      meta: {
-        title: 'webgl',
-        icon: 'icon-home'
-      }
     }
   ]
 }, {
@@ -43,33 +35,6 @@ export const routes: RouteRecordRaw[] = [{
       component: () => import('@/views/form/index.vue'),
       meta: {
         title: '表单',
-        icon: 'icon-home'
-      }
-    },
-    {
-      path: '/draggableForm',
-      name: 'draggableForm',
-      component: () => import('@/views/draggableForm/index.vue'),
-      meta: {
-        title: '可视化编辑器',
-        icon: 'icon-drag'
-      }
-    }
-  ]
-}, {
-  path: '/games',
-  component: AppLayout,
-  meta: {
-    title: '游戏',
-    icon: 'icon-dashboard'
-  },
-  children: [
-    {
-      path: '/game1',
-      name: 'Game1',
-      component: () => import('@/views/games/game1.vue'),
-      meta: {
-        title: '游戏1',
         icon: 'icon-home'
       }
     }

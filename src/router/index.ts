@@ -4,6 +4,7 @@ import 'nprogress/nprogress.css'
 // import { store } from '../store/index'
 import { store } from '@/store'
 import { routes } from './MenuRoutes'
+import { getItem } from '@/utils/storage'
 const router = createRouter({
   history: createWebHistory(), // 路由模式 history
   routes: [
@@ -18,7 +19,7 @@ const router = createRouter({
 
 router.beforeEach((to, from) => {
   nprogress.start()
-  if (to.meta.requiresAuth && !store.state.user) {
+  if (to.meta.requiresAuth && !getItem('TOKEN')) {
     // 页面需要授权但是没有登录，则重写向到登录页
     return {
       path: '/login',

@@ -1,16 +1,13 @@
-import { IMenu, IUserInfo } from '@/api/types/common'
+
 import { State } from '@/types/Store'
-import { MENU, USER } from '@/utils/constans'
-import { getItem } from '@/utils/storage'
 import { InjectionKey } from 'vue'
 import { createStore, Store, useStore as baseUseStore } from 'vuex'
 import { getters } from './getters'
 import { mutations } from './mutations'
 export const state:State = {
   isCollapse: false,
-  user: getItem<{ token: string } & IUserInfo>(USER),
-  menus: getItem<IMenu>(MENU) || [] as IMenu[],
-  theme: true
+  theme: true,
+  roles: []
 }
 // export type State = typeof state
 export const key:InjectionKey<Store<State>> = Symbol('store')

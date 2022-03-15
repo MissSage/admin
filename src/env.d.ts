@@ -2,9 +2,26 @@
 
 // eslint-disable-next-line no-unused-vars
 interface ImportMetaEnv {
+  /**
+   * 项目名称
+   */
   VITE_APP_TITLE: string
+  /**
+   * 接口路径
+   */
   VITE_API_BASEURL: string
-  // 更多环境变量...
+  /**
+   * scada接口路径
+   */
+  VITE_API_SCADAURL:string
+  /**
+   * 营收接口
+   */
+  VITE_API_YINSHOUURL:string
+  /**
+   * 图片路径
+   */
+  VITE_API_IMAGEURL:string
 }
 declare module '*.vue' {
   import type { DefineComponent } from 'vue'

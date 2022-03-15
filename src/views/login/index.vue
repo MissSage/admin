@@ -2,10 +2,10 @@
   <div class="login-container">
     <el-form
       class="login-form"
-      :rules="rules"
+      :rules="loginRules"
       ref="form"
-      :model="user"
-      @submit.prevent="handleSubmit"
+      :model="state.loginForm"
+      @submit.prevent="handleLogin"
     >
       <div class="login-form__header">
         <img
@@ -16,7 +16,7 @@
       </div>
       <el-form-item prop="account">
         <el-input
-          v-model="user.account"
+          v-model="state.loginForm.username"
           placeholder="请输入用户名"
         >
           <template #prefix>
@@ -26,7 +26,7 @@
       </el-form-item>
       <el-form-item prop="pwd">
         <el-input
-          v-model="user.pwd"
+          v-model="state.loginForm.password"
           type="password"
           placeholder="请输入密码"
         >
@@ -38,7 +38,7 @@
       <el-form-item prop="imgcode">
         <div class="imgcode-wrap">
           <el-input
-            v-model="user.imgcode"
+            v-model="state.loginForm.verifyCode"
             placeholder="请输入验证码"
           >
             <template #prefix>
@@ -48,8 +48,8 @@
           <img
             class="imgcode"
             alt="验证码"
-            :src="captchaSrc"
-            @click="loadCaptcha"
+            :src="state.verifyImage"
+            @click="setCaptcha"
           >
         </div>
       </el-form-item>
@@ -57,7 +57,7 @@
         <el-button
           class="submit-button"
           type="primary"
-          :loading="loading"
+          :loading="state.loading"
           native-type="submit"
         >
           登录
@@ -70,76 +70,101 @@
 <script lang="ts" setup>
 import { onMounted, reactive, ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { getCaptcha, login } from '@/api/common'
-import type { IElForm, IFormRule } from '@/types/element-plus'
+import type { IElForm } from '@/types/element-plus'
 import { store } from '@/store'
-// import { ElMessage } from 'element-plus'
-
+import { login, getVerify, getKey, getInfo } from '@/api/login'
+import { loginRules } from '.'
+import { ILogin } from './type'
+import { cloneDeep } from 'lodash-es'
+import { encrypt } from '@/utils/AES'
+import { getToken, getUserId, setCurTenant, setTenantId, setToken, setUserId } from '@/utils/cookies'
+import { getItem, setItem } from '@/utils/storage'
 const router = useRouter()
 const route = useRoute()
-const form = ref<IElForm | null>(null)
-// 验证码src
-const captchaSrc = ref('')
-const user = reactive({
-  account: 'admin',
-  pwd: '123456',
-  imgcode: ''
-})
-const loading = ref(false)
-const rules = ref<IFormRule>({
-  account: [{ required: true, message: '请输入账号', trigger: 'change' }],
-  pwd: [{ required: true, message: '请输入密码', trigger: 'change' }],
-  imgcode: [{ required: true, message: '请输入验证码', trigger: 'change' }]
+const form = ref<IElForm>()
+const state = reactive<{
+  loginForm: ILogin
+  loading: boolean
+  pwdType: string
+  visiblePwd: boolean
+  title: string
+  verifyImage:string
+}>({
+  verifyImage: '',
+  loginForm: {
+    username: '',
+    password: '',
+    requestId: '',
+    verifyCode: ''
+  },
+  loading: false,
+  pwdType: 'password',
+  visiblePwd: false,
+  title: import.meta.env.VITE_API_BASEURL
+
 })
 
-onMounted(() => {
-  loadCaptcha()
-})
-/**
- * 获取验证码
- */
-const loadCaptcha = async () => {
-  const data = await getCaptcha()
-  captchaSrc.value = URL.createObjectURL(data)
-}
-
-const handleSubmit = async () => {
+const handleLogin = async () => {
   // 表单验证
   const valid = await form.value?.validate()
-  if (!valid) {
-    return false
+  if (!valid) return false
+  state.loading = true
+
+  const loginForm = cloneDeep({ ...state.loginForm })
+  const keyRes = await getKey()
+  loginForm.username = encrypt(loginForm.username, keyRes.data?.key)
+  loginForm.password = encrypt(loginForm.password, keyRes.data?.key)
+
+  const res = await login(loginForm).catch(() => setCaptcha()).finally(() => { state.loading = false })
+  if (!res?.data) return
+  setItem('TOKEN', res?.data?.token)
+  const tokenBody = JSON.parse(
+    atob(
+      res?.data?.token
+        .match(/\.(.*?)\./)[1]
+        .replace(/-/g, '+')
+        .replace(/_/g, '/')
+    )
+  )
+  setItem('USERID', tokenBody.userId)
+  getUserInfo()
+  redirect()
+}
+
+const setCaptcha = async () => {
+  const res = await getVerify()
+  state.loginForm = res.data?.data
+  state.loginForm.requestId = res.data?.request
+}
+const getUserInfo = async () => {
+  const userId = getItem<string>('USERID')
+  if (!userId) return
+  const { data } = await getInfo(userId)
+
+  const authority = (data?.authority && [data.authority]) || []
+  authority.length > 0 && store.commit('SET_ROLES', authority)
+  setUserId(data.id.id)
+  setTenantId(data.tenantId.id)
+  const current_cookie = getToken()
+  const changed = () => {
+    location.href = '/'
   }
-
-  // 验证通过，展示 loading
-  loading.value = true
-
-  // 请求提交
-  const data = await login(user).catch(() => {
-    loadCaptcha() // 刷新验证码
-  }).finally(() => {
-    loading.value = false
-  })
-
-  if (!data) return
-
-  // ElMessage.success('登录成功')
-
-  // 存储登录用户信息
-  store.commit('setUser', {
-    ...data.user_info,
-    token: data.token
-  })
-
-  store.commit('setMenus', data.menus)
-
-  // 跳转回原来页面
+  setInterval(() => {
+    if (current_cookie !== getToken()) {
+      changed()
+    }
+  }, 500)
+}
+const redirect = () => {
   let redirect = route.query.redirect || '/'
   if (typeof redirect !== 'string') {
     redirect = '/'
   }
   router.replace(redirect)
 }
-
+onMounted(() => {
+  setCaptcha()
+})
 </script>
 
 <style lang="scss" scoped>
