@@ -18,10 +18,6 @@ interface ImportMetaEnv {
    * 营收接口
    */
   VITE_API_YINSHOUURL:string
-  /**
-   * 图片路径
-   */
-  VITE_API_IMAGEURL:string
 }
 declare module '*.vue' {
   import type { DefineComponent } from 'vue'

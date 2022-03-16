@@ -8,7 +8,7 @@ import { filterRouters } from '@/utils/formatter'
 export const routes: RouteRecordRaw[] = filterRouters([{
   path: '/',
   component: AppLayout,
-  redirect: '/home',
+  redirect: 'home',
   meta: {
     title: '控制台',
     icon: 'icon-dashboard'
@@ -33,7 +33,7 @@ export const routes: RouteRecordRaw[] = filterRouters([{
   },
   children: [
     {
-      path: '/index',
+      path: 'index',
       name: 'Form',
       component: () => import('@/views/form/index.vue'),
       meta: {

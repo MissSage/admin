@@ -38,8 +38,11 @@ export const DateFormatter = (val: string | Date, format?: string) => {
  */
 export const filterRouters = (routers:RouteRecordRaw[], parent?:RouteRecordRaw) => {
   return routers.filter(item => !item.meta?.hidden).map(item => {
-    parent && (item.path = parent.path + '/' + item.path)
+    parent && (item.path = resolvePath(parent.path + '/' + item.path))
     item.children && (item.children = filterRouters(item.children, item))
     return item
   })
+}
+export const resolvePath = (path:string) => {
+  return path.replace(/\/+/g, '/')
 }

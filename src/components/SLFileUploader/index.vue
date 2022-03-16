@@ -40,15 +40,14 @@
 </template>
 <script lang="ts">
 import { computed, defineComponent, onMounted, PropType, reactive, ref, toRefs } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
-import type { UploadFile } from 'element-plus/es/el-upload/src/upload.type'
-import { SLMessage } from '@/utils/Message'
+import { ElMessage, ElMessageBox, UploadFile } from 'element-plus'
 import { useStore } from 'vuex'
 import { formateFiles } from '../SLUploader'
 import { FileItem } from '@/common/types/common'
 // import type { UploadFile } from 'element-plus/es/components/upload/src/upload.type'
 
-import { downloadFile } from '@/utils/fileHelper'
+import { downloadFile } from '@/utils/helper'
+import { SLMessage } from '@/utils/global'
 export default defineComponent({
   name: 'SLFileUploader',
   props: {
@@ -136,17 +135,18 @@ export default defineComponent({
         state.previewVisible = true
       }
     }
-    const handleExceed = (files: FileList, fileList: UploadFile[]) => {
+    const handleExceed = () => {
       SLMessage.warning(`最多可添加${props.limit}份文件`)
     }
     const beforeRemove = (file: UploadFile, fileList: UploadFile[]) => {
       console.log(file, fileList)
-      return fileList.filter(item => item.url !== file.url)
+      fileList = fileList.filter(item => item.url !== file.url)
+      return true
       // return ElMessageBox.confirm(`Cancel the transfert of ${file.name} ?`)
     }
-    const handleSuccess = (response, file, fileList) => {
+    const handleSuccess = (response: any, file: any, fileList: any[]) => {
       const list = fileList
-        ? fileList.map(item => {
+        ? fileList.map((item: { response: any; url: any; name: any }) => {
           const obj = {
             url: item.response || item.url,
             name: item.name
@@ -160,7 +160,7 @@ export default defineComponent({
     const emitValue = (list: any) => {
       ctx.emit(
         'update:modelValue',
-        props.returnType === 'arrStr' ? JSON.stringify(list) : list.map(item => item.url).join(',')
+        props.returnType === 'arrStr' ? JSON.stringify(list) : list.map((item: { url: any }) => item.url).join(',')
       )
     }
     onMounted(() => {

@@ -14,11 +14,11 @@ import { COLORS, ICONS } from '@/common/constans/common'
 import { GetWaterStatistics } from '@/api/yinshou/baobiao/WaterStatistics'
 import { IQuery_YinShou_Water } from '../../types/Water/Statistics'
 import moment from 'moment'
-import { SLMessage } from '@/utils/Message'
+import { SLMessage } from '@/utils/global'
 export default defineComponent({
   name: 'WaterStatistics',
   components: { SLCardTable, SLCardSearch },
-  setup() {
+  setup () {
     const refSLCardSearch = ref<InstanceType<typeof SLCardSearch>>()
     const slCardSearchConfig = ref<ISLCardSearch>({
       filters: [
@@ -50,7 +50,7 @@ export default defineComponent({
           }
         }
       ],
-      showSummary:true,
+      showSummary: true,
       columns: [
         { label: '区域', prop: 'orgName' },
         { label: '表具名称', prop: 'bookName' },
@@ -92,7 +92,7 @@ export default defineComponent({
         start: start,
         end: end
       }
-      
+
       const res = await GetWaterStatistics(params)
       slCardTableConfig.value.dataList = res.data || []
       slCardTableConfig.value.pagination.total = res.data?.length || 0

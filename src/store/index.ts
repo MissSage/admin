@@ -1,24 +1,28 @@
 
-import { State } from '@/common/types/Store'
+import { IStore_Root, State } from '@/common/types/Store'
 import { InjectionKey } from 'vue'
 import { createStore, Store, useStore as baseUseStore } from 'vuex'
 import { getters } from './getters'
 import { mutations } from './mutations'
-export const state:State = {
+import app from './modules/app'
+export const state:IStore_Root = {
   isCollapse: false,
-  theme: true,
+  theme: 'dark',
   roles: []
 }
 // export type State = typeof state
-export const key:InjectionKey<Store<State>> = Symbol('store')
-export const store = createStore<State>({
+export const key:InjectionKey<Store<IStore_Root>> = Symbol('store')
+export const store = createStore<IStore_Root>({
   strict: true,
   state,
   getters,
-  mutations
+  mutations,
+  modules: {
+    app
+  }
 })
 // 封装简化后的useStore方法
-export function useStore () {
+export function useStore<T=State> () {
   // 这里把key传进去
-  return baseUseStore(key)
+  return baseUseStore<T>(key)
 }

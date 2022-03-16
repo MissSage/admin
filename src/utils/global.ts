@@ -1,4 +1,5 @@
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { App } from 'vue'
 /**
  * 消息
  */

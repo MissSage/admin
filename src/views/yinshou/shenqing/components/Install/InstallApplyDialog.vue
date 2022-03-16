@@ -39,7 +39,7 @@ import { SLConfirm, SLMessage } from '@/utils/global'
 import { GetInstallDetail, PostInstallStatus } from '@/api/yinshou/shenqing/InstallApply'
 
 import { IPostStatusParams } from '@/views/yinshou/types/shengqing/InstallApply'
-import { useStore } from 'vuex'
+import { useStore } from '@/store'
 import { SLStepsConfig } from '@/components/SLSteps/type'
 interface IInstallApply {
   id?: string
@@ -84,7 +84,6 @@ export default defineComponent({
     const route = useRoute()
     const router = useRouter()
     const store = useStore()
-    const fileUrl = store.state.app.actionUrl + 'api/file/file'
     const refSLForm = ref<InstanceType<typeof SLForm>>()
     const state = reactive<{
       title: string
@@ -354,7 +353,7 @@ export default defineComponent({
         state.apply.yanshou_status = res.data?.status
       }
       refSLForm.value && (refSLForm.value.dataForm = state.apply)
-      slFormConfig.value.columns = setFormColumns(step, fileUrl)
+      slFormConfig.value.columns = setFormColumns(step)
     }
     onMounted(async () => {
       refreshDetail()

@@ -211,7 +211,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-@import 'src/assets/css/amapSearchStyle.scss';
+// @import 'src/assets/css/amapSearchStyle.scss';
 
 .message-text {
   margin: 10px 0 12px 20px;

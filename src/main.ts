@@ -16,8 +16,8 @@ app.use(global)
 
 // 自动注册全局组件
 // 这个是vite自己的功能，非web标准或es标准
-const modules = import.meta.globEager('./components/**/index.ts')
-for (const path in modules) {
-  app.use(modules[path].default)
-}
+// const modules = import.meta.globEager('./components/install.ts')
+// for (const path in modules) {
+//   app.use(modules[path].default)
+// }
 app.mount('#app')

@@ -10,13 +10,13 @@ import SLCardSearch from '@/components/SLCardSearch/index.vue'
 import { ISLCardSearch } from '@/components/SLCardSearch/type'
 import SLCardTable from '@/components/SLCardTable/index.vue'
 import { ISLCardTable } from '@/components/SLCardTable/type'
-import { SLMessage } from '@/utils/Message'
+import { SLMessage } from '@/utils/global'
 import moment from 'moment'
 import { defineComponent, ref } from 'vue'
 export default defineComponent({
   name: 'WaterDetail',
   components: { SLCardSearch, SLCardTable },
-  setup() {
+  setup () {
     const tempData:any[] = []
     const refSLCardSearch = ref<InstanceType<typeof SLCardSearch>>()
     const slCardSearchConfig = ref<ISLCardSearch>({

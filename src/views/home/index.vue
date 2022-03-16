@@ -3,6 +3,7 @@
     <div class="info">
       <p>Lgs's vue demo</p>
     </div>
+    <SLDescriptionHeader :title="'aaa'"></SLDescriptionHeader>
   </div>
 </template>
 <script lang='ts'>

@@ -82,7 +82,7 @@ export const InstallStatusOptions: NormalOption[] = [
 export const InstallStatusFormatter = (type: string) => {
   return InstallStatusOptions.find(item => item.value === type)?.label || '-'
 }
-export const setFormColumns = (status: number, fileUrl?: string): ISLFormFieldSet[] => {
+export const setFormColumns = (status: number): ISLFormFieldSet[] => {
   const columnSHENHE: ISLFormFieldSet[] =
     status >= InstallStatus.DAISHENHE ||
     status === InstallStatus.REFUZED ||

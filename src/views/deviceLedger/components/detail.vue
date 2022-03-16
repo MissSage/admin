@@ -486,7 +486,7 @@ export default {
       .el-form-item__content {
         border: none;
         border-bottom: 0;
-        background-color: $form-bg-color;
+        background-color: #222536;
       }
     }
     // .form-custom ::v-deep,

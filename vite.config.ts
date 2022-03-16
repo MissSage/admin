@@ -28,7 +28,7 @@ export default defineConfig(({ command, mode }) => {
       }),
       createHtmlPlugin({
         minify: true,
-        entry: 'src/main.ts',
+        entry: '/src/main.ts',
         inject: {
           data: {
             VITE_APP_TITLE: getEnvFn(mode, 'VITE_APP_TITLE')
@@ -105,7 +105,7 @@ export default defineConfig(({ command, mode }) => {
       }
     },
     build: {
-      sourcemap: false,
+      sourcemap: mode !== 'production',
       minify: 'terser',
       terserOptions: {
         compress: {

@@ -183,7 +183,7 @@ export default defineComponent({
   }
   :deep(.el-upload) {
     &.el-upload--picture-card {
-      background-color: $form-bg-color;
+      background-color: #222536;
       width: 96px;
       height: 96px;
       line-height: 96px;

@@ -30,6 +30,12 @@ router.beforeEach((to, from) => {
       query: { redirect: to.fullPath }
     }
   }
+  if (to.matched === []) {
+    return {
+      path: '404',
+      query: { redirect: '/' }
+    }
+  }
 })
 router.afterEach(() => {
   nprogress.done()
