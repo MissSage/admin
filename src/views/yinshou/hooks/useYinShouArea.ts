@@ -1,4 +1,5 @@
 import { GetYinShouArea } from '@/api/yinshou'
+import { NormalOption } from '@/common/types/common'
 import { ref } from 'vue'
 
 const useYinShouArea = () => {
@@ -6,7 +7,7 @@ const useYinShouArea = () => {
     const res = await GetYinShouArea()
 
     return (
-      res.data?.map(item => {
+      res.data?.map((item: { name: any; id: any }) => {
         const obj: NormalOption = {
           label: item.name,
           value: item.id,

@@ -46,6 +46,7 @@ module.exports = {
       { varsIgnorePattern: '.*', args: 'none' }
     ],
     'no-array-constructor': 0,
+    'array-callback-return': 0,
     camelcase: 0
   },
   ignorePatterns: ['src/styles/**/*.js'],

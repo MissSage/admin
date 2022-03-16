@@ -92,6 +92,7 @@ export default defineComponent({
         start: start,
         end: end
       }
+      
       const res = await GetWaterStatistics(params)
       slCardTableConfig.value.dataList = res.data || []
       slCardTableConfig.value.pagination.total = res.data?.length || 0

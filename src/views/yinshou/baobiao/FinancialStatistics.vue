@@ -5,29 +5,46 @@
   </div>
 </template>
 <script lang="ts">
+import { ExportFinancialSummary, GetFinancialSummary } from '@/api/yinshou/baobiao/FinancialSummary'
 import { ICONS } from '@/common/constans/common'
 import SLCardSearch from '@/components/SLCardSearch/index.vue'
 import { ISLCardSearch } from '@/components/SLCardSearch/type'
 import SLCardTable from '@/components/SLCardTable/index.vue'
 import { ISLCardTable } from '@/components/SLCardTable/type'
-import { SLMessage } from '@/utils/Message'
 import moment from 'moment'
-import { defineComponent, ref } from 'vue'
+import { defineComponent, onMounted, ref } from 'vue'
+import useYinShouArea from '../hooks/useYinShouArea'
+import { ExportReport, PayMeTypes } from '.'
 export default defineComponent({
   name: 'FinancialStatistics',
   components: { SLCardSearch, SLCardTable },
-  setup() {
+  setup () {
+    const { getYinShouArea } = useYinShouArea()
     const refSLCardSearch = ref<InstanceType<typeof SLCardSearch>>()
     const slCardSearchConfig = ref<ISLCardSearch>({
       labelWidth: '100px',
       filters: [
-        { type: 'input', field: 'orgId', label: '区域：' },
-        { type: 'daterange', field: 'date', label: '时间段：' }
+        { type: 'cascader', field: 'orgId', label: '区域：' },
+        { type: 'input', field: 'custName', label: '用户名：' }
       ],
       operations: [
         { perm: true, text: '搜 索', click: () => refreshData() },
         { perm: true, text: '重 置', click: () => resetQuery(), type: 'default' }
-      ]
+      ],
+      moreFilter: {
+        filters: [
+          {
+            type: 'select',
+            field: 'payMode',
+            label: '支付方式：',
+            formatter: (val: any) => {
+              return PayMeTypes.find(item => item.value === val)?.label || '-'
+            },
+            options: PayMeTypes
+          },
+          { type: 'daterange', field: 'date', label: '时间段：' }
+        ]
+      }
     })
     const slCardTableConfig = ref<ISLCardTable>({
       title: '账务统计报表',
@@ -36,18 +53,19 @@ export default defineComponent({
           perm: true,
           text: '导 出',
           icon: ICONS.EXPORT,
-          click: () => {
-            SLMessage.info(JSON.stringify(slCardTableConfig.value.selectList))
-          }
+          click: () => refreshData(true)
         }
       ],
       columns: [
-        { label: '区域', prop: '' },
-        { label: '户号', prop: '' },
-        { label: '户名', prop: '' },
-        { label: '充值金额(合计)(元)', prop: '' },
-        { label: '水费(合计)(元)', prop: '' },
-        { label: '用户余额(元)', prop: '' }
+        { prop: 'payee', label: '收费员' },
+        { prop: 'payAmount', label: '充值金额' },
+        { prop: 'payType', label: '支付方式' },
+        { prop: 'areaName', label: '区域' },
+        { prop: 'payTime', label: '充值时间' },
+        { prop: 'payMode', label: '充值方式' },
+        { prop: 'tel', label: '手机' },
+        { prop: 'custName', label: '户名' },
+        { prop: 'custCode', label: '户号' }
       ],
       dataList: [],
       selectList: [],
@@ -72,7 +90,7 @@ export default defineComponent({
     const resetQuery = () => {
       refSLCardSearch.value && (refSLCardSearch.value.queryParams = {})
     }
-    const refreshData = () => {
+    const refreshData = async (isExport?: boolean) => {
       const query = refSLCardSearch.value?.queryParams
       const date = query?.date
       let [start, end] = [moment().add(-3, 'M').valueOf(), moment().valueOf()]
@@ -81,12 +99,25 @@ export default defineComponent({
         end = moment(date[1], 'YYYY-MM-DD').add(0, 'd').valueOf()
       }
       const params = {
-        orgId: query?.orgId,
+        organizationId: query?.orgId,
+        custName: query?.custName,
+        payMode: query?.payMode,
         start: start,
         end: end
       }
-      SLMessage.info(JSON.stringify(params))
+      if (isExport) {
+        const res = await ExportFinancialSummary(params)
+        ExportReport(res.data)
+      } else {
+        const res = await GetFinancialSummary(params)
+        slCardTableConfig.value.dataList = res.data || []
+      }
     }
+    onMounted(async () => {
+      refreshData()
+      const filter = slCardSearchConfig.value.filters?.find(item => item.field === 'orgId')
+      filter && filter.type === 'cascader' && (filter.options = await getYinShouArea())
+    })
     return {
       refSLCardSearch,
       slCardSearchConfig,

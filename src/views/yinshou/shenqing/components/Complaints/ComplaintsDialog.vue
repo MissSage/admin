@@ -12,21 +12,24 @@
       </el-scrollbar>
     </div>
     <div class="footer">
-      <SLButton v-for="(btn, i) in buttons" :key="i" :config="btn"></SLButton>
+      <SLButton
+        v-for="(btn, i) in buttons"
+        :key="i"
+        :config="btn"
+      ></SLButton>
     </div>
   </el-card>
 </template>
 <script lang="ts">
 import { computed, defineComponent, onMounted, reactive, ref, toRefs } from 'vue'
-import router from '@/router'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { ComplaintsStatus, setFormColumns } from '.'
 import SLForm from '@/components/SLForm/index.vue'
 import { ISLFormConfig } from '@/components/SLForm'
 import SLButton from '@/components/SLButton/index.vue'
 import { ISLOperation } from '@/components/SLCardSearch/type'
-import { SLConfirm, SLMessage } from '@/utils/Message'
 import { ComplaintsReply } from '@/api/yinshou/shenqing/Complaints'
+import { SLMessage, SLConfirm } from '@/utils/global'
 interface IComplaintsApply {
   id?: string
   code?: string
@@ -44,8 +47,9 @@ interface IComplaintsApply {
 export default defineComponent({
   name: 'ComplaintsApplyDialog',
   components: { SLForm, SLButton },
-  setup() {
+  setup () {
     const route = useRoute()
+    const router = useRouter()
     const refSLForm = ref<InstanceType<typeof SLForm>>()
     const state = reactive<{
       title: string

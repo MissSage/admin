@@ -35,9 +35,9 @@ import SLForm from '@/components/SLForm/index.vue'
 import { ISLFormConfig } from '@/components/SLForm'
 import SLButton from '@/components/SLButton/index.vue'
 import { ISLOperation } from '@/components/SLCardSearch/type'
+import { SLConfirm, SLMessage } from '@/utils/global'
 import { GetRepaireDetail, PostRepaireStatus } from '@/api/yinshou/shenqing/RepaireApply'
 import { SLStepsConfig } from '@/components/SLSteps/type'
-import { SLConfirm, SLMessage } from '@/utils/global'
 interface IInstallApply {
   id?: string
   code?: string

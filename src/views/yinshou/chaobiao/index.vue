@@ -8,7 +8,11 @@
       :config="slDialogFormConfig"
       @close="handleDialogClose"
     >
-      <SLTable v-if="tableShow" class="form-card-box" :config="slCardTableConfig_form"></SLTable>
+      <SLTable
+        v-if="tableShow"
+        class="form-card-box"
+        :config="slCardTableConfig_form"
+      ></SLTable>
     </SLDialogForm>
   </div>
 </template>
@@ -20,8 +24,8 @@ import { ISLCardSearch } from '@/components/SLCardSearch/type'
 import { ISLCardTable } from '@/components/SLCardTable/type'
 import SLDialogForm from '@/components/SLDialogForm/index.vue'
 import { ISLDialogFormConfig } from '@/components/SLDialogForm/type'
-import { IQueryUserBill } from '../types/chaobiao'
-import { SLConfirm, SLMessage } from '@/utils/Message'
+import { IQueryUserBill, IQueryMeterRead } from '../types/chaobiao'
+import { SLConfirm, SLMessage } from '@/utils/global'
 import {
   initCBSJ,
   initYHZD,
@@ -41,13 +45,13 @@ import {
 } from '@/api/yinshou/chaobiao'
 import { ISLTableConfig } from '@/components/SLTable/type'
 import SLTable from '../../../components/SLTable/index.vue'
-import { IQueryMeterRead } from '../types/chaobiao'
+
 import moment from 'moment'
 import useCustType from '../hooks/useCustType'
 export default defineComponent({
   name: 'MeterReadManage',
   components: { SLCardTable, SLCardSearch, SLDialogForm, SLTable },
-  setup() {
+  setup () {
     const refSLDialogForm = ref<InstanceType<typeof SLDialogForm>>()
     const refSLCardSearch = ref<InstanceType<typeof SLCardSearch>>()
     const { CustTypeList, getCustTypeList } = useCustType()
@@ -120,50 +124,7 @@ export default defineComponent({
     })
     const slCardTableConfig = ref<ISLCardTable>({
       title: '抄表数据',
-      headerBtns: [
-        {
-          perm: true,
-          text: '抄表数据',
-          click: () => openDialog(OPERATETYPE.CHAOBIAOSHUJU),
-          disabled: (() => !slCardTableConfig.value.currentRow) as () => any
-        },
-        {
-          perm: true,
-          text: '用户账单',
-          click: () => openDialog(OPERATETYPE.YONGHUZHANGDAN),
-          disabled: (() => !slCardTableConfig.value.currentRow) as () => any
-        },
-        {
-          perm: true,
-          text: '开/关阀',
-          click: () => openDialog(OPERATETYPE.GUANFA),
-          disabled: (() => !slCardTableConfig.value.currentRow) as () => any
-        },
-        {
-          perm: false,
-          text: '开 阀',
-          click: () => toggleValve(OPERATETYPE.KAIFA),
-          disabled: (() => !slCardTableConfig.value.currentRow) as () => any
-        },
-        {
-          perm: false,
-          text: '更改表具低数',
-          click: () => openDialog(OPERATETYPE.GGBJDZ),
-          disabled: (() => !slCardTableConfig.value.currentRow) as () => any
-        },
-        {
-          perm: false,
-          text: '更改上报周期',
-          click: () => openDialog(OPERATETYPE.GGSBZQ),
-          disabled: (() => !slCardTableConfig.value.currentRow) as () => any
-        },
-        {
-          perm: false,
-          text: '历史指令',
-          click: () => openDialog(OPERATETYPE.LISHIZHILIN),
-          disabled: (() => !slCardTableConfig.value.currentRow) as () => any
-        }
-      ],
+
       columns: initCBGLClolumns(),
       dataList: [],
       // handleSelectChange: (rows: any) => {
@@ -189,6 +150,50 @@ export default defineComponent({
       },
       operations: []
     })
+    slCardTableConfig.value.headerBtns = [
+      {
+        perm: true,
+        text: '抄表数据',
+        click: () => openDialog(OPERATETYPE.CHAOBIAOSHUJU),
+        disabled: (() => !slCardTableConfig.value.currentRow) as () => any
+      },
+      {
+        perm: true,
+        text: '用户账单',
+        click: () => openDialog(OPERATETYPE.YONGHUZHANGDAN),
+        disabled: (() => !slCardTableConfig.value.currentRow) as () => any
+      },
+      {
+        perm: true,
+        text: '开/关阀',
+        click: () => openDialog(OPERATETYPE.GUANFA),
+        disabled: (() => !slCardTableConfig.value.currentRow) as () => any
+      },
+      {
+        perm: false,
+        text: '开 阀',
+        click: () => toggleValve(OPERATETYPE.KAIFA),
+        disabled: (() => !slCardTableConfig.value.currentRow) as () => any
+      },
+      {
+        perm: false,
+        text: '更改表具低数',
+        click: () => openDialog(OPERATETYPE.GGBJDZ),
+        disabled: (() => !slCardTableConfig.value.currentRow) as () => any
+      },
+      {
+        perm: false,
+        text: '更改上报周期',
+        click: () => openDialog(OPERATETYPE.GGSBZQ),
+        disabled: (() => !slCardTableConfig.value.currentRow) as () => any
+      },
+      {
+        perm: false,
+        text: '历史指令',
+        click: () => openDialog(OPERATETYPE.LISHIZHILIN),
+        disabled: (() => !slCardTableConfig.value.currentRow) as () => any
+      }
+    ]
     /**
      * 打开弹窗
      * 根据不同的操作类型进行不同的数据格式化操作
@@ -251,6 +256,7 @@ export default defineComponent({
             rows: state.slCardTableConfig_form.pagination.limit,
             meterCode: id
           })
+          break
         default:
           break
       }

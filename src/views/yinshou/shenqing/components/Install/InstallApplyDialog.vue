@@ -28,7 +28,6 @@
 </template>
 <script lang="ts">
 import { computed, defineComponent, onMounted, reactive, ref, toRefs } from 'vue'
-
 import { useRoute, useRouter } from 'vue-router'
 import SLSteps from '@/components/SLSteps/index.vue'
 import { GetStepFromStatus, InstallStatus, InstallSteps, setFormColumns, StatusForSubmit } from '.'
@@ -36,12 +35,12 @@ import SLForm from '@/components/SLForm/index.vue'
 import { ISLFormConfig } from '@/components/SLForm'
 import SLButton from '@/components/SLButton/index.vue'
 import { ISLOperation } from '@/components/SLCardSearch/type'
+import { SLConfirm, SLMessage } from '@/utils/global'
 import { GetInstallDetail, PostInstallStatus } from '@/api/yinshou/shenqing/InstallApply'
 
 import { IPostStatusParams } from '@/views/yinshou/types/shengqing/InstallApply'
 import { useStore } from 'vuex'
 import { SLStepsConfig } from '@/components/SLSteps/type'
-import { SLConfirm, SLMessage } from '@/utils/global'
 interface IInstallApply {
   id?: string
   code?: string
@@ -328,6 +327,7 @@ export default defineComponent({
         ...(res.data || {})
       }
       const step = GetStepFromStatus(state.apply.status)
+
       if (step >= InstallStatus.SHANGMENKANCHA) {
         state.apply.kancha_status = res.data?.zysInstallSurvey?.status
         state.apply.kancha_person = res.data?.zysInstallSurvey?.person

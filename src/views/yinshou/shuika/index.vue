@@ -9,19 +9,27 @@
         </div>
       </template>
       <div class="header-items">
-        <div v-for="(item, i) in fields" :key="i" class="item">
+        <div
+          v-for="(item, i) in fields"
+          :key="i"
+          class="item"
+        >
           <label class="label">{{ item.label }}</label>
           <span v-if="item.type !== 'table'" class="text">{{
             (item.formatter &&
               item.formatter(
                 slCardTableConfig.currentRow ? slCardTableConfig.currentRow[item.field] : '-'
               )) ||
-            (slCardTableConfig.currentRow ? slCardTableConfig.currentRow[item.field] : '-')
+              (slCardTableConfig.currentRow ? slCardTableConfig.currentRow[item.field] : '-')
           }}</span>
         </div>
       </div>
     </SLCard>
-    <SLCardTable ref="refCardTable" class="table-box" :config="slCardTableConfig"></SLCardTable>
+    <SLCardTable
+      ref="refCardTable"
+      class="table-box"
+      :config="slCardTableConfig"
+    ></SLCardTable>
     <SLDialogForm
       v-if="slDialogFormConfig.dialogConfig.visible"
       ref="refSLDialogForm"
@@ -56,7 +64,7 @@ import { ISLOperation } from '@/components/SLCardSearch/type'
 import { ISLCardTable } from '@/components/SLCardTable/type'
 import SLDialogForm from '@/components/SLDialogForm/index.vue'
 import { ISLDialogFormConfig } from '@/components/SLDialogForm/type'
-import { SLConfirm, SLMessage } from '@/utils/Message'
+import { SLConfirm, SLMessage } from '@/utils/global'
 import SLCard from '@/components/SLCard/index.vue'
 import SLButton from '@/components/SLButton/index.vue'
 import { ISLFormItem } from '@/components/SLFormItem/type'
@@ -69,6 +77,7 @@ import {
   initYSZDTableColumns,
   initUserInfoColumns,
   formatShuikaStatus
+  , SHUIKASTATUS
 } from './index'
 import SLForm from '@/components/SLForm/index.vue'
 import { ISLFormConfig } from '@/components/SLForm'
@@ -81,7 +90,7 @@ import {
   UpdateWaterCard,
   UpdateWaterCardStatus
 } from '@/api/yinshou/shuika'
-import { SHUIKASTATUS } from './index'
+
 import useCustType from '../hooks/useCustType'
 export default defineComponent({
   name: 'WaterCardManage',
@@ -93,7 +102,7 @@ export default defineComponent({
     // SLTable
     //  SLForm
   },
-  setup() {
+  setup () {
     const { CustTypeList, getCustTypeList } = useCustType()
     const refCardTable = ref<InstanceType<typeof SLCardTable>>()
     const refSLDialogForm = ref<InstanceType<typeof SLDialogForm>>()
@@ -492,7 +501,7 @@ export default defineComponent({
               { type: 'text', label: '户号：', field: 'custCode' },
               { type: 'text', label: '用户姓名：', field: 'custName' },
               { type: 'text', label: '用户类型：', field: 'custType' },
-              { type: 'text', label: '账户余额：', field: 'money',unit:'元' },
+              { type: 'text', label: '账户余额：', field: 'money', unit: '元' },
               { type: 'text', label: '地址：', field: 'address', cols: 2 }
             ]
           },
@@ -521,8 +530,8 @@ export default defineComponent({
         type === OPERATES.BILL
           ? initYSZDTableColumns()
           : type === OPERATES.DETAIL
-          ? initUserInfoColumns()
-          : []
+            ? initUserInfoColumns()
+            : []
       slTableConfig.value.dataList = []
       slFormInDialogConfig.value.columns = [
         {
@@ -575,7 +584,7 @@ export default defineComponent({
       slCardTableConfig.value.dataList = res.data?.rows
       slCardTableConfig.value.pagination.total = res.data?.total
     }
-    onMounted(async() => {
+    onMounted(async () => {
       await refreshData()
       CustTypeList.value = await getCustTypeList()
     })

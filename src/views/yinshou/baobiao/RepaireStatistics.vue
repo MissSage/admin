@@ -6,67 +6,80 @@
           <el-image class="image" :src="require('@/assets/icons/moren.png')"></el-image>
           <div class="item-info">
             <p class="text">待维修数量</p>
-            <p class="number">{{ repaireTasks.waiting }}</p>
+            <p class="number">{{ RepairSummary?.prepareRepair || 0 }}</p>
           </div>
         </div>
         <div class="item">
           <el-image class="image" :src="require('@/assets/icons/moren.png')"></el-image>
           <div class="item-info">
             <p class="text">维修中数量</p>
-            <p class="number">{{ repaireTasks.dealing }}</p>
+            <p class="number">{{ RepairSummary?.repairing || 0 }}</p>
           </div>
         </div>
         <div class="item">
           <el-image class="image" :src="require('@/assets/icons/moren.png')"></el-image>
           <div class="item-info">
             <p class="text">已维修数量</p>
-            <p class="number">{{ repaireTasks.complete }}</p>
+            <p class="number">{{ RepairSummary?.repaired || 0 }}</p>
           </div>
         </div>
         <div class="item">
           <el-image class="image" :src="require('@/assets/icons/moren.png')"></el-image>
           <div class="item-info">
             <p class="text">维修总数量</p>
-            <p class="number">{{ repaireTasks.total }}</p>
+            <p class="number">{{ RepairSummary?.repaireTotal || 0 }}</p>
           </div>
         </div>
       </div>
     </SLCard>
-    <SLCardTable ref="refSLCardTable" class="table-box" :config="slCardTableConfig"></SLCardTable>
+    <SLCardTable
+      ref="refSLCardTable"
+      class="table-box"
+      :config="slCardTableConfig"
+    ></SLCardTable>
   </div>
 </template>
 <script lang="ts">
 import SLCardTable from '@/components/SLCardTable/index.vue'
 import { ISLCardTable } from '@/components/SLCardTable/type'
-import { SLMessage } from '@/utils/Message'
 import moment from 'moment'
 import SLCard from '@/components/SLCard/index.vue'
-import { defineComponent, reactive, ref, toRefs } from 'vue'
+import { defineComponent, onMounted, reactive, ref, toRefs } from 'vue'
+import { ExportRepairSummary, GetRepairSummary } from '@/api/yinshou/baobiao/RepairSummary'
+import { ExportReport } from '.'
+interface IRepairSummary {
+  prepareRepair: string
+  repairList: [
+    {
+      custCode: string
+      code: string
+      repairTime: string
+      person: string
+      remark: string
+      applyTime: string
+      custName: string
+      reply: string
+    }
+  ]
+  repairing: '维修中'
+  repaireTotal: '维修总数'
+  repaired: '已维修'
+}
 export default defineComponent({
   name: 'RepaireStatistics',
   components: { SLCardTable, SLCard },
-  setup() {
+  setup () {
     const state = reactive<{
-      repaireTasks: {
-        waiting: number
-        dealing: number
-        complete: number
-        total: number
-      }
+      RepairSummary: IRepairSummary | undefined
     }>({
-      repaireTasks: {
-        waiting: 123,
-        dealing: 333,
-        complete: 2245,
-        total: 1892
-      }
+      RepairSummary: undefined
     })
 
     const slCardTableConfig = ref<ISLCardTable>({
       title: '维修统计',
       headerBtns: [
         { perm: true, text: '搜 索', click: () => refreshData() },
-        { perm: true, text: '导 出', click: () => exportData() }
+        { perm: true, text: '导 出', click: () => refreshData(true) }
       ],
       headerQuery: [
         { type: 'daterange', field: 'date', label: '时间段：', onChange: () => refreshData() }
@@ -82,6 +95,7 @@ export default defineComponent({
       dataList: [],
       selectList: [],
       pagination: {
+        hide: true,
         page: 1,
         limit: 999,
         total: 0,
@@ -100,25 +114,34 @@ export default defineComponent({
       }
     })
     const refSLCardTable = ref<InstanceType<typeof SLCardTable>>()
-    const exportData = () => {
-      SLMessage.info('接口没接')
-    }
-    const refreshData = () => {
+
+    const refreshData = async (isExport?: boolean) => {
       const query = refSLCardTable.value?.queryParams
       const date = query?.date
-      let [start, end] = [moment().add(-3, 'M').valueOf(), moment().valueOf()]
+      let [start, end] = [moment().add(-3, 'M').format('YYYY-MM-DD'), moment().format('YYYY-MM-DD')]
       if (date && date.length === 2) {
-        start = moment(date[0], 'YYYY-MM-DD').add(0, 'd').valueOf()
-        end = moment(date[1], 'YYYY-MM-DD').add(0, 'd').valueOf()
+        start = moment(date[0]).format('YYYY-MM-DD')
+        end = moment(date[1]).format('YYYY-MM-DD')
       }
       const params = {
         start: start,
         end: end
       }
-      SLMessage.info(JSON.stringify(params))
+      if (isExport) {
+        const res = await ExportRepairSummary(params)
+        ExportReport(res.data)
+      } else {
+        const res = await GetRepairSummary(params)
+        state.RepairSummary = res.data
+        slCardTableConfig.value.dataList = state.RepairSummary?.repairList || []
+      }
     }
+    onMounted(() => {
+      refreshData()
+    })
     return {
       ...toRefs(state),
+      refSLCardTable,
       slCardTableConfig
     }
   }
@@ -133,7 +156,7 @@ export default defineComponent({
 .table-box {
   height: calc(100% - 115px);
 }
-.header-card{
+.header-card {
   margin-bottom: 15px;
 }
 .header-item {

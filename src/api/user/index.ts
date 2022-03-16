@@ -81,8 +81,12 @@ export function deleteUsers (data: any) {
   })
 }
 
-// 获取单个用户信息
-export function getUser (userId: string) {
+/**
+ * 获取单个用户信息
+ * @param userId
+ * @returns
+ */
+export const getUser = (userId: string) => {
   return request({
     url: 'api/user/' + userId,
     method: 'get'

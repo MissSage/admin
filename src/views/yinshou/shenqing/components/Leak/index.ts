@@ -1,4 +1,6 @@
+import { NormalOption } from '@/common/types/common'
 import { ISLFormFieldSet } from '@/components/SLForm'
+import { SLStep } from '@/components/SLSteps/type'
 
 export enum LeakStatus {
   REFUZED = 0,
@@ -10,7 +12,7 @@ export enum LeakStatus {
 export const StatusForSubmit = {
   SHENHE_BUTONGGUO: '1',
   SHENHE_TONGGUO: '2',
-  WEIXIU_WEIWANCHENG:'3',
+  WEIXIU_WEIWANCHENG: '3',
   WEIXIU_WANCHENG: '4',
   YANSHOU_WANCHENG: '9',
   YANSHOU_BUWANCHENG: '10'
@@ -168,7 +170,7 @@ export const setFormColumns = (status: number): ISLFormFieldSet[] => {
                 disabled: status > LeakStatus.SHANGMENWEIXIU || status < LeakStatus.DAISHENHE,
                 placeholder: status > LeakStatus.SHANGMENWEIXIU ? ' ' : '',
                 type: 'input-number',
-                unit:'元',
+                unit: '元',
                 label: '其他费用：',
                 field: 'repaire_otherCost'
               },
@@ -188,7 +190,7 @@ export const setFormColumns = (status: number): ISLFormFieldSet[] => {
                 label: status === LeakStatus.SHANGMENWEIXIU ? '上传图片：' : '维修图片：',
                 field: 'repaire_img',
                 cols: 2,
-                returnType:'arrStr'
+                returnType: 'arrStr'
               }
             ]
           }

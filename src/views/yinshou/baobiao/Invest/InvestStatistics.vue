@@ -11,15 +11,15 @@ import SLCardSearch from '@/components/SLCardSearch/index.vue'
 import { ISLCardSearch } from '@/components/SLCardSearch/type'
 import SLCardTable from '@/components/SLCardTable/index.vue'
 import { ISLCardTable } from '@/components/SLCardTable/type'
-import { SLMessage } from '@/utils/Message'
 import moment from 'moment'
 import { defineComponent, onMounted, ref } from 'vue'
+import { ExportReport } from '..'
 import useYinShouArea from '../../hooks/useYinShouArea'
 import { IQuery_Yinshou_Invest } from '../../types/Invest/Statistics'
 export default defineComponent({
   name: 'InvestStatistics',
   components: { SLCardSearch, SLCardTable },
-  setup() {
+  setup () {
     const { getYinShouArea } = useYinShouArea()
     const refSLCardSearch = ref<InstanceType<typeof SLCardSearch>>()
     const slCardSearchConfig = ref<ISLCardSearch>({
@@ -105,15 +105,8 @@ export default defineComponent({
         end: end
       }
       if (isExport) {
-        const res = await GetInvestStatistics(params)
-        const url = window.URL.createObjectURL(res.data)
-        console.log(url)
-        const link = document.createElement('a')
-        link.style.display = 'none'
-        link.href = url
-        link.setAttribute('download', `用户充值报表.xlsx`)
-        document.body.appendChild(link)
-        link.click()
+        const res = await ExportInvests(params)
+        ExportReport(res.data)
       } else {
         const res = await GetInvestStatistics(params)
         slCardTableConfig.value.dataList = res.data || []

@@ -1,4 +1,6 @@
+import { NormalOption } from '@/common/types/common'
 import { ISLFormFieldSet } from '@/components/SLForm'
+import { SLStep } from '@/components/SLSteps/type'
 export enum InstallStatus {
   REFUZED = -1,
   OVER,
@@ -177,9 +179,7 @@ export const setFormColumns = (status: number, fileUrl?: string): ISLFormFieldSe
                     ? ' '
                     : '',
                 disabled:
-                  status > InstallStatus.SHANGMENKANCHA || status < InstallStatus.DAISHENHE
-                    ? true
-                    : false,
+                  !!(status > InstallStatus.SHANGMENKANCHA || status < InstallStatus.DAISHENHE),
                 type: 'radio',
                 label: '能否施工：',
                 field: 'kancha_status',
@@ -194,9 +194,7 @@ export const setFormColumns = (status: number, fileUrl?: string): ISLFormFieldSe
                     ? ' '
                     : '',
                 disabled:
-                  status > InstallStatus.SHANGMENKANCHA || status < InstallStatus.DAISHENHE
-                    ? true
-                    : false,
+                  !!(status > InstallStatus.SHANGMENKANCHA || status < InstallStatus.DAISHENHE),
                 type: 'input',
                 label: '勘察人：',
                 field: 'kancha_person'
@@ -207,9 +205,7 @@ export const setFormColumns = (status: number, fileUrl?: string): ISLFormFieldSe
                     ? ' '
                     : '',
                 disabled:
-                  status > InstallStatus.SHANGMENKANCHA || status < InstallStatus.DAISHENHE
-                    ? true
-                    : false,
+                  !!(status > InstallStatus.SHANGMENKANCHA || status < InstallStatus.DAISHENHE),
                 type: 'datetime',
                 label: '勘察时间：',
                 field: 'kancha_time'
@@ -220,9 +216,7 @@ export const setFormColumns = (status: number, fileUrl?: string): ISLFormFieldSe
                     ? ' '
                     : '',
                 disabled:
-                  status > InstallStatus.SHANGMENKANCHA || status < InstallStatus.DAISHENHE
-                    ? true
-                    : false,
+                  !!(status > InstallStatus.SHANGMENKANCHA || status < InstallStatus.DAISHENHE),
                 type: 'input-number',
                 label: '其他费用：',
                 field: 'kancha_otherCost',
@@ -234,9 +228,7 @@ export const setFormColumns = (status: number, fileUrl?: string): ISLFormFieldSe
                     ? ' '
                     : '',
                 disabled:
-                  status > InstallStatus.SHANGMENKANCHA || status < InstallStatus.DAISHENHE
-                    ? true
-                    : false,
+                  !!(status > InstallStatus.SHANGMENKANCHA || status < InstallStatus.DAISHENHE),
                 type: 'textarea',
                 label: '勘察反馈：',
                 field: 'kancha_remark',
@@ -249,9 +241,7 @@ export const setFormColumns = (status: number, fileUrl?: string): ISLFormFieldSe
                     ? ' '
                     : '',
                 disabled:
-                  status > InstallStatus.SHANGMENKANCHA || status < InstallStatus.DAISHENHE
-                    ? true
-                    : false,
+                  !!(status > InstallStatus.SHANGMENKANCHA || status < InstallStatus.DAISHENHE),
                 type: 'image',
                 label: status === InstallStatus.SHANGMENKANCHA ? '上传图片：' : '现场图片：',
                 field: 'kancha_img',
@@ -263,9 +253,7 @@ export const setFormColumns = (status: number, fileUrl?: string): ISLFormFieldSe
                     ? ' '
                     : '',
                 disabled:
-                  status > InstallStatus.SHANGMENKANCHA || status < InstallStatus.DAISHENHE
-                    ? true
-                    : false,
+                  !!(status > InstallStatus.SHANGMENKANCHA || status < InstallStatus.DAISHENHE),
                 type: 'file',
                 label: status === InstallStatus.SHANGMENKANCHA ? '上传相关文件：' : '相关文件：',
                 field: 'kancha_file',
@@ -274,13 +262,13 @@ export const setFormColumns = (status: number, fileUrl?: string): ISLFormFieldSe
               },
               {
                 placeholder: status > InstallStatus.SHANGMENKANCHA ? ' ' : '',
-                disabled: status > InstallStatus.SHANGMENKANCHA ? true : false,
+                disabled: status > InstallStatus.SHANGMENKANCHA,
                 type: 'input',
                 label: '用户编号：',
                 field: 'kancha_custId'
               },
               {
-                disabled: status > InstallStatus.SHANGMENKANCHA ? true : false,
+                disabled: status > InstallStatus.SHANGMENKANCHA,
                 placeholder: status > InstallStatus.SHANGMENKANCHA ? ' ' : '',
                 type: 'input',
                 label: '用户名称',
@@ -340,7 +328,7 @@ export const setFormColumns = (status: number, fileUrl?: string): ISLFormFieldSe
             fields: [
               {
                 placeholder: status > InstallStatus.SHANGMENSHIGONG ? ' ' : '',
-                disabled: status > InstallStatus.SHANGMENSHIGONG ? true : false,
+                disabled: status > InstallStatus.SHANGMENSHIGONG,
                 type: 'radio',
                 label: '是否完成：',
                 field: 'shigong_status',
@@ -351,21 +339,21 @@ export const setFormColumns = (status: number, fileUrl?: string): ISLFormFieldSe
               },
               {
                 placeholder: status > InstallStatus.SHANGMENSHIGONG ? ' ' : '',
-                disabled: status > InstallStatus.SHANGMENSHIGONG ? true : false,
+                disabled: status > InstallStatus.SHANGMENSHIGONG,
                 type: 'input',
                 label: '施工人：',
                 field: 'shigong_person'
               },
               {
                 placeholder: status > InstallStatus.SHANGMENSHIGONG ? ' ' : '',
-                disabled: status > InstallStatus.SHANGMENSHIGONG ? true : false,
+                disabled: status > InstallStatus.SHANGMENSHIGONG,
                 type: 'datetime',
                 label: '施工日期：',
                 field: 'shigong_time'
               },
               {
                 placeholder: status > InstallStatus.SHANGMENSHIGONG ? ' ' : '',
-                disabled: status > InstallStatus.SHANGMENSHIGONG ? true : false,
+                disabled: status > InstallStatus.SHANGMENSHIGONG,
                 type: 'textarea',
                 label: '施工反馈：',
                 field: 'shigong_remark',
@@ -374,7 +362,7 @@ export const setFormColumns = (status: number, fileUrl?: string): ISLFormFieldSe
               },
               {
                 placeholder: status > InstallStatus.SHANGMENSHIGONG ? ' ' : '',
-                disabled: status > InstallStatus.SHANGMENSHIGONG ? true : false,
+                disabled: status > InstallStatus.SHANGMENSHIGONG,
                 type: 'image',
                 returnType: 'arrStr',
                 label: status === InstallStatus.SHANGMENSHIGONG ? '上传图片：' : '现场图片：',
@@ -399,7 +387,7 @@ export const setFormColumns = (status: number, fileUrl?: string): ISLFormFieldSe
             fields: [
               {
                 placeholder: status > InstallStatus.DAIYANSHOU ? ' ' : '',
-                disabled: status > InstallStatus.DAIYANSHOU ? true : false,
+                disabled: status > InstallStatus.DAIYANSHOU,
                 type: 'radio',
                 label: '是否完成：',
                 field: 'yanshou_status',
@@ -409,7 +397,7 @@ export const setFormColumns = (status: number, fileUrl?: string): ISLFormFieldSe
                 ]
               },
               {
-                hidden: status <= InstallStatus.DAIYANSHOU ? true : false,
+                hidden: status <= InstallStatus.DAIYANSHOU,
                 placeholder: ' ',
                 disabled: true,
                 type: 'input',
@@ -417,7 +405,7 @@ export const setFormColumns = (status: number, fileUrl?: string): ISLFormFieldSe
                 field: 'examPerson'
               },
               {
-                hidden: status <= InstallStatus.DAIYANSHOU ? true : false,
+                hidden: status <= InstallStatus.DAIYANSHOU,
                 placeholder: ' ',
                 disabled: true,
                 type: 'datetime',

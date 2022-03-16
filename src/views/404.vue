@@ -2,14 +2,30 @@
   <div class="wscn-http404-container">
     <div class="wscn-http404">
       <div class="pic-404">
-        <img class="pic-404__parent" :src="img_404" alt="404" />
-        <img class="pic-404__child left" :src="img_404_cloud" alt="404" />
-        <img class="pic-404__child mid" :src="img_404_cloud" alt="404" />
-        <img class="pic-404__child right" :src="img_404_cloud" alt="404" />
+        <img
+          class="pic-404__parent"
+          :src="img_404"
+          alt="404"
+        />
+        <img
+          class="pic-404__child left"
+          :src="img_404_cloud"
+          alt="404"
+        />
+        <img
+          class="pic-404__child mid"
+          :src="img_404_cloud"
+          alt="404"
+        />
+        <img
+          class="pic-404__child right"
+          :src="img_404_cloud"
+          alt="404"
+        />
       </div>
       <div class="bullshit">
         <div class="bullshit__oops">OOPS!</div>
-        <div class="bullshit__headline">{{ message }}</div>
+        <div class="bullshit__headline">{{ '网管说这个页面你不能进......' }}</div>
         <div class="bullshit__info">请检查您输入的网址是否正确，请点击以下按钮返回主页</div>
         <el-button>
           <!-- <a :href="returnUrl" class="to-a">返回首页</a> -->
@@ -21,40 +37,33 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import img_404 from '@/assets/404_images/404.png'
 import img_404_cloud from '@/assets/404_images/404_cloud.png'
+import { useStore } from '@/store'
+import { defineComponent, reactive, toRefs } from 'vue'
 import { createNamespacedHelpers } from 'vuex'
 const { mapState } = createNamespacedHelpers('permission')
-export default {
+export default defineComponent({
   name: 'Page404',
-  data() {
-    return {
+  setup () {
+    const store = useStore()
+    const state = reactive<{
+      img_404:any
+      img_404_cloud:any
+      returnUrl: string
+    }>({
       img_404,
       img_404_cloud,
-      returnUrl: ''
+      returnUrl: '/'
+    })
+    return {
+      ...toRefs(state),
+      img_404,
+      img_404_cloud
     }
-  },
-  computed: {
-    ...mapState(['bigScreenR', 'addRouters']),
-    message() {
-      return '网管说这个页面你不能进......'
-    }
-  },
-  created() {
-    let path = ''
-    if (this.bigScreenR[0]) {
-      path = this.bigScreenR[0].path
-    } else {
-      if (this.addRouters[0]) {
-        const path1 = this.addRouters[0].path
-        const path2 = this.addRouters[0].children[0].path
-        path = path1 + '/' + path2
-      }
-    }
-    this.returnUrl = path
   }
-}
+})
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>

@@ -1,8 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import nprogress from 'nprogress'
 import 'nprogress/nprogress.css'
-// import { store } from '../store/index'
-import { store } from '@/store'
 import { routes } from './MenuRoutes'
 import { getItem } from '@/utils/storage'
 const router = createRouter({
@@ -13,6 +11,11 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: () => import('../views/login/index1.vue')
+    },
+    {
+      path: '/404',
+      name: 'NotFound',
+      component: () => import('../views/404.vue')
     }
   ] // 路由规则
 })

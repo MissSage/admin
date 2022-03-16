@@ -1,6 +1,6 @@
 import { ISLFormFieldSet } from '@/components/SLForm'
 import { ISLTableColumn, ISLTableConfig } from '@/components/SLTable/type'
-import { DateFormatter } from '@/utils/DateFormatter'
+import { DateFormatter } from '@/utils/formatter'
 import moment from 'moment'
 
 export enum OPERATETYPE {
@@ -196,8 +196,8 @@ export const initKGFAColumns = (
       fieldset: {
         desc: '设备详情',
         right: [
-          { perm: true, text: '开 阀', handle: () => toggleValve(OPERATETYPE.KAIFA) },
-          { perm: true, text: '关 阀', handle: () => toggleValve(OPERATETYPE.GUANFA) }
+          { perm: true, text: '开 阀', click: () => toggleValve(OPERATETYPE.KAIFA) },
+          { perm: true, text: '关 阀', click: () => toggleValve(OPERATETYPE.GUANFA) }
         ]
       },
       fields: []

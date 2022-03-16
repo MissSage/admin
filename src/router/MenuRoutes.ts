@@ -2,7 +2,10 @@ import { RouteRecordRaw } from 'vue-router'
 import AppLayout from '@/layout/AppLayout.vue'
 
 import Home from '../views/home/index.vue'
-export const routes: RouteRecordRaw[] = [{
+import { yinshouRoutes } from './modules/yinshou'
+import { filterRouters } from '@/utils/formatter'
+
+export const routes: RouteRecordRaw[] = filterRouters([{
   path: '/',
   component: AppLayout,
   redirect: '/home',
@@ -12,7 +15,7 @@ export const routes: RouteRecordRaw[] = [{
   },
   children: [
     {
-      path: '/home',
+      path: 'home',
       name: 'home',
       component: Home,
       meta: {
@@ -30,7 +33,7 @@ export const routes: RouteRecordRaw[] = [{
   },
   children: [
     {
-      path: '/form/index',
+      path: '/index',
       name: 'Form',
       component: () => import('@/views/form/index.vue'),
       meta: {
@@ -39,4 +42,7 @@ export const routes: RouteRecordRaw[] = [{
       }
     }
   ]
-}]
+},
+...yinshouRoutes
+
+])

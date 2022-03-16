@@ -11,15 +11,16 @@ import { defineComponent, onMounted, reactive, ref, toRefs } from 'vue'
 import { ISLCardSearch } from '@/components/SLCardSearch/type'
 import { ISLCardTable } from '@/components/SLCardTable/type'
 import { COLORS, ICONS } from '@/common/constans/common'
-import { SLConfirm, SLMessage } from '@/utils/Message'
-import router from '@/router'
+import { SLConfirm, SLMessage } from '@/utils/global'
 import { DeleteComplaints, GeComplaintsList } from '@/api/yinshou/shenqing/Complaints'
 import { IQuery_YinShou_Complaints } from '../types/shengqing/Complaints'
 import { formatComplaintsStatus } from './components/Complaints'
+import { useRouter } from 'vue-router'
 export default defineComponent({
   name: 'LeakApply',
   components: { SLCardTable, SLCardSearch },
-  setup() {
+  setup () {
+    const router = useRouter()
     const refSLCardSearch = ref<InstanceType<typeof SLCardSearch>>()
     const state = reactive<{
       slCardTableConfig: ISLCardTable

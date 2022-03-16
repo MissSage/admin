@@ -11,15 +11,16 @@ import { defineComponent, onMounted, reactive, ref, toRefs } from 'vue'
 import { ISLCardSearch } from '@/components/SLCardSearch/type'
 import { ISLCardTable } from '@/components/SLCardTable/type'
 import { COLORS, ICONS } from '@/common/constans/common'
-import { SLConfirm, SLMessage } from '@/utils/Message'
-import router from '@/router'
+import { SLConfirm, SLMessage } from '@/utils/global'
 import { DeleteInstallApply, GetInstallList } from '@/api/yinshou/shenqing/InstallApply'
 import { IQuery_YinShou_Install } from '../types/shengqing/InstallApply'
 import { InstallStatusFormatter } from './components/Install'
+import { useRouter } from 'vue-router'
 export default defineComponent({
   name: 'InstallApply',
   components: { SLCardTable, SLCardSearch },
-  setup() {
+  setup () {
+    const router = useRouter()
     const refSLCardSearch = ref<InstanceType<typeof SLCardSearch>>()
     const state = reactive<{
       slCardTableConfig: ISLCardTable

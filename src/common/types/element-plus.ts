@@ -7,5 +7,5 @@ export type IElTree = InstanceType<typeof ElTree>
 export type IElTable = InstanceType<typeof ElTable>
 
 export type IFormRule = Record<string, FormItemRule[]>
-export type IFormItemRule = FormRules
+export type IFormItemRule = FormItemRule|FormItemRule[]
 export type IElScrollbar = InstanceType<typeof ElScrollbar>

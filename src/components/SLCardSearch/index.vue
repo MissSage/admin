@@ -224,7 +224,7 @@ export default defineComponent({
     const formateQueryParamsToString = (params?: Record<string, any>) => {
       state.moreFilterConditions = []
       props.config.moreFilter?.filters?.map(item => {
-        if (!item.field || item.type !== 'text') return item
+        if (!item.field || item.type === 'text') return item
         state.moreFilterConditions.push({
           label: item.label,
           value: (params && params[item.field]) || '-',

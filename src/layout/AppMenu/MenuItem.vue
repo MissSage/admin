@@ -5,7 +5,7 @@
   >
     <template #title>
       <el-icon class="iconfont" :class="menu.icon"></el-icon>
-      <span class="sub-menu-title">{{ menu.title }}</span>
+      <span class="sub-menu-title">{{ menu.meta?.title }}</span>
     </template>
     <MenuItem
       v-for="subMenu in menu.children"
@@ -19,13 +19,14 @@
   >
     <el-icon class="iconfont" :class="menu.icon"></el-icon>
     <template #title>
-      <span>{{ menu.title }}</span>
+      <span>{{ menu.meta?.title }}</span>
     </template>
   </el-menu-item>
 </template>
 
 <script lang="ts" setup>
 import type { PropType } from 'vue'
+import { RouteRecordRaw } from 'vue-router'
 
 defineProps({
   menu: {
@@ -33,7 +34,6 @@ defineProps({
     required: true
   }
 })
-
 </script>
 
 <style lang="scss" scoped>
