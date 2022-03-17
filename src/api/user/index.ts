@@ -58,7 +58,7 @@ export function getTenantUsers (tenantId: string) {
   })
 }
 
-export function getTenantUsersByPage (params: any) {
+export const getTenantUsersByPage = (params: any) => {
   return request({
     url: 'api/tenant/users/list',
     method: 'get',

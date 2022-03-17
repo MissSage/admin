@@ -11,11 +11,16 @@
           :key="i"
           style="margin-bottom: 0"
           :label="item.value"
-          >{{ item.label }}</el-radio
         >
-        <el-radio v-if="config.showOther" style="margin-bottom: 0" label="other"
-          >自定义时间</el-radio
+          {{ item.label }}
+        </el-radio>
+        <el-radio
+          v-if="config.showOther"
+          style="margin-bottom: 0"
+          label="other"
         >
+          自定义时间
+        </el-radio>
       </el-radio-group>
       <el-date-picker
         v-if="datePickerVisible"
@@ -35,23 +40,24 @@
 <script>
 import moment from 'moment'
 export default {
+  // eslint-disable-next-line vue/require-prop-types
   props: ['config'],
-  data() {
+  data () {
     return {
       defaultValue: 1,
       daterange: [moment().subtract(1, 'months'), moment()],
       datePickerVisible: false
     }
   },
-  mounted() {
+  mounted () {
     this.$emit('checkVal', this.daterange, this.config.key)
   },
   methods: {
-    optionChange(val) {
+    optionChange (val) {
       if (val === 'other') {
         this.datePickerVisible = true
       } else {
-        const option = this.config.options.find(item => item.value == val)
+        const option = this.config.options.find(item => item.value === val)
         if (!option) return
         const intval = parseInt(val)
         this.datePickerVisible = false
@@ -59,7 +65,7 @@ export default {
       }
       this.$emit('checkVal', this.daterange, this.config.key)
     },
-    daterangeChange(val) {
+    daterangeChange (val) {
       this.$emit('checkVal', val, this.config.key)
     }
   }

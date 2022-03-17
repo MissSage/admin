@@ -9,7 +9,7 @@
       <el-button
         class="dialog-title-extra"
         type="default"
-        size="mini"
+        size="small"
         @click="followOrder"
       >
         <span v-if="!workOrder.follow" class="icon iconfont icon-jia"></span>
@@ -85,12 +85,12 @@
                   :headers="{ 'X-Authorization': 'Bearer ' + $store.getters.token }"
                   :show-file-list="false"
                   :on-success="
-                    (res, file) => handleUploadSuccess(res, file, null, 'processVoiceFile')
+                    (res, file) => handleUploadSuccess(res, file, undefined, 'processVoiceFile')
                   "
                   :before-upload="beforeFileUpload"
                 >
                   <el-button
-                    size="mini"
+                    size="small"
                     type="primary"
                     :disabled="activeIndex > statusToNumber(Status.DEALING)"
                   >
@@ -107,7 +107,7 @@
                     :title="workOrder.processVoiceFile"
                     :closable="activeIndex <= statusToNumber(Status.DEALING)"
                     @close="workOrder.processVoiceFile = ''"
-                    @click="downloadResource(workOrder.processVoiceFile, '附件', 'file')"
+                    @click="downloadFile(workOrder.processVoiceFile, '附件', 'file')"
                   >
                     {{ workOrder.processVoiceFile }}
                   </el-tag>
@@ -209,7 +209,7 @@
                       :before-upload="beforeFileUpload"
                     >
                       <el-button
-                        size="mini"
+                        size="small"
                         type="primary"
                         :disabled="activeIndex > statusToNumber(Status.DEALING)"
                       >
@@ -223,7 +223,7 @@
                         :closable="activeIndex <= statusToNumber(Status.DEALING)"
                         :title="item.voiceFile"
                         @close="item.voiceFile = ''"
-                        @click="downloadResource(item.voiceFile, '附件', 'file')"
+                        @click="downloadFile(item.voiceFile, '附件', 'file')"
                       >
                         {{ item.voiceFile }}
                       </el-tag>
@@ -243,7 +243,7 @@
                     v-if="activeIndex <= statusToNumber(Status.DEALING)"
                     type="primary"
                     class="use-sources-right"
-                    size="mini"
+                    size="small"
                     @click="addComponent(item)"
                   >
                     添加
@@ -427,7 +427,7 @@
                 :before-upload="beforeFileUpload"
               >
                 <el-button
-                  size="mini"
+                  size="small"
                   type="primary"
                   :disabled="activeIndex > Status.ACCEPTING"
                 >
@@ -444,7 +444,7 @@
                   :title="workOrder.acceptanceVoiceFile"
                   :closable="activeIndex < statusToNumber(Status.ACCEPTED)"
                   @close="workOrder.acceptanceVoiceFile = ''"
-                  @click="downloadResource(workOrder.acceptanceVoiceFile, '附件', 'file')"
+                  @click="downloadFile(workOrder.acceptanceVoiceFile, '附件', 'file')"
                 >
                   {{ workOrder.acceptanceVoiceFile }}
                 </el-tag>
@@ -456,21 +456,21 @@
         <div class="form-footer">
           <el-button
             v-if="workOrder.status === Status.DISCOMFIRMED"
-            size="mini"
+            size="small"
             type="danger"
           >
             已拒单
           </el-button>
           <el-button
             v-if="workOrder.status === Status.TIMEOUTED"
-            size="mini"
+            size="small"
             type="danger"
           >
             已超时
           </el-button>
           <el-button
             v-if="workOrder.status === Status.COMFIRMING"
-            size="mini"
+            size="small"
             type="danger"
             @click="handleConfirm(false)"
           >
@@ -478,7 +478,7 @@
           </el-button>
           <el-button
             v-if="workOrder.status === Status.COMFIRMING"
-            size="mini"
+            size="small"
             type="primary"
             @click="handleConfirm(true)"
           >
@@ -487,7 +487,7 @@
 
           <el-button
             v-if="workOrder.status === Status.DEALING"
-            size="mini"
+            size="small"
             type="primary"
             @click="submitOrder"
           >
@@ -495,7 +495,7 @@
           </el-button>
           <el-button
             v-if="workOrder.status === Status.ACCEPTING"
-            size="mini"
+            size="small"
             type="danger"
             @click="handleAccess(false)"
           >
@@ -503,7 +503,7 @@
           </el-button>
           <el-button
             v-if="workOrder.status === Status.ACCEPTING"
-            size="mini"
+            size="small"
             type="primary"
             @click="handleAccess(true)"
           >
@@ -522,11 +522,11 @@ import OrderDetailBase from './orderDetailBase.vue'
 import SlUploader from '@/components/SLUploader/index.vue'
 import SLSteps from '@/components/SLSteps/index.vue'
 import { reactive, toRefs, ref, computed, defineComponent, onMounted } from 'vue'
-import useGlobal from '@/hooks/global/useGlobal'
 import { IElForm } from '@/common/types/element-plus'
 import { ExtraQueryParam } from '@/common/types/common'
 import { getAllStorages } from '@/api/component'
 import { useStore } from 'vuex'
+import { downloadFile } from '@/utils/helper'
 import {
   IWorkOrder,
   IWorkOrderAcceptanceParams,
@@ -555,16 +555,16 @@ import {
   ISaveOptionDetail,
   ITableItem as IComponentTableItem
 } from '@/common/types/component/storage'
-import { useRoute } from 'vue-router'
-import router from '@/router'
+import { useRoute, useRouter } from 'vue-router'
 import { SLStepsConfig } from '@/components/SLSteps/type'
+import { SLConfirm, SLMessage } from '@/utils/global'
 export default defineComponent({
   components: { DescriptionHeader, TextItem, OrderDetailBase, SlUploader, SLSteps },
   emits: ['refreshData'],
   setup (props, ctx) {
     const store = useStore()
     const route = useRoute()
-    const { $messageWarning, $messageSuccess, $messageError, $confirm } = useGlobal()
+    const router = useRouter()
     const title = route.query.title || '工单详情'
     // 定义状态
     const state = reactive<{
@@ -592,12 +592,12 @@ export default defineComponent({
      */
     const getOrderDetail = async () => {
       if (!route.query.id) {
-        $messageWarning('获取详情失败')
+        SLMessage.error('获取详情失败')
         return
       }
       const res = await orderDetail(route.query.id.toString())
       if (!res) {
-        $messageError('获取任务详情失败')
+        SLMessage.error('获取任务详情失败')
         return
       }
       console.log(res.data)
@@ -608,11 +608,7 @@ export default defineComponent({
     const ruleForm = ref<IElForm>()
     const handleConfirm = (confirm: boolean) => {
       const mes = confirm ? '确认接单？' : '确定退单？'
-      $confirm(mes, '确认提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
+      SLConfirm(mes, '确认提示')
         .then(async () => {
           const Params: IWorkOrderComfirmParams = {
             id: state.workOrder.id || '',
@@ -621,10 +617,10 @@ export default defineComponent({
           const res = await confirmOrder(Params)
           if (res.data.code === 200) {
             state.workOrder.status = Params.confirm ? Status.DEALING : Status.DISCOMFIRMED
-            Params.confirm === false && $messageWarning('退单成功！')
+            Params.confirm === false && SLMessage.success('退单成功！')
             Params.confirm === false && routerBack()
           } else {
-            $messageError(res.data.message)
+            SLMessage.error(res.data.message)
           }
         })
         .catch(e => {
@@ -636,30 +632,30 @@ export default defineComponent({
       router.go(-1)
     }
     const submitOrder = () => {
-      $confirm('确定提交验证？', '确认提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
+      SLConfirm('确定提交验证？', '确认提示')
         .then(async () => {
           if (state.workOrder.type !== OrderTypes.OTHER) {
-            state.workOrder.contentDetail
-              ? state.workOrder.contentDetail.jobList
-                ? state.workOrder.contentDetail.jobList.map(item => {
-                  if (!item.componentOptions) {
-                    item.componentOptions = []
-                  }
-                })
-                : (state.workOrder.contentDetail.jobList = [])
-              : null
+            state.workOrder.contentDetail && (state.workOrder.contentDetail.jobList = state.workOrder.contentDetail.jobList || [])
+            state.workOrder.contentDetail?.jobList?.map(item => {
+              if (!item.componentOptions) { item.componentOptions = [] }
+            })
+            // state.workOrder.contentDetail
+            //   ? state.workOrder.contentDetail.jobList
+            //     ? state.workOrder.contentDetail.jobList.map(item => {
+            //       if (!item.componentOptions) {
+            //         item.componentOptions = []
+            //       }
+            //     })
+            //     : (state.workOrder.contentDetail.jobList = [])
+            //   : null
           }
           const res = await processOrder(state.workOrder as IWorkOrder)
           if (res.data.code === 200) {
             state.workOrder.status = Status.ACCEPTING
-            $messageSuccess('提交成功！')
+            SLMessage.success('提交成功！')
             ctx.emit('refreshData')
           } else {
-            $messageError(res.data.message)
+            SLMessage.error(res.data.message)
           }
         })
         .catch(e => {
@@ -671,11 +667,7 @@ export default defineComponent({
      */
     const handleAccess = async (acceptance: boolean) => {
       const msg = acceptance ? '确定验收？' : '确定驳回？'
-      $confirm(msg, '确认提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
+      SLConfirm(msg, '确认提示')
         .then(async () => {
           // 驳回的话要清空验收内容
           if (acceptance === false) {
@@ -698,7 +690,7 @@ export default defineComponent({
             state.workOrder.status = Params.acceptance ? Status.ACCEPTED : Status.DEALING
             // routerBack()
           } else {
-            $messageError(res.data.message)
+            SLMessage.error(res.data.message)
           }
         })
         .catch(e => {
@@ -707,7 +699,7 @@ export default defineComponent({
     }
 
     const componentChange = (row: ISaveOptionDetail) => {
-      const item = state.storages.find(item => item.id == row.componentId)
+      const item = state.storages.find(item => item.id === row.componentId)
       if (item) {
         row.name = item.name
         row.specification = item.specification
@@ -740,11 +732,7 @@ export default defineComponent({
       } as ISaveOptionDetail)
     }
     const removeComponent = (joblistItem: IWorkOrderJobList, step: ISaveOptionDetail) => {
-      $confirm('确定要删除吗?', '删除提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
+      SLConfirm('确定要删除吗?', '删除提示').then(() => {
         joblistItem.componentOptions && joblistItem.componentOptions.splice(step.orderNumber - 1, 1)
         joblistItem.componentOptions &&
           joblistItem.componentOptions.forEach(item => {
@@ -759,10 +747,10 @@ export default defineComponent({
       const isLt2M = file.size / 1024 / 1024 < 2
 
       if (!isJPG) {
-        $messageError('上传图片只能是 JPG/PNG 格式!')
+        SLMessage.error('上传图片只能是 JPG/PNG 格式!')
       }
       if (!isLt2M) {
-        $messageError('上传图片大小不能超过 2MB!')
+        SLMessage.error('上传图片大小不能超过 2MB!')
       }
       return isJPG && isLt2M
     }
@@ -787,17 +775,19 @@ export default defineComponent({
     }
     const followOrder = async () => {
       if (!state.workOrder.id) {
-        $messageWarning('参数错误！')
+        SLMessage.warning('参数错误！')
         return
       }
       const res = await follow(state.workOrder.id)
-      res.status === 200 ? (state.workOrder.follow = res.data.result) : ''
-      res.status === 200
-        ? $messageSuccess(res.data.result ? '关注成功！' : '已取消关注！')
-        : $messageError('关注失败，请稍候再试！')
-      ctx.emit('refreshData')
+      if (res.status === 200) {
+        state.workOrder.follow = res.data.result
+        SLMessage.success(res.data.result ? '关注成功！' : '已取消关注！')
+      } else {
+        SLMessage.error('关注失败，请稍候再试！')
+        ctx.emit('refreshData')
+      }
     }
-    const handleImgChange = imgs => {
+    const handleImgChange = (imgs: string | undefined) => {
       state.workOrder.processImgs = imgs
     }
     onMounted(() => {
@@ -833,6 +823,7 @@ export default defineComponent({
       formateDevStatus,
       followOrder,
       routerBack,
+      downloadFile,
       handleImgChange
     }
   }

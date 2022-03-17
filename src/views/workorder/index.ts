@@ -1,8 +1,8 @@
-import { FileItem } from '@/common/types/common'
+import { FileItem, NormalOption } from '@/common/types/common'
 import { IOrderStatusOptions, ITreeNode, IWorkOrder } from '@/common/types/workorder'
-import useGlobal from '@/hooks/global/useGlobal'
-const { $format } = useGlobal()
-export const initOrderFormColums = (): AOUCloumn[] => {
+import { SLStep } from '@/components/SLSteps/type'
+import { DateFormatter } from '@/utils/formatter'
+export const initOrderFormColums = (): any[] => {
   return [
     {
       type: 'input',
@@ -61,7 +61,7 @@ export const initOrderFormColums = (): AOUCloumn[] => {
       key: 'deadlineTime',
       rules: [{ required: true, message: '请选择截止时间' }]
     }
-  ] as AOUCloumn[]
+  ] as any[]
 }
 export const OrderTypes = {
   REPAIRE: '1',
@@ -177,7 +177,7 @@ export const statusToNumber = (status?: string) => {
 }
 export const formateSteps = (): SLStep[] => {
   return statusOptions
-    .filter(item => item.value != Status.TIMEOUTED && item.value != Status.DISCOMFIRMED)
+    .filter(item => item.value !== Status.TIMEOUTED && item.value !== Status.DISCOMFIRMED)
     .map(item => {
       const obj: SLStep = {
         index: statusToNumber(item.value.toString()),
@@ -243,7 +243,7 @@ export const initTreeData: ITreeNode[] = [
   }
 ]
 export const initInnerUser = (users: any) => {
-  return users.map(item => {
+  return users.map((item: { firstName: any; id: { id: any } }) => {
     const user = {
       label: item.firstName,
       value: item.id.id
@@ -252,11 +252,11 @@ export const initInnerUser = (users: any) => {
   })
 }
 
-export const formatDate = (date: string) => {
-  return $format(date)
+export const formatDate = (date: any) => {
+  return DateFormatter(date)
 }
-export const formatRowDate = (row: IWorkOrder, key: string) => {
-  return $format(row[key])
+export const formatRowDate = (row: any, key: string) => {
+  return DateFormatter(row[key])
 }
 
 // 饼图相关
@@ -269,8 +269,8 @@ const img =
 // 00FEFF
 export const color = ['#FF801C', '#F5FF46', '#00FE65', '#00FEFF', '#ffa800', '#ff5b00', '#ff3000']
 
-//获取圆上面某点的坐标(x0,y0表示坐标，r半径，angle角度)
-function getCirlPoint(x0, y0, r, angle) {
+// 获取圆上面某点的坐标(x0,y0表示坐标，r半径，angle角度)
+function getCirlPoint (x0: number, y0: number, r: number, angle: number) {
   const x1 = x0 + r * Math.cos((angle * Math.PI) / 180)
   const y1 = y0 + r * Math.sin((angle * Math.PI) / 180)
   return {
@@ -313,7 +313,7 @@ const seriesOption = (data: any[], total: number, angle: number) => {
           show: true,
           position: 'outside',
           color: '#ddd',
-          formatter: function (params) {
+          formatter: function (params: { value: number; name: string }) {
             const percent = total === 0 ? 0 : Math.floor((params.value / total) * 100)
             if (params.name !== '') {
               return params.name + '\n' + percent + '%'
@@ -337,7 +337,7 @@ const seriesOption = (data: any[], total: number, angle: number) => {
       name: 'ring5',
       type: 'custom',
       coordinateSystem: 'none',
-      renderItem: function (params, api) {
+      renderItem: function (params: any, api: { getWidth: () => number; getHeight: () => number }) {
         return {
           type: 'arc',
           shape: {
@@ -362,7 +362,7 @@ const seriesOption = (data: any[], total: number, angle: number) => {
       name: 'ring5',
       type: 'custom',
       coordinateSystem: 'none',
-      renderItem: function (params, api) {
+      renderItem: function (params: any, api: { getWidth: () => number; getHeight: () => number }) {
         const x0 = api.getWidth() / 2
         const y0 = api.getHeight() / 2
         const r = Math.min(api.getWidth(), api.getHeight()) / 2.8
@@ -375,7 +375,7 @@ const seriesOption = (data: any[], total: number, angle: number) => {
             r: 4
           },
           style: {
-            stroke: '#00FEFF', //绿
+            stroke: '#00FEFF', // 绿
             fill: '#00FEFF'
           },
           silent: true
@@ -389,7 +389,7 @@ const seriesOption = (data: any[], total: number, angle: number) => {
       name: 'ring5',
       type: 'custom',
       coordinateSystem: 'none',
-      renderItem: function (params, api) {
+      renderItem: function (params: any, api: { getWidth: () => number; getHeight: () => number }) {
         return {
           type: 'arc',
           shape: {
@@ -414,7 +414,7 @@ const seriesOption = (data: any[], total: number, angle: number) => {
       name: 'ring5', // 蓝色
       type: 'custom',
       coordinateSystem: 'none',
-      renderItem: function (params, api) {
+      renderItem: function (params: any, api: { getWidth: () => number; getHeight: () => number }) {
         const x0 = api.getWidth() / 2
         const y0 = api.getHeight() / 2
         const r = Math.min(api.getWidth(), api.getHeight()) / 2.8
@@ -427,7 +427,7 @@ const seriesOption = (data: any[], total: number, angle: number) => {
             r: 4
           },
           style: {
-            stroke: '#00FEFF', //绿
+            stroke: '#00FEFF', // 绿
             fill: '#00FEFF'
           },
           silent: true
@@ -440,7 +440,7 @@ const seriesOption = (data: any[], total: number, angle: number) => {
       name: 'ring5',
       type: 'custom',
       coordinateSystem: 'none',
-      renderItem: function (params, api) {
+      renderItem: function (params: any, api: { getWidth: () => number; getHeight: () => number }) {
         return {
           type: 'arc',
           shape: {
@@ -465,7 +465,7 @@ const seriesOption = (data: any[], total: number, angle: number) => {
       name: 'ring5',
       type: 'custom',
       coordinateSystem: 'none',
-      renderItem: function (params, api) {
+      renderItem: function (params: any, api: { getWidth: () => number; getHeight: () => number }) {
         return {
           type: 'arc',
           shape: {
@@ -490,7 +490,7 @@ const seriesOption = (data: any[], total: number, angle: number) => {
       name: 'ring5',
       type: 'custom',
       coordinateSystem: 'none',
-      renderItem: function (params, api) {
+      renderItem: function (params: any, api: { getWidth: () => number; getHeight: () => number }) {
         const x0 = api.getWidth() / 2
         const y0 = api.getHeight() / 2
         const r = Math.min(api.getWidth(), api.getHeight()) / 3.1
@@ -503,7 +503,7 @@ const seriesOption = (data: any[], total: number, angle: number) => {
             r: 4
           },
           style: {
-            stroke: '#00FEFF', //粉
+            stroke: '#00FEFF', // 粉
             fill: '#00FEFF'
           },
           silent: true
@@ -516,7 +516,7 @@ const seriesOption = (data: any[], total: number, angle: number) => {
       name: 'ring5',
       type: 'custom',
       coordinateSystem: 'none',
-      renderItem: function (params, api) {
+      renderItem: function (params: any, api: { getWidth: () => number; getHeight: () => number }) {
         const x0 = api.getWidth() / 2
         const y0 = api.getHeight() / 2
         const r = Math.min(api.getWidth(), api.getHeight()) / 3.1
@@ -529,7 +529,7 @@ const seriesOption = (data: any[], total: number, angle: number) => {
             r: 4
           },
           style: {
-            stroke: '#00FEFF', //绿
+            stroke: '#00FEFF', // 绿
             fill: '#00FEFF'
           },
           silent: true
@@ -539,7 +539,7 @@ const seriesOption = (data: any[], total: number, angle: number) => {
     }
   ]
 }
-export const initOption = (data: any, legend, colors, total, angle: number) => {
+export const initOption = (data: any, legend: any, colors: any, total: number, angle: number) => {
   const option = {
     // backgroundColor: '#000E1A',
     backgroundColor: '#272A3E',
@@ -585,9 +585,9 @@ export const initOption = (data: any, legend, colors, total, angle: number) => {
 }
 export const formatePathName = (url:string) => {
   const paths = url.split('/')
-  if(paths.length>1){
-    return paths[paths.length-1]
-  }else{
+  if (paths.length > 1) {
+    return paths[paths.length - 1]
+  } else {
     return url
   }
 }

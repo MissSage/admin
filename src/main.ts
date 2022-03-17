@@ -7,7 +7,10 @@ import './styles/index.scss'
 import './styles/iconfont/iconfont.css'
 import elementPlus from './plugins/element-plus'
 import global from './plugins/globalProperties'
+import installEcharts from '@/plugins/echart'
+
 const app = createApp(App)
+installEcharts(app)
 // 加载插件
 app.use(router)
 app.use(store, key)

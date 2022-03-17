@@ -1,5 +1,9 @@
 <template>
-  <el-form label-position="top" class="flex-form" :model="workOrder">
+  <el-form
+    label-position="top"
+    class="flex-form"
+    :model="workOrder"
+  >
     <el-form-item label="工单编号:">
       <TextItem>{{ workOrder.code }}</TextItem>
     </el-form-item>
@@ -10,7 +14,7 @@
       <TextItem>{{ workOrder.creatorName }}</TextItem>
     </el-form-item>
     <el-form-item label="创建时间:">
-      <TextItem>{{ formatDate(workOrder.createTime) }}</TextItem>
+      <TextItem>{{ workOrder.createTime?formatDate(workOrder.createTime):workOrder.createTime }}</TextItem>
     </el-form-item>
     <el-form-item label="工单类型:">
       <TextItem>{{ formateRowOrderType(workOrder) }}</TextItem>
@@ -32,7 +36,13 @@
       :data="workOrder.contentDetail.jobList"
       style="width: 100%"
     >
-      <el-table-column prop="orderNumber" width="78" align="center" label="序号"> </el-table-column>
+      <el-table-column
+        prop="orderNumber"
+        width="78"
+        align="center"
+        label="序号"
+      >
+      </el-table-column>
       <el-table-column label="项目" width="240">
         <template #default="scope">
           <div class="selectText">{{ scope.row.projectName || scope.row.projectId }}</div>
@@ -47,7 +57,7 @@
       </el-table-column>
       <el-table-column label="检修项目" width="240">
         <template #default="scope">
-          <div class="selectText" @click="showStandardDetail(workOrder.type, scope.row)">
+          <div class="selectText" @click="showStandardDetail(workOrder.type||'', scope.row)">
             <span class="openable-text">{{ scope.row.standardName || scope.row.standardId }}</span>
           </div>
         </template>
@@ -65,13 +75,17 @@
     </template>
   </template>
   <template v-else-if="workOrder.type === OrderTypes.OTHER">
-    <el-descriptions direction="vertical" :column="2" border>
+    <el-descriptions
+      direction="vertical"
+      :column="2"
+      border
+    >
       <el-descriptions-item label="问题描述">{{ workOrder.questionRemark }}</el-descriptions-item>
       <el-descriptions-item label="问题附件">
         <el-tag v-if="workOrder.questionFile">
           <span
             class="questfile-download"
-            @click="downloadResource(workOrder.questionFile, '问题附件', 'file')"
+            @click="downloadResource(workOrder.questionFile||'', '问题附件', 'file')"
           >
             {{ formatePathName(workOrder.questionFile) }}
           </span>
@@ -118,7 +132,15 @@ import {
 import { IWorkOrderDetail } from '@/common/types/workorder'
 import { defineComponent, PropType, ref } from 'vue'
 import { ElMessage } from 'element-plus'
-
+interface DialogConfig {
+  visible: boolean
+  title?: string
+  close: () => void
+  currentId: string
+  dialogWidth?: string
+  readonly?: boolean
+  deviceNo?: string
+}
 export default defineComponent({
   name: 'OrderDetailBase',
   components: { TextItem, RepaireAddDialog, MaintenanceAddDialog },
@@ -130,7 +152,7 @@ export default defineComponent({
       }
     }
   },
-  setup() {
+  setup () {
     // codes here
     const downloadResource = (url: string, name: string, type: string) => {
       if (type === 'img') return window.open(url)
@@ -171,7 +193,7 @@ export default defineComponent({
           MaintenanceAddDialogConfig.value.readonly = true
           MaintenanceAddDialogConfig.value.visible = true
         }
-      }else{
+      } else {
         ElMessage.warning('未请求到数据！')
       }
     }

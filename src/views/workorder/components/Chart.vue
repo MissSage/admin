@@ -29,7 +29,7 @@ export default defineComponent({
       default: ''
     }
   },
-  setup(props) {
+  setup (props) {
     const { countType, queryType } = toRefs(props)
     const state = reactive<{
       chartIns: any
@@ -55,24 +55,24 @@ export default defineComponent({
       console.log(res)
       let total = 0
       total = res.data
-        ? res.data.reduce((prev, next) => {
-            return prev + next.value
-          }, total)
+        ? res.data.reduce((prev: any, next: { value: any }) => {
+          return prev + next.value
+        }, total)
         : 0
       const data: any[] = []
       const legend: any[] = []
       const colors: any[] = []
       res.data &&
-        res.data.map((item, i) => {
+        res.data.map((item: { value: any; key: any }, i: number) => {
           data.push(
             {
               value: item.value,
               name: item.key,
               itemStyle: {
                 borderWidth: 5,
-                  shadowBlur: 20,
-                  borderColor: color[i],
-                  shadowColor: color[i]
+                shadowBlur: 20,
+                borderColor: color[i],
+                shadowColor: color[i]
               }
             },
             {
@@ -80,14 +80,14 @@ export default defineComponent({
               name: '',
               itemStyle: {
                 label: {
-                    show: false
-                  },
-                  labelLine: {
-                    show: false
-                  },
-                  color: 'rgba(0, 0, 0, 0)',
-                  borderColor: 'rgba(0, 0, 0, 0)',
-                  borderWidth: 0
+                  show: false
+                },
+                labelLine: {
+                  show: false
+                },
+                color: 'rgba(0, 0, 0, 0)',
+                borderColor: 'rgba(0, 0, 0, 0)',
+                borderWidth: 0
               }
             }
           )
@@ -95,7 +95,7 @@ export default defineComponent({
           colors.push(color[i % color.length])
         })
       state.timer = setInterval(function () {
-        //用setInterval做动画感觉有问题
+        // 用setInterval做动画感觉有问题
         state.angle += 3
         state.option = initOption(data, legend, colors, total, state.angle)
         initChart()
@@ -122,7 +122,7 @@ export default defineComponent({
     onMounted(() => {
       resetChart()
       window.onresize = function () {
-        //自适应大小
+        // 自适应大小
         state.chartIns && state.chartIns.resize()
       }
     })

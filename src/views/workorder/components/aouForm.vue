@@ -1,12 +1,5 @@
 <template>
   <SLDialog v-if="slDialogConfig.visible" :config="slDialogConfig">
-    <!-- <el-dialog
-    v-model="dialogVisible"
-    width="40%"
-    :title="title || ''"
-    :lock-scroll="false"
-    @close="close"
-  > -->
     <el-form
       ref="ruleForm"
       :rules="rules"
@@ -16,7 +9,8 @@
       class="dialogform addOrUpdateDialog"
     >
       <el-form-item label="工单标题" prop="name">
-        <el-input v-model="dataForm.name" placeholder="请输入工单标题"> </el-input>
+        <el-input v-model="dataForm.name" placeholder="请输入工单标题">
+        </el-input>
       </el-form-item>
       <div class="flex-form-item">
         <el-form-item label="工单类型" prop="type">
@@ -74,7 +68,11 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item v-if="dataForm.type === '0'" prop="questionRemark" label="问题描述">
+      <el-form-item
+        v-if="dataForm.type === '0'"
+        prop="questionRemark"
+        label="问题描述"
+      >
         <el-input
           v-model="dataForm.questionRemark"
           type="textarea"
@@ -83,7 +81,11 @@
           placeholder="请输入问题描述"
         ></el-input>
       </el-form-item>
-      <el-form-item v-if="dataForm.type === '0'" prop="questionFile" label="上传附件">
+      <el-form-item
+        v-if="dataForm.type === '0'"
+        prop="questionFile"
+        label="上传附件"
+      >
         <div class="fileUpload">
           <el-upload
             class="upload-demo"
@@ -93,23 +95,31 @@
             :on-success="(res, file) => handleUploadSuccess(res, file)"
             :before-upload="beforeFileUpload"
           >
-            <el-button size="mini" type="primary">点击上传</el-button>
+            <el-button size="small" type="primary">点击上传</el-button>
           </el-upload>
-          <div v-if="dataForm.questionFile && dataForm.questionFile !== ''" class="fileBox">
-            {{ uploadFileName }}<span @click="dataForm.questionFile = ''">×</span>
+          <div
+            v-if="dataForm.questionFile && dataForm.questionFile !== ''"
+            class="fileBox"
+          >
+            {{ uploadFileName
+            }}<span @click="dataForm.questionFile = ''">×</span>
           </div>
         </div>
       </el-form-item>
       <div class="flex-form-item">
         <el-form-item label="是否外委" prop="isOutsider">
-          <el-radio-group v-model="dataForm.isOutsider" @change="(val:any)=>handleIsOutsiderChange(val)">
+          <el-radio-group
+            v-model="dataForm.isOutsider"
+            @change="(val:any)=>handleIsOutsiderChange(val)"
+          >
             <el-radio
               v-for="option in isOutsiderOptions"
               :key="option.value"
               style="margin-bottom: 0"
               :label="option.value"
-              >{{ option.label }}</el-radio
             >
+              {{ option.label }}
+            </el-radio>
           </el-radio-group>
         </el-form-item>
 
@@ -138,11 +148,6 @@
         ></el-date-picker>
       </el-form-item>
     </el-form>
-    <!-- <template #footer>
-      <el-button size="mini" @click="handleClose">取 消</el-button>
-      <el-button size="mini" type="primary" @click="handleSubmit">保 存</el-button>
-    </template> -->
-    <!-- </el-dialog> -->
   </SLDialog>
 </template>
 
@@ -150,18 +155,31 @@
 import SLDialog from '@/components/SLDialog/index.vue'
 import { getMaintTaskTable } from '@/api/maintenance/task'
 import { getRepairTaskTable } from '@/api/repair/task'
-import { getTenantUsersByPage } from '@/api/user'
+import { getTenantUsersByPage } from '@/api/user/index'
 import { saveOrder } from '@/api/workorder'
-import { QueryListParam } from '@/common/types/common'
+import { NormalOption, QueryListParam } from '@/common/types/common'
 import { IElForm } from '@/common/types/element-plus'
 import { IWorkOrderSaveParams } from '@/common/types/workorder'
-import useGlobal from '@/hooks/global/useGlobal'
 import { removeSlash } from '@/utils/removeIdSlash'
-import { watch, computed, defineComponent, onMounted, PropType, reactive, ref, toRefs } from 'vue'
+import {
+  watch,
+  computed,
+  defineComponent,
+  onMounted,
+  PropType,
+  reactive,
+  ref,
+  toRefs
+} from 'vue'
 import { useStore } from 'vuex'
-import { initInnerUser, isOutsiderOptions, orderTypeOptions, priorityOptions } from '../index'
+import {
+  initInnerUser,
+  isOutsiderOptions,
+  orderTypeOptions,
+  priorityOptions
+} from '../index'
 import { ISLDialogConfig } from '@/components/SLDialog/type'
-const { $messageSuccess, $messageError } = useGlobal()
+import { SLMessage } from '@/utils/global'
 export default defineComponent({
   name: 'AouForm',
   components: { SLDialog },
@@ -194,14 +212,14 @@ export default defineComponent({
     }
   },
   emits: ['refreshData'],
-  setup(props, ctx) {
+  setup (props, ctx) {
     const slDialogConfig = ref<ISLDialogConfig>({
       title: props.title,
       visible: props.visible,
       scrollbar: true,
       width: '30%',
       cancel: {
-        handler: async() => await props.close()
+        handler: async () => await props.close()
       },
       confirm: {
         show: true,
@@ -222,8 +240,8 @@ export default defineComponent({
     const store = useStore()
     const state = reactive<{
       dataForm: IWorkOrderSaveParams
-      TaskOptions: SelectOption[]
-      ExcutorOptions: SelectOption[]
+      TaskOptions: NormalOption[]
+      ExcutorOptions: NormalOption[]
       fileActionUrl: string
       uploadFileName: string
     }>({
@@ -248,10 +266,16 @@ export default defineComponent({
     const rules = {
       type: [{ required: true, message: '请选择工单类型', trigger: 'change' }],
       name: [{ required: true, message: '请输入工单标题' }],
-      priority: [{ required: true, message: '请选择优先级', trigger: 'change' }],
+      priority: [
+        { required: true, message: '请选择优先级', trigger: 'change' }
+      ],
       contentId: [{ required: true, message: '请选择任务', trigger: 'change' }],
-      executor: [{ required: true, message: '请选择处理人', trigger: 'change' }],
-      deadlineTime: [{ required: true, message: '请选择截止时间', trigger: 'change' }]
+      executor: [
+        { required: true, message: '请选择处理人', trigger: 'change' }
+      ],
+      deadlineTime: [
+        { required: true, message: '请选择截止时间', trigger: 'change' }
+      ]
     }
     // codes here
     const handleTypeChange = async (val?: string) => {
@@ -270,12 +294,12 @@ export default defineComponent({
         val === '1'
           ? await getRepairTaskTable(params)
           : val === '2'
-          ? await getMaintTaskTable(params)
-          : null
+            ? await getMaintTaskTable(params)
+            : null
       res
         ? (state.TaskOptions = res.data.data
-            .filter(item => !item.code)
-            .map(item => {
+            .filter((item: { code: any }) => !item.code)
+            .map((item: { name: any; id: any }) => {
               const option = {
                 label: item.name,
                 value: item.id
@@ -300,10 +324,12 @@ export default defineComponent({
         isOutsider === 'false'
           ? await getTenantUsersByPage(params)
           : isOutsider === 'true'
-          ? // 暂时调用同一接口，后端还没确定? await getOrderContact(params)
-            await getTenantUsersByPage(params)
-          : null
-      res ? (state.ExcutorOptions = initInnerUser(res.data.data)) : (state.ExcutorOptions = [])
+          // 暂时调用同一接口，后端还没确定? await getOrderContact(params)
+            ? await getTenantUsersByPage(params)
+            : null
+      res
+        ? (state.ExcutorOptions = initInnerUser(res.data.data))
+        : (state.ExcutorOptions = [])
     }
 
     // 暂存文件名
@@ -312,7 +338,7 @@ export default defineComponent({
       return true
     }
     // 图片上传成功，保存图片url
-    const handleUploadSuccess = (res: string,file:any) => {
+    const handleUploadSuccess = (res: string, file: any) => {
       state.dataForm.questionFile = res
     }
     const handleClose = () => {
@@ -324,20 +350,20 @@ export default defineComponent({
       console.log('submit')
       ruleForm.value
         ? ruleForm.value.validate(async (valid: any) => {
-            if (!valid) {
-              return false
-            }
-            const res = await saveOrder({
-              ...state.dataForm,
-              executor: removeSlash(state.dataForm.executor)
-            })
-            if (res.status === 200) {
-              $messageSuccess('保存成功')
-              ctx.emit('refreshData')
-              if (props.close) props.close()
-            }
+          if (!valid) {
+            return false
+          }
+          const res = await saveOrder({
+            ...state.dataForm,
+            executor: removeSlash(state.dataForm.executor)
           })
-        : $messageError('系统错误')
+          if (res.status === 200) {
+            SLMessage.success('保存成功')
+            ctx.emit('refreshData')
+            if (props.close) props.close()
+          }
+        })
+        : SLMessage.error('系统错误')
     }
 
     onMounted(() => {
@@ -366,7 +392,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-@import 'src/assets/css/amapSearchStyle.scss';
+@import "src/assets/css/amapSearchStyle.scss";
 .searchInput {
   z-index: 1000;
   position: relative;
