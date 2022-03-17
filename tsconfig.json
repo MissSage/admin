@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    // "allowJs": true,
+    "allowJs": true,
     // "esModuleInterop": true,
     // "experimentalDecorators": true,
     "importHelpers": true,

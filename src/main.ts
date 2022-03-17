@@ -6,9 +6,10 @@ import { store, key } from './store'
 import './styles/index.scss'
 import './styles/iconfont/iconfont.css'
 import elementPlus from './plugins/element-plus'
-const app = createApp(App)
-console.log(import.meta.env)
+import installEcharts from '@/plugins/echart'
 
+const app = createApp(App)
+installEcharts(app)
 // 加载插件
 app.use(router)
 app.use(store, key)
