@@ -21,7 +21,7 @@
     },
     // "preserveConstEnums": true,
     "resolveJsonModule": true,
-    // "sourceMap": true, // default false
+    "sourceMap": true, // default false
     "strict": true,
     "target": "esnext",
     "types": [
@@ -31,9 +31,9 @@
     // "useDefineForClassFields": true // default true
   },
   "include": [
+    "src/**/*.vue",
     "src/**/*.ts",
     "src/**/*.d.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue"
+    "src/**/*.tsx"
   ]
 }

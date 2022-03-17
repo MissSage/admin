@@ -1,10 +1,8 @@
 import { RouteRecordRaw } from 'vue-router'
 import AppLayout from '@/layout/AppLayout.vue'
-
-import Home from '../views/home/index.vue'
 import { yinshouRoutes } from './modules/yinshou'
 import { filterRouters } from '@/utils/formatter'
-
+import Home from '@/views/home/home.vue'
 export const routes: RouteRecordRaw[] = filterRouters([{
   path: '/',
   component: AppLayout,

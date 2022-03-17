@@ -6,13 +6,13 @@ import { store, key } from './store'
 import './styles/index.scss'
 import './styles/iconfont/iconfont.css'
 import elementPlus from './plugins/element-plus'
-import global from './plugins/globalProperties'
 const app = createApp(App)
+console.log(import.meta.env)
+
 // 加载插件
 app.use(router)
 app.use(store, key)
 app.use(elementPlus)
-app.use(global)
 
 // 自动注册全局组件
 // 这个是vite自己的功能，非web标准或es标准

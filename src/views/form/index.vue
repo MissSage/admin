@@ -93,7 +93,7 @@
 </template>
 
 <script lang="ts" setup>
-import { NormalOption } from '@/types/global'
+import { NormalOption } from '@/common/types/common'
 import { onMounted, reactive } from 'vue'
 interface Option {
   key: number

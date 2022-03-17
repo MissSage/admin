@@ -27,41 +27,9 @@
         </template>
         <el-form-item v-if="config.moreFilter || config.operations?.length">
           <div class="operate-group operate-left">
-            <el-button
-              v-if="config.moreFilter"
-              type="primary"
-              :icon="'iconfont icon-filter'"
-              @click="moreFilterVisiable = !moreFilterVisiable"
-            >
-              更多选项
-            </el-button>
+            <SLButton v-if="config.moreFilter" :config="moreFilterConfig"></SLButton>
             <template v-for="(btn, i) in config.operations || []" :key="i">
-              <el-button
-                v-if="
-                  btn.perm && (typeof btn.perm === 'boolean' ? btn.perm : btn.perm(queryParams))
-                "
-                :icon="
-                  btn.icon && (typeof btn.icon === 'string' ? btn.icon : btn.icon(queryParams))
-                "
-                :loading="
-                  btn.loading &&
-                    (typeof btn.loading === 'boolean' ? btn.loading : btn.loading(queryParams))
-                "
-                :type="
-                  btn.type
-                    ? typeof btn.type === 'string'
-                      ? btn.type as any
-                      : btn.type(queryParams)
-                    : 'primary'
-                "
-                :disabled="
-                  btn.disabled &&
-                    (typeof btn.disabled === 'boolean' ? btn.disabled : btn.disabled(queryParams))
-                "
-                @click="btn.click && btn.click(queryParams)"
-              >
-                {{ btn.text && (typeof btn.text === 'string' ? btn.text : btn.text(queryParams)) }}
-              </el-button>
+              <SLButton :config="btn"></SLButton>
             </template>
           </div>
         </el-form-item>
@@ -70,30 +38,7 @@
       <div v-if="config.midOperations?.length" class="operate-group operate-mid">
         <!-- 中间额外自定义操作按钮 -->
         <template v-for="(btn, i) in config.midOperations || []" :key="i">
-          <el-button
-            v-if="btn.perm && (typeof btn.perm === 'boolean' ? btn.perm : btn.perm(queryParams))"
-            :icon="btn.icon && (typeof btn.icon === 'string' ? btn.icon : btn.icon(queryParams))"
-            :loading="
-              btn.loading &&
-                (typeof btn.loading === 'boolean' ? btn.loading : btn.loading(queryParams))
-            "
-            :type="
-              btn.type
-                ? typeof btn.type === 'string'
-                  ? btn.type as any
-                  : btn.type(queryParams)
-                : 'primary'
-            "
-            :disabled="
-              btn.disabled &&
-                (typeof btn.disabled === 'boolean' ? btn.disabled : btn.disabled(queryParams))
-            "
-            @click="btn.click && btn.click(queryParams)"
-          >
-            {{
-              btn.text && (typeof btn.text === 'string' ? btn.text : btn.text(queryParams))
-            }}
-          </el-button>
+          <SLButton :config="btn"></SLButton>
         </template>
       </div>
       <el-form
@@ -123,32 +68,7 @@
           <div class="operate-group operate-right">
             <!-- 中间额外自定义操作按钮 -->
             <template v-for="(btn, i) in config.rightOperations || []" :key="i">
-              <el-button
-                v-if="
-                  btn.perm && (typeof btn.perm === 'boolean' ? btn.perm : btn.perm(queryParams))
-                "
-                :icon="
-                  btn.icon && (typeof btn.icon === 'string' ? btn.icon : btn.icon(queryParams))
-                "
-                :loading="
-                  btn.loading &&
-                    (typeof btn.loading === 'boolean' ? btn.loading : btn.loading(queryParams))
-                "
-                :type="
-                  btn.type
-                    ? typeof btn.type === 'string'
-                      ? btn.type as any
-                      : btn.type(queryParams)
-                    : 'primary'
-                "
-                :disabled="
-                  btn.disabled &&
-                    (typeof btn.disabled === 'boolean' ? btn.disabled : btn.disabled(queryParams))
-                "
-                @click="btn.click && btn.click(queryParams)"
-              >
-                {{ btn.text && (typeof btn.text === 'string' ? btn.text : btn.text(queryParams)) }}
-              </el-button>
+              <SLButton :config="btn"></SLButton>
             </template>
           </div>
         </el-form-item>
@@ -182,10 +102,11 @@ import SLFormItem from '@/components/SLFormItem/index.vue'
 import SLMoreFilter from '@/components/SLMoreFilter/index.vue'
 import SLCard from '@/components/SLCard/index.vue'
 import { defineComponent, PropType, reactive, toRefs, onMounted, watch } from 'vue'
-import type { ISLCardSearch } from './type'
+import type { ISLCardSearch, ISLOperation } from './type'
+import SLButton from '../SLButton/index.vue'
 export default defineComponent({
   name: 'CardSearch',
-  components: { SLMoreFilter, SLFormItem, SLCard },
+  components: { SLMoreFilter, SLFormItem, SLCard, SLButton },
   props: {
     config: {
       type: Object as PropType<ISLCardSearch>,
@@ -211,7 +132,14 @@ export default defineComponent({
         ...(props.config.defaultParams || {})
       }
     })
+    const moreFilterConfig:ISLOperation = {
+      text: '更多选项',
+      click: () => {
+        state.moreFilterVisiable = !state.moreFilterVisiable
+      },
+      icon: 'iconfont icon-filter'
 
+    }
     // 接收AddtionalFilters附加参数
     const addtionalSubmit = (params: Record<string, any>) => {
       Object.assign(state.queryParams, params)
@@ -250,7 +178,8 @@ export default defineComponent({
     return {
       ...toRefs(state),
 
-      addtionalSubmit
+      addtionalSubmit,
+      moreFilterConfig
     }
   }
 })

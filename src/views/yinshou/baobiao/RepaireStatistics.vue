@@ -3,28 +3,28 @@
     <SLCard class="header-card">
       <div class="header-item">
         <div class="item">
-          <el-image class="image" :src="require('@/assets/icons/moren.png')"></el-image>
+          <el-image class="image" :src="defaultImage"></el-image>
           <div class="item-info">
             <p class="text">待维修数量</p>
             <p class="number">{{ RepairSummary?.prepareRepair || 0 }}</p>
           </div>
         </div>
         <div class="item">
-          <el-image class="image" :src="require('@/assets/icons/moren.png')"></el-image>
+          <el-image class="image" :src="defaultImage"></el-image>
           <div class="item-info">
             <p class="text">维修中数量</p>
             <p class="number">{{ RepairSummary?.repairing || 0 }}</p>
           </div>
         </div>
         <div class="item">
-          <el-image class="image" :src="require('@/assets/icons/moren.png')"></el-image>
+          <el-image class="image" :src="defaultImage"></el-image>
           <div class="item-info">
             <p class="text">已维修数量</p>
             <p class="number">{{ RepairSummary?.repaired || 0 }}</p>
           </div>
         </div>
         <div class="item">
-          <el-image class="image" :src="require('@/assets/icons/moren.png')"></el-image>
+          <el-image class="image" :src="defaultImage"></el-image>
           <div class="item-info">
             <p class="text">维修总数量</p>
             <p class="number">{{ RepairSummary?.repaireTotal || 0 }}</p>
@@ -47,6 +47,7 @@ import SLCard from '@/components/SLCard/index.vue'
 import { defineComponent, onMounted, reactive, ref, toRefs } from 'vue'
 import { ExportRepairSummary, GetRepairSummary } from '@/api/yinshou/baobiao/RepairSummary'
 import { ExportReport } from '.'
+import { getImageUrl } from '@/utils/helper'
 interface IRepairSummary {
   prepareRepair: string
   repairList: [
@@ -71,8 +72,10 @@ export default defineComponent({
   setup () {
     const state = reactive<{
       RepairSummary: IRepairSummary | undefined
+      defaultImage:any
     }>({
-      RepairSummary: undefined
+      RepairSummary: undefined,
+      defaultImage: getImageUrl('moren.png')
     })
 
     const slCardTableConfig = ref<ISLCardTable>({

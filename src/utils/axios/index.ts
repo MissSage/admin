@@ -4,7 +4,7 @@ import { getToken } from '../cookies'
 import { SLMessage } from '../global'
 
 const _axios = axios.create({
-  baseURL: import.meta.env.VITE_API_BASEURL
+  baseURL: String(import.meta.env.VITE_API_BASEURL)
 })
 
 _axios.interceptors.request.use(

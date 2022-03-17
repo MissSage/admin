@@ -43,7 +43,7 @@ export default defineComponent({
 .sl-card {
   width: 100%;
   border-radius: 4px;
-  background-color: #222536;
+  // background-color: #222536;
   box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.5);
   .sl-card-content {
     height: 100%;

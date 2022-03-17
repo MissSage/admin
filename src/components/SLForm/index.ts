@@ -1,5 +1,7 @@
 
 import { IFormItemRule } from '@/common/types/element-plus'
+import { FormItemRule } from 'element-plus'
+import { Arrayable } from 'element-plus/es/utils'
 import { ISLOperation } from '../SLCardSearch/type'
 import { ISLFormItem } from '../SLFormItem/type'
 
@@ -51,7 +53,7 @@ export interface ISLFormConfig {
    * 表单中fieldset选项的query选项的默认值
    */
   defaultQuerys?:Record<string, any>
-  rules?: IFormItemRule
+  rules?: Partial<Record<string, Arrayable<FormItemRule>>>
   columns: ISLFormFieldSet[]
   /**
    * 在提交前整理数据的勾子

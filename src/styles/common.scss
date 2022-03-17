@@ -1,5 +1,8 @@
 @import './themes.scss';
 
+*{
+    box-sizing: border-box;
+}
 // 公共样式
 html,
 body {
@@ -33,7 +36,7 @@ $theme in $themes {
             &::-webkit-scrollbar-thumb {
                 /*滚动条里面小方块*/
                 border-radius: 10px;
-                background: map-get($map: $theme, $key: base);
+                background: map-get($map: $theme, $key: light);
             }
 
             &::-webkit-scrollbar-track {

@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    ref="dialog"
+    ref="refDialog"
     v-model="visible"
     :width="width"
     :title="title"
@@ -121,41 +121,41 @@ export default defineComponent({
       }
       ctx.emit('close')
     }
-    const dialog = ref<IElDialog | null>(null)
+    const refDialog = ref<IElDialog>()
 
     const refDialogFooter = ref<HTMLElement>()
-    const resetContentHeight = () => {
-      if (!props.config.contentHeight) {
-        const appMainEl = document.getElementById('app-main')
-        const footerHeight = refDialogFooter.value ? refDialogFooter.value.clientHeight : 0
-        appMainEl && (state.contentHeight = appMainEl.clientHeight - 190 - footerHeight + 'px')
-      } else {
-        state.contentHeight = props.config.contentHeight || '600px'
-      }
-      if (!props.config.contentMaxHeight) {
-        state.contentMaxHeight = state.contentHeight
-      }
-    }
-    const resetTop = () => {
-      dialog.value && (dialog.value.style['margin-top'] = '70px')
-    }
-    onBeforeMount(() => {
-      resetContentHeight()
-    })
+    // const resetContentHeight = () => {
+    //   if (!props.config.contentHeight) {
+    //     const appMainEl = document.getElementById('app-main')
+    //     const footerHeight = refDialogFooter.value ? refDialogFooter.value.clientHeight : 0
+    //     appMainEl && (state.contentHeight = appMainEl.clientHeight - 190 - footerHeight + 'px')
+    //   } else {
+    //     state.contentHeight = props.config.contentHeight || '600px'
+    //   }
+    //   if (!props.config.contentMaxHeight) {
+    //     state.contentMaxHeight = state.contentHeight
+    //   }
+    // }
+    // const resetTop = () => {
+    //   refDialog.value && (refDialog.value.style['margin-top'] = '70px')
+    // }
+    // onBeforeMount(() => {
+    //   resetContentHeight()
+    // })
     onMounted(() => {
-      resetTop()
-      nextTick(() => {
-        resetContentHeight()
-        ctx.emit('heightChangeComplete')
-      })
-      window.addEventListener('resize', () => resetContentHeight())
+      // resetTop()
+      // nextTick(() => {
+      //   resetContentHeight()
+      //   ctx.emit('heightChangeComplete')
+      // })
+      // window.addEventListener('resize', () => resetContentHeight())
     })
     onUnmounted(() => {
-      window.removeEventListener('resize', () => resetContentHeight())
+      // window.removeEventListener('resize', () => resetContentHeight())
     })
     return {
       ...toRefs(state),
-      dialog,
+      refDialog,
       refDialogFooter,
       handleColse
     }

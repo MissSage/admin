@@ -1,4 +1,4 @@
-import { FormItemRule } from 'element-plus/packages/form/src/form.type'
+import { FormItemRule } from 'element-plus'
 
 export interface ISelectOptions {
   label: string

@@ -70,7 +70,6 @@
 <script lang="ts" setup>
 import { onMounted, reactive, ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import type { IElForm } from '@/types/element-plus'
 import { store } from '@/store'
 import { login, getVerify, getKey, getInfo } from '@/api/login'
 import { loginRules } from '.'
@@ -79,6 +78,7 @@ import { cloneDeep } from 'lodash-es'
 import { encrypt } from '@/utils/AES'
 import { getToken, getUserId, setCurTenant, setTenantId, setToken, setUserId } from '@/utils/cookies'
 import { getItem, setItem } from '@/utils/storage'
+import { IElForm } from '@/common/types/element-plus'
 const router = useRouter()
 const route = useRoute()
 const form = ref<IElForm>()
@@ -100,7 +100,7 @@ const state = reactive<{
   loading: false,
   pwdType: 'password',
   visiblePwd: false,
-  title: import.meta.env.VITE_API_BASEURL
+  title: String(import.meta.env.VITE_API_BASEURL)
 
 })
 

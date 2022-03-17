@@ -3,7 +3,7 @@ import axios from 'axios'
 import { getToken } from '../cookies'
 
 const _axios = axios.create({
-  baseURL: import.meta.env.VITE_API_SCADAURL
+  baseURL: String(import.meta.env.VITE_API_SCADAURL)
 })
 
 _axios.interceptors.request.use(

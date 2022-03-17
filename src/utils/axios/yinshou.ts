@@ -3,7 +3,7 @@ import axios from 'axios'
 import { SLMessage } from '../global'
 
 const _axios = axios.create({
-  baseURL: import.meta.env.VITE_API_YINSHOUURL,
+  baseURL: String(import.meta.env.VITE_API_YINSHOUURL),
   withCredentials: true
 })
 

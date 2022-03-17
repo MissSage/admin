@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts">
-import { NormalOption } from '@/types/global'
+import { NormalOption } from '@/common/types/common'
 import { defineComponent, PropType, reactive, toRefs } from 'vue'
 
 export default defineComponent({

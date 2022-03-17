@@ -206,13 +206,13 @@
     @change="handleChange"
   />
 
-  <ChooseUserByRole
+  <!-- <ChooseUserByRole
     v-else-if="config.type === 'user'"
     width="100%"
     :multiple="config.multiple"
     :height="config.height || '40px'"
     @check-users="(users:any) => handleChange(users)"
-  />
+  /> -->
   <SLUploader
     v-if="config.type === 'image'"
     v-model="value"
@@ -249,11 +249,16 @@ import { defineComponent, PropType, reactive, toRefs, watch } from 'vue'
 import { ISLFormDate, ISLFormDateRange, ISLFormItem } from './type'
 import { useStore } from '@/store'
 import { deresolveValue, resolveValue } from './isValid'
-import ChooseUserByRole from '@/components/chooseUserByRole/index.vue'
+// import ChooseUserByRole from '@/components/chooseUserByRole/index.vue'
 import SLFileUploader from '../SLFileUploader/index.vue'
 export default defineComponent({
   name: 'SLFormItem',
-  components: { SLAmap, SLUploader, ChooseUserByRole, SLFileUploader },
+  components: {
+    SLAmap,
+    SLUploader,
+    // ChooseUserByRole,
+    SLFileUploader
+  },
   props: {
     // eslint-disable-next-line vue/require-default-prop
     modelValue: [String, Number, Array, Object, Boolean],

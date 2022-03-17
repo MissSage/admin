@@ -197,14 +197,6 @@ export default defineComponent({
 })
 </script>
 <style lang="scss" scoped>
-.el-button {
-  &.desc-right-btn {
-    height: 25px;
-    line-height: 25px;
-    padding: 0 15px;
-    min-height: 25px;
-  }
-}
 .el-descriptions {
   margin-right: 0;
   margin-left: 0;

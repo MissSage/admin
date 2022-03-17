@@ -1,7 +1,6 @@
 <template>
   <el-button
     v-if="config.perm && (typeof config.perm === 'boolean' ? config.perm : config.perm(row))"
-    :icon="config.icon && (typeof config.icon === 'string' ? config.icon : config.icon(row))"
     :loading="
       config.loading && (typeof config.loading === 'boolean' ? config.loading : config.loading(row))
     "
@@ -19,6 +18,7 @@
     "
     @click="config.click && config.click(row)"
   >
+    <el-icon v-if="config.icon" :class="config.icon"></el-icon>
     {{ config.text && (typeof config.text === 'string' ? config.text : config.text(row)) }}
   </el-button>
 </template>
