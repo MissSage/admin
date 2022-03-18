@@ -8,7 +8,8 @@ import app from './modules/app'
 export const state:IStore_Root = {
   isCollapse: false,
   theme: 'dark',
-  roles: []
+  roles: [],
+  isMobile: navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i) !== null
 }
 // export type State = typeof state
 export const key:InjectionKey<Store<IStore_Root>> = Symbol('store')

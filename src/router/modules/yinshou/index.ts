@@ -12,14 +12,14 @@ export const yinshouRoutes:RouteRecordRaw[] = [
       hidden: false,
       alwaysShow: true,
       title: '水卡管理',
-      icon: 'iconfont icon-xunjianguanli',
+      icon: 'icon-home',
       roles: ['CUSTOMER_USER', 'TENANT_ADMIN', 'TENANT_SUPPORT']
     },
     children: [
       {
         path: 'index',
         name: 'WaterCardManageIndex',
-        meta: { title: '水卡管理', icon: 'iconfont icon-xunjianguanli' },
+        meta: { title: '水卡管理', icon: 'icon-home' },
         component: () => import('@/views/yinshou/shuika/index.vue')
       }
     ]
@@ -33,14 +33,14 @@ export const yinshouRoutes:RouteRecordRaw[] = [
       hidden: false,
       alwaysShow: true,
       title: '抄表管理',
-      icon: 'iconfont icon-xunjianguanli',
+      icon: 'icon-home',
       roles: ['CUSTOMER_USER', 'TENANT_ADMIN', 'TENANT_SUPPORT']
     },
     children: [
       {
         path: 'index',
         name: 'MeterReadManageIndex',
-        meta: { title: '抄表管理', icon: 'iconfont icon-xunjianguanli' },
+        meta: { title: '抄表管理', icon: 'icon-home' },
         component: () => import('@/views/yinshou/chaobiao/index.vue')
       }
     ]
@@ -54,14 +54,14 @@ export const yinshouRoutes:RouteRecordRaw[] = [
       hidden: false,
       alwaysShow: true,
       title: '申请管理',
-      icon: 'iconfont icon-xunjianguanli',
+      icon: 'icon-home',
       roles: ['CUSTOMER_USER', 'TENANT_ADMIN', 'TENANT_SUPPORT']
     },
     children: [
       {
         path: 'InstallApply',
         name: 'InstallApply',
-        meta: { title: '报装申请', icon: 'iconfont icon-xunjianguanli' },
+        meta: { title: '报装申请', icon: 'icon-home' },
         component: () => import('@/views/yinshou/shenqing/InstallApply.vue')
       },
       {
@@ -72,14 +72,14 @@ export const yinshouRoutes:RouteRecordRaw[] = [
         meta: {
           hidden: true,
           title: '报装审批',
-          icon: 'iconfont icon-xunjianguanli',
+          icon: 'icon-home',
           roles: ['CUSTOMER_USER', 'TENANT_ADMIN', 'TENANT_SUPPORT']
         }
       },
       {
         path: 'LeakApply',
         name: 'LeakApply',
-        meta: { title: '报漏报修', icon: 'iconfont icon-xunjianguanli' },
+        meta: { title: '报漏报修', icon: 'icon-home' },
         component: () => import('@/views/yinshou/shenqing/LeakApply.vue')
       },
       {
@@ -89,14 +89,14 @@ export const yinshouRoutes:RouteRecordRaw[] = [
         meta: {
           hidden: true,
           title: '报漏报修',
-          icon: 'iconfont icon-xunjianguanli',
+          icon: 'icon-home',
           roles: ['CUSTOMER_USER', 'TENANT_ADMIN', 'TENANT_SUPPORT']
         }
       },
       {
         path: 'Complaints',
         name: 'Complaints',
-        meta: { title: '投诉意见', icon: 'iconfont icon-xunjianguanli' },
+        meta: { title: '投诉意见', icon: 'icon-home' },
         component: () => import('@/views/yinshou/shenqing/Complaints.vue')
       },
       {
@@ -107,7 +107,7 @@ export const yinshouRoutes:RouteRecordRaw[] = [
         meta: {
           hidden: true,
           title: '投诉意见',
-          icon: 'iconfont icon-xunjianguanli',
+          icon: 'icon-home',
           roles: ['CUSTOMER_USER', 'TENANT_ADMIN', 'TENANT_SUPPORT']
         }
       }
@@ -122,50 +122,50 @@ export const yinshouRoutes:RouteRecordRaw[] = [
       hidden: false,
       alwaysShow: true,
       title: '报表管理',
-      icon: 'iconfont icon-xunjianguanli',
+      icon: 'icon-home',
       roles: ['CUSTOMER_USER', 'TENANT_ADMIN', 'TENANT_SUPPORT']
     },
     children: [
       {
         path: 'WaterStatistics',
         name: 'WaterStatistics',
-        meta: { title: '用水统计报表', icon: 'iconfont icon-xunjianguanli' },
+        meta: { title: '用水统计报表', icon: 'icon-home' },
         component: () => import('@/views/yinshou/baobiao/Water/WaterStatistics.vue')
       },
       // {
       //   path: 'WaterDetail',
       //   name: 'WaterDetail',
-      //   meta: { title: '用水明细报表', icon: 'iconfont icon-xunjianguanli' },
+      //   meta: { title: '用水明细报表', icon: 'icon-home' },
       //   component: () => import('@/views/yinshou/baobiao/Water/WaterDetail.vue')
       // },
       {
         path: 'InvestStatistics',
         name: 'InvestStatistics',
-        meta: { title: '用户充值报表', icon: 'iconfont icon-xunjianguanli' },
+        meta: { title: '用户充值报表', icon: 'icon-home' },
         component: () => import('@/views/yinshou/baobiao/Invest/InvestStatistics.vue')
       },
       // {
       //   path: 'InvestDetail',
       //   name: 'InvestDetail',
-      //   meta: { title: '用户充值明细报表', icon: 'iconfont icon-xunjianguanli' },
+      //   meta: { title: '用户充值明细报表', icon: 'icon-home' },
       //   component: () => import('@/views/yinshou/baobiao/Invest/InvestDetail.vue')
       // },
       {
         path: 'FinancialStatistics',
         name: 'FinancialStatistics',
-        meta: { title: '账务统计报表', icon: 'iconfont icon-xunjianguanli' },
+        meta: { title: '账务统计报表', icon: 'icon-home' },
         component: () => import('@/views/yinshou/baobiao/FinancialStatistics.vue')
       },
       {
         path: 'AccountStatistics',
         name: 'AccountStatistics',
-        meta: { title: '开户统计报表', icon: 'iconfont icon-xunjianguanli' },
+        meta: { title: '开户统计报表', icon: 'icon-home' },
         component: () => import('@/views/yinshou/baobiao/AccountStatistics.vue')
       },
       {
         path: 'RepaireStatistics',
         name: 'RepaireStatistics',
-        meta: { title: '维修统计报表', icon: 'iconfont icon-xunjianguanli' },
+        meta: { title: '维修统计报表', icon: 'icon-home' },
         component: () => import('@/views/yinshou/baobiao/RepaireStatistics.vue')
       }
     ]

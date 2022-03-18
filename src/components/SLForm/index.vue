@@ -84,7 +84,7 @@ import {
 } from 'vue'
 import SLDescriptionHeader from '@/components/SLDescriptionHeader/index.vue'
 import SLFormItem from '@/components/SLFormItem/index.vue'
-import { cloneDeep } from 'lodash'
+import { cloneDeep } from 'lodash-es'
 import { IElForm } from '@/common/types/element-plus'
 import { ISLFormConfig, ISLFormFieldSet } from './index'
 import { ISLFormItem, ISLFormTable } from '../SLFormItem/type'

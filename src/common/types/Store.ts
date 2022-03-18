@@ -3,6 +3,7 @@ export interface IStore_Root{
   isCollapse: boolean
   theme:'dark' | 'primary'
   roles:string[]
+  isMobile:boolean
 }
 export interface IStore_Module_APP{
   actionUrl:string

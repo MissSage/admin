@@ -4,7 +4,7 @@
     :index="menu.path"
   >
     <template #title>
-      <el-icon class="iconfont" :class="menu.icon"></el-icon>
+      <el-icon class="iconfont" :class="menu.meta?.icon"></el-icon>
       <span class="sub-menu-title">{{ menu.meta?.title }}</span>
     </template>
     <MenuItem
@@ -17,7 +17,7 @@
     v-else
     :index="menu.path"
   >
-    <el-icon class="iconfont" :class="menu.icon"></el-icon>
+    <el-icon class="iconfont" :class="menu.meta?.icon"></el-icon>
     <template #title>
       <span>{{ menu.meta?.title }}</span>
     </template>
@@ -26,7 +26,6 @@
 
 <script lang="ts" setup>
 import type { PropType } from 'vue'
-import { RouteRecordRaw } from 'vue-router'
 
 defineProps({
   menu: {

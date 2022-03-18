@@ -2,7 +2,7 @@
   "name": "lgs-admin",
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite serve --mode development",
+    "dev": "vite",
     "build": "vue-tsc --noEmit --skipLibCheck && vite build",
     "serve": "vite preview",
     "lint": "eslint ./src/**/*.{js,jsx,vue,ts,tsx} --fix"

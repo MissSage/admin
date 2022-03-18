@@ -7,8 +7,6 @@ import eslintPlugin from 'vite-plugin-eslint'
 import { createHtmlPlugin } from 'vite-plugin-html'
 const getEnvFn = (mode, target) => {
   const res = loadEnv(mode, process.cwd() + '/env')[target]
-  console.log(process.cwd(), res)
-
   return res
 }
 // https://vitejs.dev/config/
@@ -16,6 +14,7 @@ export default defineConfig(({ command, mode }) => {
   console.log(command, mode)
   if (command === 'serve') {
     // 开发模式下的配置
+
   } else {
     // ==='build'
     // 生产模式下的配置
@@ -100,7 +99,7 @@ export default defineConfig(({ command, mode }) => {
         }
       },
       postcss: {
-        // map: false,
+        // map: true,
         plugins: [
           {
             postcssPlugin: 'internal:charset-removal',
@@ -116,7 +115,7 @@ export default defineConfig(({ command, mode }) => {
       }
     },
     build: {
-      sourcemap: mode !== 'production',
+      // sourcemap: true,
       minify: 'terser',
       terserOptions: {
         compress: {
@@ -135,7 +134,7 @@ export default defineConfig(({ command, mode }) => {
       }
     },
     optimizeDeps: {
-      include: []
+      include: ['vue', 'lodash-es', 'vuex', 'vue-router', 'axios', 'nprogress', 'element-plus', 'moment', '@element-plus/icons-vue', 'element-plus/lib/locale/lang/zh-cn']
     }
   }
 })
